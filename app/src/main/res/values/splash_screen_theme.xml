@@ -3,6 +3,5 @@
 
     <style name="SplashScreenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_screen_background</item>
-        <item name="colorPrimaryDark">@color/white</item>
     </style>
 </resources>

@@ -3,8 +3,8 @@
     android:opacity="opaque">
     <item android:drawable="@android:color/white" />
     <item
-        android:width="100dp"
-        android:height="100dp"
-        android:drawable="@mipmap/ic_launcher_round"
-        android:gravity="center"/>
+        android:width="150dp"
+        android:height="150dp"
+        android:drawable="@drawable/logo"
+        android:gravity="center" />
 </layer-list>

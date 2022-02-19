@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         moveToLoginActivity();
     }
 
+    //Move from SplashScreen to Login Activity
     private void moveToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
