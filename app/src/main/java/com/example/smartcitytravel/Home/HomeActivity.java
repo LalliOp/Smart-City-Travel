@@ -39,7 +39,6 @@ public class HomeActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
                             startActivity(intent);
-                            finish();
                         }
 
                     }

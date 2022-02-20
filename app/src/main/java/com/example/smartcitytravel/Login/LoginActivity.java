@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.Home.HomeActivity;
+import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.databinding.ActivityLoginBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -24,7 +25,7 @@ import com.google.android.gms.tasks.Task;
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
 
-    //run when launch() function is called
+    //run when launch() function is called by GoogleSignUpActivityResult
     private ActivityResultLauncher<Intent> GoogleSignUpActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -44,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        login();
         signUpWithGoogle();
     }
 
@@ -53,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
         binding.googleImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                binding.googleSignUpLoading.setVisibility(View.VISIBLE);
+
                 GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestEmail()
                         .build();
@@ -80,9 +84,25 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    private void login() {
+        binding.loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (binding.emailEdit.getText().toString().length() >= 1) {
+                    Toast.makeText(LoginActivity.this, binding.emailEdit.getText().toString(), Toast.LENGTH_SHORT).show();
+                    moveToHomeActivity();
+                }
+            }
+        });
+    }
+
     //Move from Login Activity to Home Activity
     private void moveToHomeActivity() {
+        binding.googleSignUpLoading.setVisibility(View.GONE);
+
         Intent intent = new Intent(this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
+
 }

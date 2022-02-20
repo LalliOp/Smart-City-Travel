@@ -44,37 +44,60 @@
         android:text="@string/smart_city_capital"
         android:textSize="50sp" />
 
-    <EditText
-        android:id="@+id/emailEdit"
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/emailLayout"
         android:layout_width="300dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:autofillHints="emailAddress"
-        android:backgroundTint="@color/white"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:textColorHint="@color/white"
+        android:theme="@style/TextInputLayoutStyle"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@color/white"
+        app:hintTextColor="@color/white">
 
-    <EditText
-        android:id="@+id/passwordEdit"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/emailEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="emailAddress"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@drawable/color_cursor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/passwordLayout"
         android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:layout_below="@id/emailEdit"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/emailLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:autofillHints="password"
-        android:backgroundTint="@color/white"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:textColorHint="@color/white"
+        android:theme="@style/TextInputLayoutStyle"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@color/white"
+        app:endIconMode="password_toggle"
+        app:hintTextColor="@color/white"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/passwordEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="password"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@drawable/color_cursor" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/loginBtn"
         android:layout_width="300dp"
         android:layout_height="60dp"
-        android:layout_below="@+id/passwordEdit"
+        android:layout_below="@+id/passwordLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/orange"
@@ -165,6 +188,13 @@
             android:theme="@style/WhiteRippleEffectTheme" />
 
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/googleSignUpLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

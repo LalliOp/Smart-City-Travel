@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
         checkAlreadyGoogleSignUp();
 
     }
-
     //Check whether user is already signup with google account
     private void checkAlreadyGoogleSignUp() {
         GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
@@ -36,13 +35,13 @@ public class MainActivity extends AppCompatActivity {
     //Move from SplashScreen to Login Activity
     private void moveToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
     }
 
     //Move from SplashScreen to Home Activity
     private void moveToHomeActivity() {
         Intent intent = new Intent(this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 }

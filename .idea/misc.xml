@@ -5,12 +5,16 @@
       <map>
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable-anydpi/ic_action_name.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.21614583333333334" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable/color_cursor.xml" value="0.21614583333333334" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable/ic_launcher_background.xml" value="0.21614583333333334" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable/splash_screen_background.xml" value="0.20104166666666667" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable/text_view_stroke_color.xml" value="0.21614583333333334" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_home.xml" value="0.1743659420289855" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_login.xml" value="0.22" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_main.xml" value="0.12771739130434784" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_sign_up.xml" value="0.1693840579710145" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/toolbar.xml" value="0.1213768115942029" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.21614583333333334" />
       </map>
     </option>
   </component>
