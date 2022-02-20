@@ -13,4 +13,7 @@
     <string name="image_of_badshahi_mosque">image of badshahi mosque</string>
     <string name="logo_of_google">logo of google</string>
     <string name="image_of_street">image of street</string>
+    <string name="full_name">Full Name</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="register">Register</string>
 </resources>

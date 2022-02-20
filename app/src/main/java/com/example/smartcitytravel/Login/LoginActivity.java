@@ -13,7 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.Home.HomeActivity;
-import com.example.smartcitytravel.R;
+import com.example.smartcitytravel.SignUp.SignUpActivity;
 import com.example.smartcitytravel.databinding.ActivityLoginBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
+                    binding.googleSignUpLoading.setVisibility(View.GONE);
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         getGoogleSignUpResult(result);
                         moveToHomeActivity();
@@ -47,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
 
         login();
         signUpWithGoogle();
+        signUp();
     }
 
     /* called when user click on google icon
@@ -84,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    //TODO:complete login
     private void login() {
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,13 +99,22 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    //Move from Login Activity to SignUp Activity when user click signup from here text
+    private void signUp() {
+        binding.signUpHereTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
+
+    }
+
     //Move from Login Activity to Home Activity
     private void moveToHomeActivity() {
-        binding.googleSignUpLoading.setVisibility(View.GONE);
-
         Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
-
 }

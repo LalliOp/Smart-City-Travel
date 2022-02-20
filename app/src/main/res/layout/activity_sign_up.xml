@@ -21,4 +21,119 @@
 
     </RelativeLayout>
 
+    <include
+        android:id="@+id/logo_title_layout"
+        layout="@layout/logo_title" />
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/fullNameLayout"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logo_title_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:textColorHint="@color/white"
+        android:theme="@style/TextInputLayoutStyle"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@color/white"
+        app:hintTextColor="@color/white">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/fullNameEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="name"
+            android:hint="@string/full_name"
+            android:inputType="textPersonName"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@drawable/color_cursor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/emailLayout"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fullNameLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:textColorHint="@color/white"
+        android:theme="@style/TextInputLayoutStyle"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@color/white"
+        app:hintTextColor="@color/white">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/emailEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="emailAddress"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@drawable/color_cursor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/passwordLayout"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/emailLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:textColorHint="@color/white"
+        android:theme="@style/TextInputLayoutStyle"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@color/white"
+        app:endIconMode="password_toggle"
+        app:hintTextColor="@color/white"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/passwordEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="password"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@drawable/color_cursor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/confirmPasswordLayout"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/passwordLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:textColorHint="@color/white"
+        android:theme="@style/TextInputLayoutStyle"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@color/white"
+        app:endIconMode="password_toggle"
+        app:hintTextColor="@color/white"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/confirmPasswordEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="password"
+            android:hint="@string/confirm_password"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@drawable/color_cursor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/confirmPasswordLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="@color/gray"
+        android:text="@string/register"
+        android:textColor="@color/black"
+        android:textSize="19sp" />
 </RelativeLayout>
