@@ -1,14 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Login.LoginActivity">
 
-    <TextView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:alpha="0.6"
+            android:contentDescription="@string/image_of_badshahi_mosque"
+            android:scaleType="centerCrop"
+            android:src="@drawable/login_background" />
+
+    </RelativeLayout>
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/logoImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/logo"
+        app:shapeAppearanceOverlay="@style/CircularImage" />
+
+    <TextView
+        android:id="@+id/appNameTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logoImg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:alpha="0.6"
+        android:fontFamily="@font/pmingliu"
+        android:text="@string/smart_city_capital"
+        android:textSize="50sp" />
+
+    <EditText
+        android:id="@+id/emailEdit"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:text="Login Activity" />
+        android:autofillHints="emailAddress"
+        android:backgroundTint="@color/white"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
+
+    <EditText
+        android:id="@+id/passwordEdit"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/emailEdit"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:autofillHints="password"
+        android:backgroundTint="@color/white"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/passwordEdit"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/orange"
+        android:text="@string/login"
+        android:textColor="@color/black"
+        android:textSize="19sp" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/marginRight"
+        android:layout_width="130dp"
+        android:layout_height="2dp"
+        android:layout_below="@id/loginBtn"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="40dp"
+        android:alpha="0.6"
+        app:dividerColor="@color/white" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/marginLeft"
+        android:layout_width="130dp"
+        android:layout_height="2dp"
+        android:layout_below="@id/loginBtn"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="40dp"
+        android:alpha="0.6"
+        app:dividerColor="@color/white" />
+
+    <TextView
+        android:id="@+id/orTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/loginBtn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:text="@string/or"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/signUpWithTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/orTxt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/signup_with"
+        android:textStyle="bold" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/googleImg"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/signUpWithTxt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="7dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:contentDescription="@string/logo_of_google"
+        android:focusable="true"
+        android:src="@drawable/ic_google"
+        android:theme="@style/WhiteRippleEffectTheme"
+        app:shapeAppearanceOverlay="@style/CircularImage" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/googleImg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/noAccountTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/don_t_have_an_account"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/signUpHereTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/noAccountTxt"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="@string/sign_up_from_here"
+            android:textStyle="bold"
+            android:theme="@style/WhiteRippleEffectTheme" />
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Smart City Travel</string>
+    <string name="smart_city_capital">SMART CITY</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="or">OR</string>
+    <string name="signup_with">Signup with</string>
+    <string name="don_t_have_an_account">Don\'t Have an Account?</string>
+    <string name="sign_up_from_here">Sign Up From Here</string>
+    <string name="image_of_badshahi_mosque">image of badshahi mosque</string>
+    <string name="logo_of_google">logo of google</string>
 </resources>
