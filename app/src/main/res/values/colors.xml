@@ -9,5 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="orange">#CC5E3C</color>
     <color name="gray">#D0D0D0</color>
-    <color name="mtrl_textinput_default_box_stroke_color">@color/white</color>
+    <color name="red">#ff2e1f</color>
+    <color name="mtrl_textinput_default_box_stroke_color" >@color/white</color>
 </resources>

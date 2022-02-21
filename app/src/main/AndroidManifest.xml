@@ -12,7 +12,8 @@
         android:theme="@style/Theme.SmartCityTravel">
         <activity
             android:name=".SignUp.SignUpActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Home.HomeActivity"
             android:exported="false"
@@ -26,7 +27,8 @@
             android:name=".MainActivity"
             android:exported="true"
             android:noHistory="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

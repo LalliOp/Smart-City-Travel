@@ -36,6 +36,7 @@
         android:theme="@style/TextInputLayoutStyle"
         app:boxBackgroundMode="outline"
         app:boxStrokeColor="@color/white"
+        app:errorEnabled="true"
         app:hintTextColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -55,11 +56,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/fullNameLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
         android:textColorHint="@color/white"
         android:theme="@style/TextInputLayoutStyle"
         app:boxBackgroundMode="outline"
         app:boxStrokeColor="@color/white"
+        app:errorEnabled="true"
         app:hintTextColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -79,12 +80,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/emailLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
         android:textColorHint="@color/white"
         android:theme="@style/TextInputLayoutStyle"
         app:boxBackgroundMode="outline"
         app:boxStrokeColor="@color/white"
         app:endIconMode="password_toggle"
+        app:errorEnabled="true"
         app:hintTextColor="@color/white"
         app:passwordToggleEnabled="true">
 
@@ -105,12 +106,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/passwordLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
         android:textColorHint="@color/white"
         android:theme="@style/TextInputLayoutStyle"
         app:boxBackgroundMode="outline"
         app:boxStrokeColor="@color/white"
         app:endIconMode="password_toggle"
+        app:errorEnabled="true"
         app:hintTextColor="@color/white"
         app:passwordToggleEnabled="true">
 
@@ -126,12 +127,12 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/loginBtn"
+        android:id="@+id/registerBtn"
         android:layout_width="300dp"
         android:layout_height="60dp"
         android:layout_below="@+id/confirmPasswordLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:backgroundTint="@color/gray"
         android:text="@string/register"
         android:textColor="@color/black"
