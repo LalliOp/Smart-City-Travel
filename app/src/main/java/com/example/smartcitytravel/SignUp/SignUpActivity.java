@@ -1,6 +1,7 @@
 package com.example.smartcitytravel.SignUp;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.Home.HomeActivity;
+import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.databinding.ActivitySignUpBinding;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -17,6 +19,8 @@ public class SignUpActivity extends AppCompatActivity {
     private boolean validate_password;
     private boolean validate_confirm_password;
     private boolean validate_match_password;
+    private ColorStateList errorColorStateList;
+    private ColorStateList normalColorStateList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +29,8 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         initializeValidator();
+        iconErrorColor();
+        iconNormalColor();
         registerAccount();
 
     }
@@ -36,6 +42,18 @@ public class SignUpActivity extends AppCompatActivity {
         validate_password = false;
         validate_confirm_password = false;
         validate_match_password = false;
+    }
+
+    //create error color which will used as icon color when error shown
+    private void iconErrorColor() {
+        int redColor = getResources().getColor(R.color.red);
+        errorColorStateList = ColorStateList.valueOf(redColor);
+    }
+
+    //create normal color which will used as icon color when no error occurs
+    private void iconNormalColor() {
+        int whiteColor = getResources().getColor(R.color.white);
+        normalColorStateList = ColorStateList.valueOf(whiteColor);
     }
 
     //run when user click on register button
@@ -58,15 +76,25 @@ public class SignUpActivity extends AppCompatActivity {
         String fullName = binding.fullNameEdit.getText().toString();
         String nameRegex = "[a-zA-Z\\s]+";
         if (fullName.isEmpty()) {
-            binding.fullNameLayout.setError("Error! Enter your name");
-            validate_full_name = false;
+            showFullNameError("Error! Enter your name");
         } else if (!fullName.matches(nameRegex)) {
-            binding.fullNameLayout.setError("Error! Only alphabets and spaces are acceptable");
-            validate_full_name = false;
+            showFullNameError("Error! Only alphabets and spaces are acceptable");
         } else {
-            binding.fullNameLayout.setError(null);
-            validate_full_name = true;
+            removeFullNameError();
         }
+    }
+
+    //show error msg and error icon color in full name field
+    private void showFullNameError(String errorMsg) {
+        binding.fullNameLayout.setErrorIconTintList(errorColorStateList);
+        binding.fullNameLayout.setError(errorMsg);
+        validate_full_name = false;
+    }
+
+    //hide error icon color and msg in full name field when no error occurs
+    private void removeFullNameError() {
+        binding.fullNameLayout.setError(null);
+        validate_full_name = true;
     }
 
     //check email field contain valid and allowed characters
@@ -74,15 +102,25 @@ public class SignUpActivity extends AppCompatActivity {
         String email = binding.emailEdit.getText().toString();
         String emailRegex = "^[A-Za-z0-9.]+@[A-Za-z.]+$";
         if (email.isEmpty()) {
-            binding.emailLayout.setError("Error! Enter email");
-            validate_email = false;
+            showEmailError("Error! Enter email");
         } else if (!email.matches(emailRegex)) {
-            binding.emailLayout.setError("Error! Invalid Email");
-            validate_email = false;
+            showEmailError("Error! Invalid Email");
         } else {
-            binding.emailLayout.setError(null);
-            validate_email = true;
+            removeEmailError();
         }
+    }
+
+    //show error msg and error icon color in email field
+    private void showEmailError(String errorMsg) {
+        binding.emailLayout.setErrorIconTintList(errorColorStateList);
+        binding.emailLayout.setError(errorMsg);
+        validate_email = false;
+    }
+
+    //hide error icon color and msg in email field when no error occurs
+    private void removeEmailError() {
+        binding.emailLayout.setError(null);
+        validate_email = true;
     }
 
     //check password field contain valid and allowed characters
@@ -107,33 +145,35 @@ public class SignUpActivity extends AppCompatActivity {
             }
         }
         if (password.isEmpty()) {
-            binding.passwordLayout.setError("Error! Enter password");
-            binding.passwordLayout.setErrorIconDrawable(null);
-            validate_password = false;
+            showPasswordError("Error! Enter password");
         } else if (password.length() < 8) {
-            binding.passwordLayout.setError("Error! Password should contain 8 or more characters");
-            binding.passwordLayout.setErrorIconDrawable(null);
-            validate_password = false;
+            showPasswordError("Error! Password should contain 8 or more characters");
         } else if (password.contains(" ")) {
-            binding.passwordLayout.setError("Error! Password should not contain spaces");
-            binding.passwordLayout.setErrorIconDrawable(null);
-            validate_password = false;
+            showPasswordError("Error! Password should not contain spaces");
         } else if (!containOneDigit) {
-            binding.passwordLayout.setError("Error! Password should contain at least one digit");
-            binding.passwordLayout.setErrorIconDrawable(null);
-            validate_password = false;
+            showPasswordError("Error! Password should contain at least one digit");
         } else if (!containOneUpperCaseLetter) {
-            binding.passwordLayout.setError("Error! Password should contain at least one uppercase letter");
-            binding.passwordLayout.setErrorIconDrawable(null);
-            validate_password = false;
+            showPasswordError("Error! Password should contain at least one uppercase letter");
         } else if (!containOneLowerCaseLetter) {
-            binding.passwordLayout.setError("Error! Password should contain at least one lowercase letter");
-            binding.passwordLayout.setErrorIconDrawable(null);
-            validate_password = false;
+            showPasswordError("Error! Password should contain at least one lowercase letter");
         } else {
-            binding.passwordLayout.setError(null);
-            validate_password = true;
+            removePasswordError();
         }
+    }
+
+    //show error msg and hide error icon in password field
+    private void showPasswordError(String errorMsg) {
+        binding.passwordLayout.setEndIconTintList(errorColorStateList);
+        binding.passwordLayout.setError(errorMsg);
+        binding.passwordLayout.setErrorIconDrawable(null);
+        validate_password = false;
+    }
+
+    //hide msg in password field when no error occurs
+    private void removePasswordError() {
+        binding.passwordLayout.setEndIconTintList(normalColorStateList);
+        binding.passwordLayout.setError(null);
+        validate_password = true;
     }
 
     //check confirm password field
@@ -142,23 +182,28 @@ public class SignUpActivity extends AppCompatActivity {
         String password = binding.passwordEdit.getText().toString();
         String confirmPassword = binding.confirmPasswordEdit.getText().toString();
         if (confirmPassword.isEmpty()) {
-            binding.confirmPasswordLayout.setError("ERROR! Re-enter password");
-            binding.confirmPasswordLayout.setErrorIconDrawable(null);
-            validate_confirm_password = false;
+            showConfirmPasswordError("ERROR! Re-enter password");
         } else if (!password.equals(confirmPassword)) {
-            binding.confirmPasswordLayout.setError("ERROR! Password not matched");
-            binding.confirmPasswordLayout.setErrorIconDrawable(null);
-
-            binding.passwordLayout.setError(" ");
-            binding.passwordLayout.setErrorIconDrawable(null);
-
-            validate_confirm_password = false;
-            validate_match_password = false;
+            showConfirmPasswordError("ERROR! Password not matched");
+            showPasswordError(" ");
         } else if (password.equals(confirmPassword)) {
-            binding.confirmPasswordLayout.setError(null);
-            validate_confirm_password = true;
-            validate_match_password = true;
+            removeConfirmPasswordError();
         }
+    }
+
+    //show error msg and hide error icon in confirm password field
+    private void showConfirmPasswordError(String errorMsg) {
+        binding.confirmPasswordLayout.setEndIconTintList(errorColorStateList);
+        binding.confirmPasswordLayout.setError(errorMsg);
+        binding.confirmPasswordLayout.setErrorIconDrawable(null);
+        validate_confirm_password = false;
+    }
+
+    //hide msg in confirm password field when no error occurs
+    private void removeConfirmPasswordError() {
+        binding.confirmPasswordLayout.setEndIconTintList(normalColorStateList);
+        binding.confirmPasswordLayout.setError(null);
+        validate_confirm_password = true;
     }
 
     //Move from SignUp Activity to Login Activity after checking each field contain valid characters
