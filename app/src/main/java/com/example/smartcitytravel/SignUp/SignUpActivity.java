@@ -18,7 +18,6 @@ public class SignUpActivity extends AppCompatActivity {
     private boolean validate_email;
     private boolean validate_password;
     private boolean validate_confirm_password;
-    private boolean validate_match_password;
     private ColorStateList errorColorStateList;
     private ColorStateList normalColorStateList;
 
@@ -36,29 +35,28 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     //initialize validate variable for each field which help us to know which field contain error or not
-    private void initializeValidator() {
+    public void initializeValidator() {
         validate_full_name = false;
         validate_email = false;
         validate_password = false;
         validate_confirm_password = false;
-        validate_match_password = false;
     }
 
     //create error color which will used as icon color when error shown
-    private void iconErrorColor() {
+    public void iconErrorColor() {
         int redColor = getResources().getColor(R.color.red);
         errorColorStateList = ColorStateList.valueOf(redColor);
     }
 
     //create normal color which will used as icon color when no error occurs
-    private void iconNormalColor() {
+    public void iconNormalColor() {
         int whiteColor = getResources().getColor(R.color.white);
         normalColorStateList = ColorStateList.valueOf(whiteColor);
     }
 
     //run when user click on register button
     //check all fields contain valid and allowed characters and move to login activity if no error occur
-    private void registerAccount() {
+    public void registerAccount() {
         binding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,7 +70,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     //check full name field contain valid and allowed characters
-    private void validateFullName() {
+    public void validateFullName() {
         String fullName = binding.fullNameEdit.getText().toString();
         String nameRegex = "[a-zA-Z\\s]+";
         if (fullName.isEmpty()) {
@@ -85,20 +83,20 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     //show error msg and error icon color in full name field
-    private void showFullNameError(String errorMsg) {
+    public void showFullNameError(String errorMsg) {
         binding.fullNameLayout.setErrorIconTintList(errorColorStateList);
         binding.fullNameLayout.setError(errorMsg);
         validate_full_name = false;
     }
 
     //hide error icon color and msg in full name field when no error occurs
-    private void removeFullNameError() {
+    public void removeFullNameError() {
         binding.fullNameLayout.setError(null);
         validate_full_name = true;
     }
 
     //check email field contain valid and allowed characters
-    private void validateEmail() {
+    public void validateEmail() {
         String email = binding.emailEdit.getText().toString();
         String emailRegex = "^[A-Za-z0-9.]+@[A-Za-z.]+$";
         if (email.isEmpty()) {
@@ -111,20 +109,20 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     //show error msg and error icon color in email field
-    private void showEmailError(String errorMsg) {
+    public void showEmailError(String errorMsg) {
         binding.emailLayout.setErrorIconTintList(errorColorStateList);
         binding.emailLayout.setError(errorMsg);
         validate_email = false;
     }
 
     //hide error icon color and msg in email field when no error occurs
-    private void removeEmailError() {
+    public void removeEmailError() {
         binding.emailLayout.setError(null);
         validate_email = true;
     }
 
     //check password field contain valid and allowed characters
-    private void validatePassword() {
+    public void validatePassword() {
         String password = binding.passwordEdit.getText().toString();
         boolean containOneDigit = false;
         boolean containOneUpperCaseLetter = false;
@@ -162,7 +160,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     //show error msg and hide error icon in password field
-    private void showPasswordError(String errorMsg) {
+    public void showPasswordError(String errorMsg) {
         binding.passwordLayout.setEndIconTintList(errorColorStateList);
         binding.passwordLayout.setError(errorMsg);
         binding.passwordLayout.setErrorIconDrawable(null);
@@ -170,7 +168,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     //hide msg in password field when no error occurs
-    private void removePasswordError() {
+    public void removePasswordError() {
         binding.passwordLayout.setEndIconTintList(normalColorStateList);
         binding.passwordLayout.setError(null);
         validate_password = true;
@@ -178,7 +176,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //check confirm password field
     //and match confirm password with password
-    private void matchPasswordAndConfirmPassword() {
+    public void matchPasswordAndConfirmPassword() {
         String password = binding.passwordEdit.getText().toString();
         String confirmPassword = binding.confirmPasswordEdit.getText().toString();
         if (confirmPassword.isEmpty()) {
@@ -192,7 +190,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     //show error msg and hide error icon in confirm password field
-    private void showConfirmPasswordError(String errorMsg) {
+    public void showConfirmPasswordError(String errorMsg) {
         binding.confirmPasswordLayout.setEndIconTintList(errorColorStateList);
         binding.confirmPasswordLayout.setError(errorMsg);
         binding.confirmPasswordLayout.setErrorIconDrawable(null);
@@ -200,16 +198,15 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     //hide msg in confirm password field when no error occurs
-    private void removeConfirmPasswordError() {
+    public void removeConfirmPasswordError() {
         binding.confirmPasswordLayout.setEndIconTintList(normalColorStateList);
         binding.confirmPasswordLayout.setError(null);
         validate_confirm_password = true;
     }
 
     //Move from SignUp Activity to Login Activity after checking each field contain valid characters
-    private void MoveToLoginActivity() {
-        if (validate_full_name && validate_email && validate_password && validate_confirm_password
-                && validate_match_password) {
+    public void MoveToLoginActivity() {
+        if (validate_full_name && validate_email && validate_password && validate_confirm_password) {
 
             Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show();
 

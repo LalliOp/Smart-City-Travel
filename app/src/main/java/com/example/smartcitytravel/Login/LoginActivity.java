@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /* called when user click on google icon
      * allow user to signUp or signIn with google account*/
-    private void signUpWithGoogle() {
+    public void signUpWithGoogle() {
         binding.googleImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Return object whether user successfully signIn or signUp with google account or throw exception
-    private void getGoogleSignUpResult(ActivityResult result) {
+    public void getGoogleSignUpResult(ActivityResult result) {
         Task<GoogleSignInAccount> googleSignInAccountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
 
         try {
@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //TODO:complete login
-    private void login() {
+    public void login() {
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Move from Login Activity to SignUp Activity when user click signup from here text
-    private void signUp() {
+    public void signUp() {
         binding.signUpHereTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Move from Login Activity to Home Activity
-    private void moveToHomeActivity() {
+    public void moveToHomeActivity() {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
