@@ -46,9 +46,19 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setEmail();
         login();
         signUpWithGoogle();
         signUp();
+    }
+
+    // set email in email field in login activity when create account from signup activity and move to login activity
+    public void setEmail() {
+        if (getIntent().getExtras() != null) {
+            String email = getIntent().getExtras().getString("email");
+            binding.emailEdit.setText(email);
+        }
+
     }
 
     /* called when user click on google icon

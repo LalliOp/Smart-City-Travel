@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.Home.HomeActivity;
+import com.example.smartcitytravel.Login.LoginActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.databinding.ActivitySignUpBinding;
 
@@ -210,7 +210,8 @@ public class SignUpActivity extends AppCompatActivity {
 
             Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(this, HomeActivity.class);
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra("email", binding.emailEdit.getText().toString());
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
