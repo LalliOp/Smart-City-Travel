@@ -6,14 +6,25 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.smartcitytravel.AWSService.DataModel.Response;
+import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Login.LoginActivity;
 import com.example.smartcitytravel.R;
+import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivitySignUpBinding;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class SignUpActivity extends AppCompatActivity {
     private ActivitySignUpBinding binding;
+    private Util util;
     private boolean validate_full_name;
     private boolean validate_email;
     private boolean validate_password;
@@ -27,6 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
         binding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        util = new Util();
         initializeValidator();
         iconErrorColor();
         iconNormalColor();
@@ -64,7 +76,10 @@ public class SignUpActivity extends AppCompatActivity {
                 validateEmail();
                 validatePassword();
                 matchPasswordAndConfirmPassword();
-                MoveToLoginActivity();
+
+                if (validate_full_name && validate_email && validate_password && validate_confirm_password) {
+                    checkConnectionAndCreateAccount();
+                }
             }
         });
     }
@@ -204,17 +219,73 @@ public class SignUpActivity extends AppCompatActivity {
         validate_confirm_password = true;
     }
 
+    // check all fields are valid. If valid create account by passing user account info to database
+    // and move to Login Activity if account created successfully
+    public void createAccount() {
+        showLoadingBar();
+        HttpClient.getInstance().createUserAccount(binding.fullNameEdit.getText().toString(),
+                binding.emailEdit.getText().toString(), binding.passwordEdit.getText().toString()).enqueue(new Callback<Response>() {
+            @Override
+            public void onResponse(@NonNull Call<Response> call, @NonNull retrofit2.Response<Response> response) {
+                if (response.body().isSuccessful()) {
+                    Toast.makeText(SignUpActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
+                    MoveToLoginActivity();
+                } else {
+                    Toast.makeText(SignUpActivity.this, "Unable to create account", Toast.LENGTH_SHORT).show();
+                }
+                hideLoadingBar();
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Response> call, @NonNull Throwable t) {
+                Toast.makeText(SignUpActivity.this, "Unable to create account", Toast.LENGTH_SHORT).show();
+                hideLoadingBar();
+
+            }
+        });
+    }
+
     //Move from SignUp Activity to Login Activity after checking each field contain valid characters
     public void MoveToLoginActivity() {
-        if (validate_full_name && validate_email && validate_password && validate_confirm_password) {
-
-            Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.putExtra("email", binding.emailEdit.getText().toString());
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("email", binding.emailEdit.getText().toString());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
 
     }
+
+    // show progress bar
+    public void showLoadingBar() {
+        binding.signUpBarLayout.setVisibility(View.VISIBLE);
+    }
+
+    //hide progressbar
+    public void hideLoadingBar() {
+        binding.signUpBarLayout.setVisibility(View.GONE);
+    }
+
+    //check internet connection and create account
+    public void checkConnectionAndCreateAccount() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Boolean connectionAvailable = util.isConnectionAvailable(SignUpActivity.this);
+
+                SignUpActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (connectionAvailable) {
+                            createAccount();
+                        } else {
+                            Toast.makeText(SignUpActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+        executor.shutdown();
+    }
+
 }
