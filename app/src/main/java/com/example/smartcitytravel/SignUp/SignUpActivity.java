@@ -1,17 +1,15 @@
 package com.example.smartcitytravel.SignUp;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.AWSService.DataModel.Result;
+import com.example.smartcitytravel.AWSService.DataModel.CreateAccountResult;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Login.LoginActivity;
-import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivitySignUpBinding;
 
@@ -29,8 +27,6 @@ public class SignUpActivity extends AppCompatActivity {
     private boolean validate_email;
     private boolean validate_password;
     private boolean validate_confirm_password;
-    private ColorStateList errorColorStateList;
-    private ColorStateList normalColorStateList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +36,6 @@ public class SignUpActivity extends AppCompatActivity {
 
         util = new Util();
         initializeValidator();
-        iconErrorColor();
-        iconNormalColor();
         registerAccount();
 
     }
@@ -52,18 +46,6 @@ public class SignUpActivity extends AppCompatActivity {
         validate_email = false;
         validate_password = false;
         validate_confirm_password = false;
-    }
-
-    //create error color which will used as icon color when error shown
-    public void iconErrorColor() {
-        int redColor = getResources().getColor(R.color.red);
-        errorColorStateList = ColorStateList.valueOf(redColor);
-    }
-
-    //create normal color which will used as icon color when no error occurs
-    public void iconNormalColor() {
-        int whiteColor = getResources().getColor(R.color.white);
-        normalColorStateList = ColorStateList.valueOf(whiteColor);
     }
 
     //run when user click on register button
@@ -99,7 +81,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //show error msg and error icon color in full name field
     public void showFullNameError(String errorMsg) {
-        binding.fullNameLayout.setErrorIconTintList(errorColorStateList);
+        binding.fullNameLayout.setErrorIconTintList(util.iconRedColor(this));
         binding.fullNameLayout.setError(errorMsg);
         validate_full_name = false;
     }
@@ -125,7 +107,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //show error msg and error icon color in email field
     public void showEmailError(String errorMsg) {
-        binding.emailLayout.setErrorIconTintList(errorColorStateList);
+        binding.emailLayout.setErrorIconTintList(util.iconRedColor(this));
         binding.emailLayout.setError(errorMsg);
         validate_email = false;
     }
@@ -176,7 +158,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //show error msg and hide error icon in password field
     public void showPasswordError(String errorMsg) {
-        binding.passwordLayout.setEndIconTintList(errorColorStateList);
+        binding.passwordLayout.setEndIconTintList(util.iconRedColor(this));
         binding.passwordLayout.setError(errorMsg);
         binding.passwordLayout.setErrorIconDrawable(null);
         validate_password = false;
@@ -184,7 +166,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //hide msg in password field when no error occurs
     public void removePasswordError() {
-        binding.passwordLayout.setEndIconTintList(normalColorStateList);
+        binding.passwordLayout.setEndIconTintList(util.iconWhiteColor(this));
         binding.passwordLayout.setError(null);
         validate_password = true;
     }
@@ -206,7 +188,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //show error msg and hide error icon in confirm password field
     public void showConfirmPasswordError(String errorMsg) {
-        binding.confirmPasswordLayout.setEndIconTintList(errorColorStateList);
+        binding.confirmPasswordLayout.setEndIconTintList(util.iconRedColor(this));
         binding.confirmPasswordLayout.setError(errorMsg);
         binding.confirmPasswordLayout.setErrorIconDrawable(null);
         validate_confirm_password = false;
@@ -214,7 +196,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //hide msg in confirm password field when no error occurs
     public void removeConfirmPasswordError() {
-        binding.confirmPasswordLayout.setEndIconTintList(normalColorStateList);
+        binding.confirmPasswordLayout.setEndIconTintList(util.iconWhiteColor(this));
         binding.confirmPasswordLayout.setError(null);
         validate_confirm_password = true;
     }
@@ -224,12 +206,13 @@ public class SignUpActivity extends AppCompatActivity {
     public void createAccount() {
         showLoadingBar();
 
-        Call<Result> createAccountCallable = HttpClient.getInstance().createUserAccount(binding.fullNameEdit.getText().toString().toLowerCase(),
+        Call<CreateAccountResult> createAccountCallable = HttpClient.getInstance().createAccount(binding.fullNameEdit.getText().toString().toLowerCase(),
                 binding.emailEdit.getText().toString().toLowerCase(), binding.passwordEdit.getText().toString());
-        createAccountCallable.enqueue(new Callback<Result>() {
+
+        createAccountCallable.enqueue(new Callback<CreateAccountResult>() {
             @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                Result result = response.body();
+            public void onResponse(Call<CreateAccountResult> call, Response<CreateAccountResult> response) {
+                CreateAccountResult result = response.body();
                 if (result.isSuccessful()) {
                     Toast.makeText(SignUpActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
                     MoveToLoginActivity();
@@ -242,7 +225,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Result> call, Throwable t) {
+            public void onFailure(Call<CreateAccountResult> call, Throwable t) {
                 Toast.makeText(SignUpActivity.this, "Unable to create account", Toast.LENGTH_SHORT).show();
                 hideLoadingBar();
             }
@@ -258,17 +241,27 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    // show progress bar
+    // show progress bar when user click on register button
     public void showLoadingBar() {
-        binding.signUpBarLayout.setVisibility(View.VISIBLE);
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
+        binding.fullNameEdit.setEnabled(false);
+        binding.emailEdit.setEnabled(false);
+        binding.passwordEdit.setEnabled(false);
+        binding.confirmPasswordEdit.setEnabled(false);
+        binding.registerBtn.setEnabled(false);
     }
 
-    //hide progressbar
+    //hide progressbar when signup is complete and move to Login Activity or error occurs
     public void hideLoadingBar() {
-        binding.signUpBarLayout.setVisibility(View.GONE);
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
+        binding.fullNameEdit.setEnabled(true);
+        binding.emailEdit.setEnabled(true);
+        binding.passwordEdit.setEnabled(true);
+        binding.confirmPasswordEdit.setEnabled(true);
+        binding.registerBtn.setEnabled(true);
     }
 
-    //check internet connection and create account
+    //check internet connection and then create account in database
     public void checkConnectionAndCreateAccount() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {

@@ -33,6 +33,9 @@
         android:theme="@style/TextInputLayoutStyle"
         app:boxBackgroundMode="outline"
         app:boxStrokeColor="@color/white"
+        app:boxStrokeErrorColor="@color/red"
+        app:errorEnabled="true"
+        app:errorTextColor="@color/red"
         app:hintTextColor="@color/white">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -58,7 +61,10 @@
         android:theme="@style/TextInputLayoutStyle"
         app:boxBackgroundMode="outline"
         app:boxStrokeColor="@color/white"
+        app:boxStrokeErrorColor="@color/red"
         app:endIconMode="password_toggle"
+        app:errorEnabled="true"
+        app:errorTextColor="@color/red"
         app:hintTextColor="@color/white"
         app:passwordToggleEnabled="true">
 
@@ -175,6 +181,10 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone" />
+
+    <include
+        android:id="@+id/loading_progress_bar"
+        layout="@layout/loading_progress_bar" />
 
 
 </RelativeLayout>

@@ -1,8 +1,6 @@
 package com.example.smartcitytravel.AWSService.DataModel;
 
-import com.google.gson.annotations.SerializedName;
-
-public class Result {
+public class CreateAccountResult {
     private boolean successful;
     private String errorMsg;
 

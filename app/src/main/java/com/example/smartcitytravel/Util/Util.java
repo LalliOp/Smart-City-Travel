@@ -1,14 +1,15 @@
 package com.example.smartcitytravel.Util;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.StrictMode;
 
+import com.example.smartcitytravel.R;
+
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Util {
     public Util() {
@@ -30,13 +31,23 @@ public class Util {
 
     //try to connect with google server to confirm internet connection is working
     public boolean isInternetAvailable() {
-        StrictMode.ThreadPolicy threadPolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(threadPolicy);
         try {
             InetAddress address = InetAddress.getByName("www.google.com");
-            return address.isReachable(150);
+            return address.isReachable(200);
         } catch (IOException e) {
             return false;
         }
+    }
+
+    //create error color which will used as icon color when error shown
+    public ColorStateList iconRedColor(Context context) {
+        int redColor = context.getResources().getColor(R.color.red);
+        return ColorStateList.valueOf(redColor);
+    }
+
+    //create normal color which will used as icon color when no error occurs
+    public ColorStateList iconWhiteColor(Context context) {
+        int whiteColor = context.getResources().getColor(R.color.white);
+        return ColorStateList.valueOf(whiteColor);
     }
 }

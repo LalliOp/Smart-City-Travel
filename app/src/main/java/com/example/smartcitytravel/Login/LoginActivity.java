@@ -1,6 +1,7 @@
 package com.example.smartcitytravel.Login;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,10 +11,15 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.smartcitytravel.AWSService.DataModel.VerifyAccountResult;
+import com.example.smartcitytravel.AWSService.Http.HttpClient;
+import com.example.smartcitytravel.Dialogs.Dialog;
 import com.example.smartcitytravel.Home.HomeActivity;
 import com.example.smartcitytravel.SignUp.SignUpActivity;
+import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityLoginBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -22,8 +28,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
+    private boolean validate_email;
+    private boolean validate_password;
+    private Util util;
 
     //run when launch() function is called by GoogleSignUpActivityResult
     private ActivityResultLauncher<Intent> GoogleSignUpActivityResult = registerForActivityResult(
@@ -31,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    binding.googleSignUpLoading.setVisibility(View.GONE);
+                    hideGoogleSignUpLoading();
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         getGoogleSignUpResult(result);
                         moveToHomeActivity();
@@ -46,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        util = new Util();
         setEmail();
         login();
         signUpWithGoogle();
@@ -67,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
         binding.googleImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.googleSignUpLoading.setVisibility(View.VISIBLE);
+                showGoogleSignUpLoading();
 
                 GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestEmail()
@@ -96,15 +113,40 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    // show progress bar when user click on signUp with Google Account
+    public void showGoogleSignUpLoading() {
+        binding.googleSignUpLoading.setVisibility(View.VISIBLE);
+        binding.emailEdit.setEnabled(false);
+        binding.passwordEdit.setEnabled(false);
+    }
+
+    //hide progress bar when signUp with Google Account is complete or user press back button
+    public void hideGoogleSignUpLoading() {
+        binding.googleSignUpLoading.setVisibility(View.GONE);
+        binding.emailEdit.setEnabled(true);
+        binding.passwordEdit.setEnabled(true);
+    }
+
     //TODO:complete login
     public void login() {
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (binding.emailEdit.getText().toString().length() >= 1) {
-                    Toast.makeText(LoginActivity.this, binding.emailEdit.getText().toString(), Toast.LENGTH_SHORT).show();
-                    moveToHomeActivity();
+                if (binding.emailEdit.getText().toString().isEmpty()) {
+                    showEmailEmptyError("Error! Empty Email");
+                } else {
+                    hideEmailEmptyError();
                 }
+                if (binding.passwordEdit.getText().toString().isEmpty()) {
+                    showPasswordEmptyError("Error! Empty Password");
+                } else {
+                    hidePasswordEmptyError();
+                }
+                if (!binding.emailEdit.getText().toString().isEmpty() &&
+                        !binding.passwordEdit.getText().toString().isEmpty()) {
+                    checkConnectionAndVerifyAccount();
+                }
+
             }
         });
     }
@@ -126,5 +168,101 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    //show error msg and error icon color in email field when email field is empty
+    public void showEmailEmptyError(String errorMsg) {
+        binding.emailLayout.setErrorIconTintList(util.iconRedColor(this));
+        binding.emailLayout.setError(errorMsg);
+    }
+
+    //hide error icon color and msg in email field when email field is not empty
+    public void hideEmailEmptyError() {
+        binding.emailLayout.setError(null);
+    }
+
+    //show error msg and hide error icon in password field when password field is empty
+    public void showPasswordEmptyError(String errorMsg) {
+        binding.passwordLayout.setEndIconTintList(util.iconRedColor(this));
+        binding.passwordLayout.setError(errorMsg);
+        binding.passwordLayout.setErrorIconDrawable(null);
+    }
+
+    //hide msg in password field when password field is not empty
+    public void hidePasswordEmptyError() {
+        binding.passwordLayout.setEndIconTintList(util.iconWhiteColor(this));
+        binding.passwordLayout.setError(null);
+    }
+
+    public void verifySignIn() {
+        showSignInLoadingBar();
+        Call<VerifyAccountResult> verifyAccountResultCallable = HttpClient.getInstance().verifyAccount(binding.emailEdit.getText().toString().toLowerCase(),
+                binding.passwordEdit.getText().toString());
+
+        verifyAccountResultCallable.enqueue(new Callback<VerifyAccountResult>() {
+            @Override
+            public void onResponse(Call<VerifyAccountResult> call, Response<VerifyAccountResult> response) {
+                VerifyAccountResult result = response.body();
+                if (result.getAccount_status() == 1) {
+                    moveToHomeActivity();
+                } else if (result.getAccount_status() == 0) {
+                    showPasswordEmptyError("Error! " + result.getErrorMsg());
+                } else if (result.getAccount_status() == -1) {
+                    createErrorDialog("Account","There are no account exist with this email");
+                }
+                hideSignInLoadingBar();
+            }
+
+            @Override
+            public void onFailure(Call<VerifyAccountResult> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "Unable to sign in", Toast.LENGTH_SHORT).show();
+                hideSignInLoadingBar();
+            }
+        });
+    }
+
+    //check internet connection and then verify account by database
+    public void checkConnectionAndVerifyAccount() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Boolean connectionAvailable = util.isConnectionAvailable(LoginActivity.this);
+
+                LoginActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (connectionAvailable) {
+                            verifySignIn();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+        executor.shutdown();
+    }
+
+    public void createErrorDialog(String title, String message) {
+        Dialog dialog = new Dialog(title, message);
+        dialog.show(getSupportFragmentManager(), "dialog");
+        dialog.setCancelable(false);
+    }
+
+    // show progress bar when user click on login button
+    public void showSignInLoadingBar() {
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
+        binding.emailEdit.setEnabled(false);
+        binding.passwordEdit.setEnabled(false);
+        binding.loginBtn.setEnabled(false);
+    }
+
+    //hide progressbar when login complete and move to home activity or error occurs
+    public void hideSignInLoadingBar() {
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
+        binding.emailEdit.setEnabled(true);
+        binding.passwordEdit.setEnabled(true);
+        binding.loginBtn.setEnabled(true);
     }
 }
