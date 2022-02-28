@@ -6,10 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.AWSService.DataModel.Response;
+import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Login.LoginActivity;
 import com.example.smartcitytravel.R;
@@ -21,6 +20,7 @@ import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
     private ActivitySignUpBinding binding;
@@ -223,25 +223,28 @@ public class SignUpActivity extends AppCompatActivity {
     // and move to Login Activity if account created successfully
     public void createAccount() {
         showLoadingBar();
-        HttpClient.getInstance().createUserAccount(binding.fullNameEdit.getText().toString(),
-                binding.emailEdit.getText().toString(), binding.passwordEdit.getText().toString()).enqueue(new Callback<Response>() {
+
+        Call<Result> createAccountCallable = HttpClient.getInstance().createUserAccount(binding.fullNameEdit.getText().toString().toLowerCase(),
+                binding.emailEdit.getText().toString().toLowerCase(), binding.passwordEdit.getText().toString());
+        createAccountCallable.enqueue(new Callback<Result>() {
             @Override
-            public void onResponse(@NonNull Call<Response> call, @NonNull retrofit2.Response<Response> response) {
-                if (response.body().isSuccessful()) {
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                Result result = response.body();
+                if (result.isSuccessful()) {
                     Toast.makeText(SignUpActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
                     MoveToLoginActivity();
                 } else {
-                    Toast.makeText(SignUpActivity.this, "Unable to create account", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, result.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                    showEmailError("Error! " + result.getErrorMsg());
+
                 }
                 hideLoadingBar();
-
             }
 
             @Override
-            public void onFailure(@NonNull Call<Response> call, @NonNull Throwable t) {
+            public void onFailure(Call<Result> call, Throwable t) {
                 Toast.makeText(SignUpActivity.this, "Unable to create account", Toast.LENGTH_SHORT).show();
                 hideLoadingBar();
-
             }
         });
     }

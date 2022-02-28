@@ -34,7 +34,7 @@ public class Util {
         StrictMode.setThreadPolicy(threadPolicy);
         try {
             InetAddress address = InetAddress.getByName("www.google.com");
-            return address.isReachable(100);
+            return address.isReachable(150);
         } catch (IOException e) {
             return false;
         }
