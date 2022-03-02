@@ -180,5 +180,4 @@
         android:id="@+id/loading_progress_bar"
         layout="@layout/loading_progress_bar" />
 
-
 </RelativeLayout>

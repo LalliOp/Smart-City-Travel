@@ -1,6 +1,7 @@
 package com.example.smartcitytravel.Login;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -238,7 +239,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //check whether account exist or not
     public void verifySignIn() {
-        showSignInLoadingBar();
+        showLoginLoadingBar();
         Call<Result> verifyAccountResultCallable = HttpClient.getInstance().verifyAccount(binding.emailEdit.getText().toString().toLowerCase(),
                 binding.passwordEdit.getText().toString());
 
@@ -256,13 +257,13 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (result.getAccount_status() == 2) {
                     createErrorDialog("Account", "Google account exist with this email. " + result.getMessage());
                 }
-                hideSignInLoadingBar();
+                hideLoginLoadingBar();
             }
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
                 Toast.makeText(LoginActivity.this, "Unable to sign in", Toast.LENGTH_SHORT).show();
-                hideSignInLoadingBar();
+                hideLoginLoadingBar();
             }
         });
     }
@@ -297,7 +298,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // show progress bar when user click on login button
-    public void showSignInLoadingBar() {
+    public void showLoginLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
         binding.emailEdit.setEnabled(false);
         binding.passwordEdit.setEnabled(false);
@@ -305,7 +306,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //hide progressbar when login complete and move to home activity or error occurs
-    public void hideSignInLoadingBar() {
+    public void hideLoginLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
         binding.emailEdit.setEnabled(true);
         binding.passwordEdit.setEnabled(true);
