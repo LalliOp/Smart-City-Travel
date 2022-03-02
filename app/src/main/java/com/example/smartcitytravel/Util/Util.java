@@ -8,8 +8,8 @@ import android.net.NetworkInfo;
 
 import com.example.smartcitytravel.R;
 
-import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class Util {
     public Util() {
@@ -33,8 +33,8 @@ public class Util {
     public boolean isInternetAvailable() {
         try {
             InetAddress address = InetAddress.getByName("www.google.com");
-            return address.isReachable(1000);
-        } catch (IOException e) {
+            return !address.toString().equals("");
+        } catch (UnknownHostException e) {
             return false;
         }
     }

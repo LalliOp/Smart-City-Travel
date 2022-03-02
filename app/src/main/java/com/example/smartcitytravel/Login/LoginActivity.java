@@ -1,7 +1,6 @@
 package com.example.smartcitytravel.Login;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -275,7 +274,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Boolean connectionAvailable = util.isConnectionAvailable(LoginActivity.this);
-
                 LoginActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
