@@ -1,8 +1,8 @@
 package com.example.smartcitytravel.Login;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -11,13 +11,13 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.AWSService.DataModel.VerifyAccountResult;
+import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Dialogs.Dialog;
 import com.example.smartcitytravel.Home.HomeActivity;
+import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.SignUp.SignUpActivity;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityLoginBinding;
@@ -37,19 +37,19 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
-    private boolean validate_email;
-    private boolean validate_password;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
     private Util util;
 
     //run when launch() function is called by GoogleSignUpActivityResult
-    private ActivityResultLauncher<Intent> GoogleSignUpActivityResult = registerForActivityResult(
+    private ActivityResultLauncher<Intent> GoogleSignInActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    hideGoogleSignUpLoading();
+                    hideGoogleSignInLoading();
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        getGoogleSignUpResult(result);
+                        getGoogleSignInResult(result);
                         moveToHomeActivity();
                     }
                 }
@@ -62,10 +62,12 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        sharedPreferences = getSharedPreferences(getString(R.string.MY_PREFERENCE), MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         util = new Util();
         setEmail();
         login();
-        signUpWithGoogle();
+        signInWithGoogle();
         signUp();
     }
 
@@ -80,11 +82,11 @@ public class LoginActivity extends AppCompatActivity {
 
     /* called when user click on google icon
      * allow user to signUp or signIn with google account*/
-    public void signUpWithGoogle() {
+    public void signInWithGoogle() {
         binding.googleImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showGoogleSignUpLoading();
+                showGoogleSignInLoading();
 
                 GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestEmail()
@@ -94,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 Intent signInIntent = googleSignInClient.getSignInIntent();
 
-                GoogleSignUpActivityResult.launch(signInIntent);
+                GoogleSignInActivityResult.launch(signInIntent);
 
             }
         });
@@ -102,32 +104,80 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Return object whether user successfully signIn or signUp with google account or throw exception
-    public void getGoogleSignUpResult(ActivityResult result) {
+    public void getGoogleSignInResult(ActivityResult result) {
         Task<GoogleSignInAccount> googleSignInAccountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
 
         try {
             GoogleSignInAccount googleSignInAccount = googleSignInAccountTask.getResult(ApiException.class);
-            Toast.makeText(LoginActivity.this, googleSignInAccount.getEmail(), Toast.LENGTH_SHORT).show();
+            checkConnectionAndSaveGoogleAccount(googleSignInAccount);
+
         } catch (ApiException e) {
-            Toast.makeText(LoginActivity.this, e.getStatusCode(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Unable to Sign In with Google", Toast.LENGTH_SHORT).show();
         }
     }
 
     // show progress bar when user click on signUp with Google Account
-    public void showGoogleSignUpLoading() {
-        binding.googleSignUpLoading.setVisibility(View.VISIBLE);
+    public void showGoogleSignInLoading() {
+        binding.googleSignInLoading.setVisibility(View.VISIBLE);
         binding.emailEdit.setEnabled(false);
         binding.passwordEdit.setEnabled(false);
     }
 
     //hide progress bar when signUp with Google Account is complete or user press back button
-    public void hideGoogleSignUpLoading() {
-        binding.googleSignUpLoading.setVisibility(View.GONE);
+    public void hideGoogleSignInLoading() {
+        binding.googleSignInLoading.setVisibility(View.GONE);
         binding.emailEdit.setEnabled(true);
         binding.passwordEdit.setEnabled(true);
     }
 
-    //TODO:complete login
+    // save google account details in database when user login with google account
+    public void saveGoogleAccount(GoogleSignInAccount googleSignInAccount) {
+
+        Call<Result> createAccountCallable = HttpClient.getInstance().createAccount(googleSignInAccount.getDisplayName().toLowerCase(),
+                googleSignInAccount.getEmail().toLowerCase(), "0", "1");
+
+        createAccountCallable.enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                if (response.body().getAccount_status() == 0) {
+                    editor.putString(getString(R.string.LOGIN_KEY), "");
+                    editor.putInt(getString(R.string.LOGIN_TYPE_KEY), 1);
+                    editor.apply();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Result> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "Unable to save google account details", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    //first check internet connection and then save google account details
+    public void checkConnectionAndSaveGoogleAccount(GoogleSignInAccount googleSignInAccount) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Boolean connectionAvailable = util.isConnectionAvailable(LoginActivity.this);
+
+                LoginActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (connectionAvailable) {
+                            saveGoogleAccount(googleSignInAccount);
+                        } else {
+                            Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+        executor.shutdown();
+    }
+
+    //run by user click on login button
+    //check email and password is not empty, check internet connection and then verify account by database
     public void login() {
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,27 +244,34 @@ public class LoginActivity extends AppCompatActivity {
         binding.passwordLayout.setError(null);
     }
 
+    //check whether account exist or not
     public void verifySignIn() {
         showSignInLoadingBar();
-        Call<VerifyAccountResult> verifyAccountResultCallable = HttpClient.getInstance().verifyAccount(binding.emailEdit.getText().toString().toLowerCase(),
+        Call<Result> verifyAccountResultCallable = HttpClient.getInstance().verifyAccount(binding.emailEdit.getText().toString().toLowerCase(),
                 binding.passwordEdit.getText().toString());
 
-        verifyAccountResultCallable.enqueue(new Callback<VerifyAccountResult>() {
+        verifyAccountResultCallable.enqueue(new Callback<Result>() {
             @Override
-            public void onResponse(Call<VerifyAccountResult> call, Response<VerifyAccountResult> response) {
-                VerifyAccountResult result = response.body();
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                Result result = response.body();
                 if (result.getAccount_status() == 1) {
+                    editor.putString(getString(R.string.LOGIN_KEY), binding.emailEdit.getText().toString().toLowerCase());
+                    editor.putInt(getString(R.string.LOGIN_TYPE_KEY), 0);
+                    editor.apply();
+
                     moveToHomeActivity();
                 } else if (result.getAccount_status() == 0) {
-                    showPasswordEmptyError("Error! " + result.getErrorMsg());
+                    createErrorDialog("Account", result.getMessage());
                 } else if (result.getAccount_status() == -1) {
-                    createErrorDialog("Account","There are no account exist with this email");
+                    createErrorDialog("Account", "There are no account exist with this email");
+                } else if (result.getAccount_status() == 2) {
+                    createErrorDialog("Account", "Google account exist with this email. " + result.getMessage());
                 }
                 hideSignInLoadingBar();
             }
 
             @Override
-            public void onFailure(Call<VerifyAccountResult> call, Throwable t) {
+            public void onFailure(Call<Result> call, Throwable t) {
                 Toast.makeText(LoginActivity.this, "Unable to sign in", Toast.LENGTH_SHORT).show();
                 hideSignInLoadingBar();
             }

@@ -7,8 +7,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.AWSService.DataModel.CreateAccountResult;
+import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
+import com.example.smartcitytravel.Dialogs.Dialog;
 import com.example.smartcitytravel.Login.LoginActivity;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivitySignUpBinding;
@@ -206,26 +207,27 @@ public class SignUpActivity extends AppCompatActivity {
     public void createAccount() {
         showLoadingBar();
 
-        Call<CreateAccountResult> createAccountCallable = HttpClient.getInstance().createAccount(binding.fullNameEdit.getText().toString().toLowerCase(),
-                binding.emailEdit.getText().toString().toLowerCase(), binding.passwordEdit.getText().toString());
+        Call<Result> createAccountCallable = HttpClient.getInstance().createAccount(binding.fullNameEdit.getText().toString().toLowerCase(),
+                binding.emailEdit.getText().toString().toLowerCase(), binding.passwordEdit.getText().toString(), "0");
 
-        createAccountCallable.enqueue(new Callback<CreateAccountResult>() {
+        createAccountCallable.enqueue(new Callback<Result>() {
             @Override
-            public void onResponse(Call<CreateAccountResult> call, Response<CreateAccountResult> response) {
-                CreateAccountResult result = response.body();
-                if (result.isSuccessful()) {
+            public void onResponse(Call<Result> call, Response<Result> response) {
+                Result result = response.body();
+                if (result.getAccount_status() == 0) {
                     Toast.makeText(SignUpActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
                     MoveToLoginActivity();
-                } else {
-                    Toast.makeText(SignUpActivity.this, result.getErrorMsg(), Toast.LENGTH_SHORT).show();
-                    showEmailError("Error! " + result.getErrorMsg());
+                } else if (result.getAccount_status() == 1) {
+                    createErrorDialog("Account", "Error! " + result.getMessage());
 
+                } else if (result.getAccount_status() == 3) {
+                    createErrorDialog("Account", "Google account exist with this email. " + result.getMessage());
                 }
                 hideLoadingBar();
             }
 
             @Override
-            public void onFailure(Call<CreateAccountResult> call, Throwable t) {
+            public void onFailure(Call<Result> call, Throwable t) {
                 Toast.makeText(SignUpActivity.this, "Unable to create account", Toast.LENGTH_SHORT).show();
                 hideLoadingBar();
             }
@@ -282,6 +284,12 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
         executor.shutdown();
+    }
+
+    public void createErrorDialog(String title, String message) {
+        Dialog dialog = new Dialog(title, message);
+        dialog.show(getSupportFragmentManager(), "dialog");
+        dialog.setCancelable(false);
     }
 
 }

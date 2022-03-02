@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.StrictMode;
 
 import com.example.smartcitytravel.R;
 
@@ -33,7 +32,7 @@ public class Util {
     public boolean isInternetAvailable() {
         try {
             InetAddress address = InetAddress.getByName("www.google.com");
-            return address.isReachable(200);
+            return address.isReachable(1000);
         } catch (IOException e) {
             return false;
         }
@@ -50,4 +49,5 @@ public class Util {
         int whiteColor = context.getResources().getColor(R.color.white);
         return ColorStateList.valueOf(whiteColor);
     }
+
 }

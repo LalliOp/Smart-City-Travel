@@ -17,4 +17,8 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="register">Register</string>
     <string name="error">Error</string>
+    <string name="sign_in_with">Sign In with</string>
+    <string name="LOGIN_KEY">login_email</string>
+    <string name="LOGIN_TYPE_KEY">login_type</string>
+    <string name="MY_PREFERENCE">my_preference</string>
 </resources>

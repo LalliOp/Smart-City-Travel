@@ -122,20 +122,20 @@
         android:textSize="17sp" />
 
     <TextView
-        android:id="@+id/signUpWithTxt"
+        android:id="@+id/signInWithTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/orTxt"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="@string/signup_with"
+        android:text="@string/sign_in_with"
         android:textStyle="bold" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/googleImg"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_below="@id/signUpWithTxt"
+        android:layout_below="@id/signInWithTxt"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="7dp"
         android:background="?attr/selectableItemBackground"
@@ -176,7 +176,7 @@
     </RelativeLayout>
 
     <ProgressBar
-        android:id="@+id/googleSignUpLoading"
+        android:id="@+id/googleSignInLoading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
