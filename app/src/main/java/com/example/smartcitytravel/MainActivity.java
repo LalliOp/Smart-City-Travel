@@ -1,7 +1,6 @@
 package com.example.smartcitytravel;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -23,8 +22,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
     private Util util;
 
     @Override
@@ -32,34 +29,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         util = new Util();
-        sharedPreferences = getSharedPreferences(getString(R.string.MY_PREFERENCE), MODE_PRIVATE);
-        editor = sharedPreferences.edit();
-        firstTimeRunSetup();
         checkUserAlreadySignIn();
-    }
-
-    //This run only one time when app run very first time after installation
-    public void firstTimeRunSetup() {
-        final String FIRST_RUN_KEY = "first_run";
-        boolean firstRun = sharedPreferences.getBoolean(FIRST_RUN_KEY, true);
-        if (firstRun) {
-
-            Toast.makeText(this, "FIRST TIME RUN", Toast.LENGTH_SHORT).show();
-            editor.putBoolean(FIRST_RUN_KEY, false);
-            editor.apply();
-        }
-
     }
 
     //Check whether user is already sign in
     public void checkUserAlreadySignIn() {
         GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
-        int login_type = sharedPreferences.getInt(getString(R.string.LOGIN_TYPE_KEY), -1);
 
         if (googleSignInAccount != null) {
             checkConnectionAndSaveGoogleAccount(googleSignInAccount);
             moveToHomeActivity();
-        } else if (login_type == 0) {
+        } else if (!util.getLoginEmailPreference(this).isEmpty()) {
             moveToHomeActivity();
         } else {
             moveToLoginActivity();
@@ -89,9 +69,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.body().getAccount_status() == 0) {
-                    editor.putString(getString(R.string.LOGIN_KEY), "");
-                    editor.putInt(getString(R.string.LOGIN_TYPE_KEY), 1);
-                    editor.apply();
+                    util.setLoginEmailPreference("", MainActivity.this);
                 }
             }
 

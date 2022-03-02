@@ -1,16 +1,14 @@
 package com.example.smartcitytravel.Home;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.Login.LoginActivity;
-import com.example.smartcitytravel.R;
+import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityHomeBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -20,8 +18,7 @@ import com.google.android.gms.tasks.Task;
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
+    private Util util;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,18 +26,14 @@ public class HomeActivity extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        sharedPreferences = getSharedPreferences(getString(R.string.MY_PREFERENCE), MODE_PRIVATE);
-        editor = sharedPreferences.edit();
+        util = new Util();
 
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                int login_type = sharedPreferences.getInt(getString(R.string.LOGIN_TYPE_KEY), -1);
-                if (login_type == 0) {
-                    editor.putString(getString(R.string.LOGIN_KEY), "");
-                    editor.putInt(getString(R.string.LOGIN_TYPE_KEY), -1);
-                    editor.apply();
+                if (!util.getLoginEmailPreference(HomeActivity.this).isEmpty()) {
+                    util.setLoginEmailPreference("", HomeActivity.this);
 
                     moveToLoginActivity();
                 } else {

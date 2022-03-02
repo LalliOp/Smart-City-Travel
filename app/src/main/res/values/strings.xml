@@ -18,7 +18,6 @@
     <string name="register">Register</string>
     <string name="error">Error</string>
     <string name="sign_in_with">Sign In with</string>
-    <string name="LOGIN_KEY">login_email</string>
-    <string name="LOGIN_TYPE_KEY">login_type</string>
+    <string name="LOGIN_EMAIL_KEY">login_email_key</string>
     <string name="MY_PREFERENCE">my_preference</string>
 </resources>
