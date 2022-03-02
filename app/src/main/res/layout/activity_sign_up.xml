@@ -141,7 +141,7 @@
         android:layout_below="@+id/confirmPasswordLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:backgroundTint="@color/gray"
+        android:backgroundTint="@color/light_white"
         android:text="@string/register"
         android:textColor="@color/black"
         android:textSize="19sp" />
