@@ -16,7 +16,6 @@
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:alpha="0.6"
-            android:contentDescription="@string/image_of_badshahi_mosque"
             android:scaleType="centerCrop"
             android:src="@drawable/login_background" />
 

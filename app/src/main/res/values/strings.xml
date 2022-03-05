@@ -19,7 +19,9 @@
     <string name="error">Error</string>
     <string name="sign_in_with">Sign In with</string>
     <string name="LOGIN_EMAIL_KEY">login_email_key</string>
-    <string name="MY_PREFERENCE">my_preference</string>
+    <string name="LOGIN_PREFERENCE">login_preference</string>
     <string name="reset_password">Reset your password</string>
     <string name="forget_password">Forget password?</string>
+    <string name="reset_your_password">Reset your password</string>
+    <string name="continue_">Continue</string>
 </resources>

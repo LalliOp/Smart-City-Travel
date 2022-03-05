@@ -16,6 +16,7 @@ import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Dialogs.Dialog;
 import com.example.smartcitytravel.Home.HomeActivity;
+import com.example.smartcitytravel.ResetPassword.EmailActivity;
 import com.example.smartcitytravel.SignUp.SignUpActivity;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityLoginBinding;
@@ -58,6 +59,9 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+//        Intent intent = new Intent(this, EmailActivity.class);
+//        startActivity(intent);
+
         util = new Util();
         setEmail();
         login();
@@ -80,21 +84,48 @@ public class LoginActivity extends AppCompatActivity {
         binding.googleImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showGoogleSignInLoading();
-
-                GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .build();
-
-                GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(LoginActivity.this, googleSignInOptions);
-
-                Intent signInIntent = googleSignInClient.getSignInIntent();
-
-                GoogleSignInActivityResult.launch(signInIntent);
-
+                checkConnectionAndSignInWithGoogle();
             }
         });
 
+    }
+
+    //check internet connection and then start google sign in service
+    public void checkConnectionAndSignInWithGoogle() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Boolean connectionAvailable = util.isConnectionAvailable(LoginActivity.this);
+
+                LoginActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (connectionAvailable) {
+                            initializeGoogleSignIn();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+        executor.shutdown();
+    }
+
+    // starting google sign in service
+    public void initializeGoogleSignIn() {
+        showGoogleSignInLoading();
+
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(LoginActivity.this, googleSignInOptions);
+
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+
+        GoogleSignInActivityResult.launch(signInIntent);
     }
 
     //Return object whether user successfully signIn or signUp with google account or throw exception
@@ -237,7 +268,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //check whether account exist or not
-    public void verifySignIn() {
+    public void verifyLogin() {
         showLoginLoadingBar();
         Call<Result> verifyAccountResultCallable = HttpClient.getInstance().verifyAccount(binding.emailEdit.getText().toString().toLowerCase(),
                 binding.passwordEdit.getText().toString());
@@ -278,7 +309,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (connectionAvailable) {
-                            verifySignIn();
+                            verifyLogin();
                         } else {
                             Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                         }
@@ -291,7 +322,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void createErrorDialog(String title, String message) {
         Dialog dialog = new Dialog(title, message);
-        dialog.show(getSupportFragmentManager(), "dialog");
+        dialog.show(getSupportFragmentManager(), "error_dialog");
         dialog.setCancelable(false);
     }
 
@@ -301,6 +332,9 @@ public class LoginActivity extends AppCompatActivity {
         binding.emailEdit.setEnabled(false);
         binding.passwordEdit.setEnabled(false);
         binding.loginBtn.setEnabled(false);
+        binding.restPasswordTxt.setEnabled(false);
+        binding.googleImg.setEnabled(false);
+        binding.signUpHereTxt.setEnabled(false);
     }
 
     //hide progressbar when login complete and move to home activity or error occurs
@@ -309,5 +343,8 @@ public class LoginActivity extends AppCompatActivity {
         binding.emailEdit.setEnabled(true);
         binding.passwordEdit.setEnabled(true);
         binding.loginBtn.setEnabled(true);
+        binding.restPasswordTxt.setEnabled(true);
+        binding.googleImg.setEnabled(true);
+        binding.signUpHereTxt.setEnabled(true);
     }
 }
