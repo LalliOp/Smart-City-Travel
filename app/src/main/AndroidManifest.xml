@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCityTravel">
         <activity
+            android:name=".ResetPassword.PinCodeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ResetPassword.EmailActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

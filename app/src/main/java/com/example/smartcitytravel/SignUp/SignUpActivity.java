@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
-import com.example.smartcitytravel.Dialogs.Dialog;
 import com.example.smartcitytravel.Login.LoginActivity;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivitySignUpBinding;
@@ -216,12 +215,12 @@ public class SignUpActivity extends AppCompatActivity {
                 Result result = response.body();
                 if (result.getAccount_status() == 0) {
                     Toast.makeText(SignUpActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
-                    MoveToLoginActivity();
+                    moveToLoginActivity();
                 } else if (result.getAccount_status() == 1) {
-                    createErrorDialog("Account", "Error! " + result.getMessage());
+                    util.createErrorDialog(SignUpActivity.this, "Account", "Error! " + result.getMessage());
 
                 } else if (result.getAccount_status() == 3) {
-                    createErrorDialog("Account", "Google account exist with this email. " + result.getMessage());
+                    util.createErrorDialog(SignUpActivity.this, "Account", "Google account exist with this email. " + result.getMessage());
                 }
                 hideLoadingBar();
             }
@@ -234,8 +233,9 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    //Move from SignUp Activity to Login Activity after checking each field contain valid characters
-    public void MoveToLoginActivity() {
+    //Move from SignUp Activity to Login Activity
+    //pass new created account email to Login Activity
+    public void moveToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra("email", binding.emailEdit.getText().toString());
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -246,21 +246,13 @@ public class SignUpActivity extends AppCompatActivity {
     // show progress bar when user click on register button
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
-        binding.fullNameEdit.setEnabled(false);
-        binding.emailEdit.setEnabled(false);
-        binding.passwordEdit.setEnabled(false);
-        binding.confirmPasswordEdit.setEnabled(false);
-        binding.registerBtn.setEnabled(false);
+        util.makeScreenNotTouchable(SignUpActivity.this);
     }
 
     //hide progressbar when signup is complete and move to Login Activity or error occurs
     public void hideLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
-        binding.fullNameEdit.setEnabled(true);
-        binding.emailEdit.setEnabled(true);
-        binding.passwordEdit.setEnabled(true);
-        binding.confirmPasswordEdit.setEnabled(true);
-        binding.registerBtn.setEnabled(true);
+        util.makeScreenTouchable(SignUpActivity.this);
     }
 
     //check internet connection and then create account in database
@@ -284,12 +276,6 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
         executor.shutdown();
-    }
-
-    public void createErrorDialog(String title, String message) {
-        Dialog dialog = new Dialog(title, message);
-        dialog.show(getSupportFragmentManager(), "dialog");
-        dialog.setCancelable(false);
     }
 
 }

@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
-import com.example.smartcitytravel.Dialogs.Dialog;
 import com.example.smartcitytravel.Home.HomeActivity;
 import com.example.smartcitytravel.ResetPassword.EmailActivity;
 import com.example.smartcitytravel.SignUp.SignUpActivity;
@@ -59,17 +58,16 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-//        Intent intent = new Intent(this, EmailActivity.class);
-//        startActivity(intent);
-
         util = new Util();
         setEmail();
         login();
         signInWithGoogle();
         signUp();
+        resetPassword();
     }
 
     // set email in email field in login activity when create account from signup activity and move to login activity
+    // get email which is passed by SignUp Activity
     public void setEmail() {
         if (getIntent().getExtras() != null) {
             String email = getIntent().getExtras().getString("email");
@@ -205,6 +203,7 @@ public class LoginActivity extends AppCompatActivity {
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                util.hideKeyboard(LoginActivity.this);
                 if (binding.emailEdit.getText().toString().isEmpty()) {
                     showEmailEmptyError("Error! Empty Email");
                 } else {
@@ -281,11 +280,11 @@ public class LoginActivity extends AppCompatActivity {
                     util.setLoginEmailPreference(binding.emailEdit.getText().toString().toLowerCase(), LoginActivity.this);
                     moveToHomeActivity();
                 } else if (result.getAccount_status() == 0) {
-                    createErrorDialog("Account", result.getMessage());
+                    util.createErrorDialog(LoginActivity.this, "Account", result.getMessage());
                 } else if (result.getAccount_status() == -1) {
-                    createErrorDialog("Account", "There are no account exist with this email");
+                    util.createErrorDialog(LoginActivity.this, "Account", "There are no account exist with this email");
                 } else if (result.getAccount_status() == 2) {
-                    createErrorDialog("Account", "Google account exist with this email. " + result.getMessage());
+                    util.createErrorDialog(LoginActivity.this, "Account", "Google account exist with this email. " + result.getMessage());
                 }
                 hideLoginLoadingBar();
             }
@@ -320,31 +319,27 @@ public class LoginActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    public void createErrorDialog(String title, String message) {
-        Dialog dialog = new Dialog(title, message);
-        dialog.show(getSupportFragmentManager(), "error_dialog");
-        dialog.setCancelable(false);
-    }
-
     // show progress bar when user click on login button
     public void showLoginLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
-        binding.emailEdit.setEnabled(false);
-        binding.passwordEdit.setEnabled(false);
-        binding.loginBtn.setEnabled(false);
-        binding.restPasswordTxt.setEnabled(false);
-        binding.googleImg.setEnabled(false);
-        binding.signUpHereTxt.setEnabled(false);
+        util.makeScreenNotTouchable(LoginActivity.this);
     }
 
     //hide progressbar when login complete and move to home activity or error occurs
     public void hideLoginLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
-        binding.emailEdit.setEnabled(true);
-        binding.passwordEdit.setEnabled(true);
-        binding.loginBtn.setEnabled(true);
-        binding.restPasswordTxt.setEnabled(true);
-        binding.googleImg.setEnabled(true);
-        binding.signUpHereTxt.setEnabled(true);
+        util.makeScreenTouchable(LoginActivity.this);
+    }
+
+    //move to reset password process
+    public void resetPassword() {
+        binding.restPasswordTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, EmailActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }

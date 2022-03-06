@@ -88,6 +88,7 @@
         android:textColor="@color/black"
         android:textSize="19sp" />
 
+
     <RelativeLayout
         android:id="@+id/forgetPasswordLayout"
         android:layout_width="wrap_content"
@@ -114,7 +115,7 @@
             android:clickable="true"
             android:focusable="true"
             android:text="@string/reset_password"
-            android:textColor="@color/light_orange"
+            android:textColor="@color/light_pink"
             android:textSize="13sp"
             android:theme="@style/WhiteRippleEffectTheme" />
     </RelativeLayout>

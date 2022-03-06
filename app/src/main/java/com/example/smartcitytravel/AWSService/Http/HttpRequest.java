@@ -1,5 +1,6 @@
 package com.example.smartcitytravel.AWSService.Http;
 
+import com.example.smartcitytravel.AWSService.DataModel.PinCodeResult;
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 
 import retrofit2.Call;
@@ -15,4 +16,9 @@ public interface HttpRequest {
     @GET("verify-account")
     Call<Result> verifyAccount(@Query("email") String email, @Query("password") String password);
 
+    @GET("verify-email")
+    Call<Result> verifyEmail(@Query("email") String email);
+
+    @GET("send-pin-code")
+    Call<PinCodeResult> sendPinCode(@Query("email") String email);
 }

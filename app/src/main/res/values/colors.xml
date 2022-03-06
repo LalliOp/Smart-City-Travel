@@ -12,7 +12,8 @@
     <color name="light_white">#D0D0D0</color>
     <color name="grey">#919191</color>
     <color name="red">#ff0033</color>
-    <color name="light_orange">#FE9676</color>
+    <color name="light_pink">#FE9676</color>
+    <color name="pink">#D98469</color>
     <color xmlns:tools="http://schemas.android.com/tools" name="mtrl_textinput_default_box_stroke_color" tools:override="true">
         @color/white
     </color>

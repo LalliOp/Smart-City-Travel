@@ -31,9 +31,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/logoLayout"
-        android:fontFamily="@font/segoe_ui"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
+        android:fontFamily="@font/segoe_ui"
         android:text="@string/reset_your_password"
         android:textSize="25sp" />
 
@@ -71,7 +71,7 @@
         android:layout_below="@+id/emailLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:backgroundTint="@color/orange"
+        android:backgroundTint="@color/pink"
         android:text="@string/continue_"
         android:textSize="19sp" />
 

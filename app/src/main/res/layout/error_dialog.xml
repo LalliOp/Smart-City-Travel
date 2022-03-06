@@ -7,19 +7,19 @@
         android:id="@+id/titleTxt"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:gravity="center"
+        android:layout_marginStart="15dp"
+        android:gravity="center_vertical"
         android:textColor="@color/black"
-        android:textSize="20sp"
+        android:textSize="21sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/messageTxt"
-        android:textSize="15sp"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
         android:layout_below="@+id/titleTxt"
-        android:textColor="@color/black" />
+        android:layout_marginHorizontal="15dp"
+        android:textColor="@color/black"
+        android:textSize="15sp" />
 
 </RelativeLayout>
