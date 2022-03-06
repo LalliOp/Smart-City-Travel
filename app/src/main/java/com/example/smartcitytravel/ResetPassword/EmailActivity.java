@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.smartcitytravel.AWSService.DataModel.PinCodeResult;
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
+import com.example.smartcitytravel.Util.Color;
+import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityEmailBinding;
 
@@ -24,6 +26,8 @@ import retrofit2.Response;
 public class EmailActivity extends AppCompatActivity {
     private ActivityEmailBinding binding;
     private Util util;
+    private Connection connection;
+    private Color color;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,9 @@ public class EmailActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         util = new Util();
+        connection = new Connection();
+        color = new Color();
+
         continueButtonClickListener();
     }
 
@@ -54,7 +61,7 @@ public class EmailActivity extends AppCompatActivity {
 
     //show error msg and error icon color in email field when email field is empty
     public void showEmailEmptyError(String errorMsg) {
-        binding.emailLayout.setErrorIconTintList(util.iconRedColor(this));
+        binding.emailLayout.setErrorIconTintList(color.iconRedColor(this));
         binding.emailLayout.setError(errorMsg);
     }
 
@@ -69,7 +76,7 @@ public class EmailActivity extends AppCompatActivity {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = util.isConnectionAvailable(EmailActivity.this);
+                Boolean connectionAvailable = connection.isConnectionAvailable(EmailActivity.this);
                 EmailActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

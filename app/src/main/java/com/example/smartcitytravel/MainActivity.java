@@ -10,8 +10,8 @@ import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Home.HomeActivity;
 import com.example.smartcitytravel.Login.LoginActivity;
-import com.example.smartcitytravel.ResetPassword.EmailActivity;
-import com.example.smartcitytravel.ResetPassword.PinCodeActivity;
+import com.example.smartcitytravel.Util.Connection;
+import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -25,12 +25,17 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private Util util;
+    private Connection connection;
+    private PreferenceHandler preferenceHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         util = new Util();
+        connection = new Connection();
+        preferenceHandler = new PreferenceHandler();
+
         checkUserAlreadySignIn();
     }
 
@@ -41,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         if (googleSignInAccount != null) {
             checkConnectionAndSaveGoogleAccount(googleSignInAccount);
             moveToHomeActivity();
-        } else if (!util.getLoginEmailPreference(this).isEmpty()) {
+        } else if (!preferenceHandler.getLoginEmailPreference(this).isEmpty()) {
             moveToHomeActivity();
         } else {
             moveToLoginActivity();
@@ -71,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.body().getAccount_status() == 0) {
-                    util.setLoginEmailPreference("", MainActivity.this);
+                    preferenceHandler.setLoginEmailPreference("", MainActivity.this);
                 }
             }
 
@@ -88,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = util.isConnectionAvailable(MainActivity.this);
+                Boolean connectionAvailable = connection.isConnectionAvailable(MainActivity.this);
 
                 MainActivity.this.runOnUiThread(new Runnable() {
                     @Override

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.PinCodeResult;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
+import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityPinCodeBinding;
 
@@ -23,6 +24,7 @@ import retrofit2.Response;
 public class PinCodeActivity extends AppCompatActivity {
     private ActivityPinCodeBinding binding;
     private Util util;
+    private Connection connection;
     private int pin_code;
     private String email;
 
@@ -33,6 +35,7 @@ public class PinCodeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         util = new Util();
+        connection = new Connection();
         getPinCodeAndEmail();
         Toast.makeText(PinCodeActivity.this, pin_code + "", Toast.LENGTH_LONG).show();
         continueButtonClickListener();
@@ -106,7 +109,7 @@ public class PinCodeActivity extends AppCompatActivity {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = util.isConnectionAvailable(PinCodeActivity.this);
+                Boolean connectionAvailable = connection.isConnectionAvailable(PinCodeActivity.this);
                 PinCodeActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

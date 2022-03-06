@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Login.LoginActivity;
+import com.example.smartcitytravel.Util.Color;
+import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivitySignUpBinding;
 
@@ -23,6 +25,8 @@ import retrofit2.Response;
 public class SignUpActivity extends AppCompatActivity {
     private ActivitySignUpBinding binding;
     private Util util;
+    private Connection connection;
+    private Color color;
     private boolean validate_full_name;
     private boolean validate_email;
     private boolean validate_password;
@@ -35,6 +39,9 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         util = new Util();
+        connection = new Connection();
+        color = new Color();
+
         initializeValidator();
         registerAccount();
 
@@ -81,7 +88,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //show error msg and error icon color in full name field
     public void showFullNameError(String errorMsg) {
-        binding.fullNameLayout.setErrorIconTintList(util.iconRedColor(this));
+        binding.fullNameLayout.setErrorIconTintList(color.iconRedColor(this));
         binding.fullNameLayout.setError(errorMsg);
         validate_full_name = false;
     }
@@ -107,7 +114,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //show error msg and error icon color in email field
     public void showEmailError(String errorMsg) {
-        binding.emailLayout.setErrorIconTintList(util.iconRedColor(this));
+        binding.emailLayout.setErrorIconTintList(color.iconRedColor(this));
         binding.emailLayout.setError(errorMsg);
         validate_email = false;
     }
@@ -158,7 +165,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //show error msg and hide error icon in password field
     public void showPasswordError(String errorMsg) {
-        binding.passwordLayout.setEndIconTintList(util.iconRedColor(this));
+        binding.passwordLayout.setEndIconTintList(color.iconRedColor(this));
         binding.passwordLayout.setError(errorMsg);
         binding.passwordLayout.setErrorIconDrawable(null);
         validate_password = false;
@@ -166,7 +173,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //hide msg in password field when no error occurs
     public void removePasswordError() {
-        binding.passwordLayout.setEndIconTintList(util.iconWhiteColor(this));
+        binding.passwordLayout.setEndIconTintList(color.iconWhiteColor(this));
         binding.passwordLayout.setError(null);
         validate_password = true;
     }
@@ -188,7 +195,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //show error msg and hide error icon in confirm password field
     public void showConfirmPasswordError(String errorMsg) {
-        binding.confirmPasswordLayout.setEndIconTintList(util.iconRedColor(this));
+        binding.confirmPasswordLayout.setEndIconTintList(color.iconRedColor(this));
         binding.confirmPasswordLayout.setError(errorMsg);
         binding.confirmPasswordLayout.setErrorIconDrawable(null);
         validate_confirm_password = false;
@@ -196,7 +203,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     //hide msg in confirm password field when no error occurs
     public void removeConfirmPasswordError() {
-        binding.confirmPasswordLayout.setEndIconTintList(util.iconWhiteColor(this));
+        binding.confirmPasswordLayout.setEndIconTintList(color.iconWhiteColor(this));
         binding.confirmPasswordLayout.setError(null);
         validate_confirm_password = true;
     }
@@ -261,7 +268,7 @@ public class SignUpActivity extends AppCompatActivity {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = util.isConnectionAvailable(SignUpActivity.this);
+                Boolean connectionAvailable = connection.isConnectionAvailable(SignUpActivity.this);
 
                 SignUpActivity.this.runOnUiThread(new Runnable() {
                     @Override

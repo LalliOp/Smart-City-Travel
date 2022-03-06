@@ -17,6 +17,9 @@ import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Home.HomeActivity;
 import com.example.smartcitytravel.ResetPassword.EmailActivity;
 import com.example.smartcitytravel.SignUp.SignUpActivity;
+import com.example.smartcitytravel.Util.Color;
+import com.example.smartcitytravel.Util.Connection;
+import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityLoginBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -36,6 +39,9 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private Util util;
+    private Connection connection;
+    private PreferenceHandler preferenceHandler;
+    private Color color;
 
     //run when launch() function is called by GoogleSignUpActivityResult
     private ActivityResultLauncher<Intent> GoogleSignInActivityResult = registerForActivityResult(
@@ -59,6 +65,10 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         util = new Util();
+        connection = new Connection();
+        preferenceHandler = new PreferenceHandler();
+        color = new Color();
+
         setEmail();
         login();
         signInWithGoogle();
@@ -94,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = util.isConnectionAvailable(LoginActivity.this);
+                Boolean connectionAvailable = connection.isConnectionAvailable(LoginActivity.this);
 
                 LoginActivity.this.runOnUiThread(new Runnable() {
                     @Override
@@ -163,7 +173,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.body().getAccount_status() == 0) {
-                    util.setLoginEmailPreference("", LoginActivity.this);
+                    preferenceHandler.setLoginEmailPreference("", LoginActivity.this);
                 }
             }
 
@@ -180,7 +190,7 @@ public class LoginActivity extends AppCompatActivity {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = util.isConnectionAvailable(LoginActivity.this);
+                Boolean connectionAvailable = connection.isConnectionAvailable(LoginActivity.this);
 
                 LoginActivity.this.runOnUiThread(new Runnable() {
                     @Override
@@ -244,7 +254,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //show error msg and error icon color in email field when email field is empty
     public void showEmailEmptyError(String errorMsg) {
-        binding.emailLayout.setErrorIconTintList(util.iconRedColor(this));
+        binding.emailLayout.setErrorIconTintList(color.iconRedColor(this));
         binding.emailLayout.setError(errorMsg);
     }
 
@@ -255,14 +265,14 @@ public class LoginActivity extends AppCompatActivity {
 
     //show error msg and hide error icon in password field when password field is empty
     public void showPasswordEmptyError(String errorMsg) {
-        binding.passwordLayout.setEndIconTintList(util.iconRedColor(this));
+        binding.passwordLayout.setEndIconTintList(color.iconRedColor(this));
         binding.passwordLayout.setError(errorMsg);
         binding.passwordLayout.setErrorIconDrawable(null);
     }
 
     //hide msg in password field when password field is not empty
     public void hidePasswordEmptyError() {
-        binding.passwordLayout.setEndIconTintList(util.iconWhiteColor(this));
+        binding.passwordLayout.setEndIconTintList(color.iconWhiteColor(this));
         binding.passwordLayout.setError(null);
     }
 
@@ -277,7 +287,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<Result> call, Response<Result> response) {
                 Result result = response.body();
                 if (result.getAccount_status() == 1) {
-                    util.setLoginEmailPreference(binding.emailEdit.getText().toString().toLowerCase(), LoginActivity.this);
+                    preferenceHandler.setLoginEmailPreference(binding.emailEdit.getText().toString().toLowerCase(), LoginActivity.this);
                     moveToHomeActivity();
                 } else if (result.getAccount_status() == 0) {
                     util.createErrorDialog(LoginActivity.this, "Account", result.getMessage());
@@ -303,7 +313,7 @@ public class LoginActivity extends AppCompatActivity {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = util.isConnectionAvailable(LoginActivity.this);
+                Boolean connectionAvailable = connection.isConnectionAvailable(LoginActivity.this);
                 LoginActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
