@@ -8,7 +8,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.AWSService.DataModel.PinCodeResult;
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Util.Color;
@@ -106,15 +105,13 @@ public class EmailActivity extends AppCompatActivity {
                 Result result = response.body();
                 if (result.getAccount_status() == -1) {
                     util.createErrorDialog(EmailActivity.this, "Account", result.getMessage());
-                    hideLoadingBar();
                 } else if (result.getAccount_status() == 0) {
                     util.createErrorDialog(EmailActivity.this, "Account",
                             "Account exist with google. " + result.getMessage());
-                    hideLoadingBar();
                 } else if (result.getAccount_status() == 1) {
-                    send_pin_code();
+                    moveToPinCodeActivity();
                 }
-
+                hideLoadingBar();
             }
 
             @Override
@@ -125,31 +122,6 @@ public class EmailActivity extends AppCompatActivity {
         });
 
 
-    }
-
-    //send pin code to email user enter
-    public void send_pin_code() {
-        Call<PinCodeResult> pinCodeCallable = HttpClient.getInstance().sendPinCode(
-                binding.emailEdit.getText().toString().toLowerCase());
-
-        pinCodeCallable.enqueue(new Callback<PinCodeResult>() {
-            @Override
-            public void onResponse(@NonNull Call<PinCodeResult> call, @NonNull Response<PinCodeResult> response) {
-                PinCodeResult result = response.body();
-                if (result != null) {
-                    preferenceHandler.saveEmailOfResetPasswordProcess(EmailActivity.this,
-                            binding.emailEdit.getText().toString().toLowerCase());
-                    moveToPinCodeActivity(result.getPin_code());
-                    hideLoadingBar();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<PinCodeResult> call, @NonNull Throwable t) {
-                Toast.makeText(EmailActivity.this, "Unable to send pin code", Toast.LENGTH_SHORT).show();
-                hideLoadingBar();
-            }
-        });
     }
 
     // show progress bar when user click on continue button
@@ -167,12 +139,9 @@ public class EmailActivity extends AppCompatActivity {
     }
 
     //Move from Email Activity to Pin Code Activity
-    //pass pin code from this activity to PinCode Activity
-    public void moveToPinCodeActivity(int pinCode) {
+    public void moveToPinCodeActivity() {
         Intent intent = new Intent(this, PinCodeActivity.class);
-        intent.putExtra("pin_code", pinCode);
         startActivity(intent);
-
     }
 
 }

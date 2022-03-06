@@ -2,6 +2,7 @@ package com.example.smartcitytravel.ResetPassword;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -35,21 +36,14 @@ public class PinCodeActivity extends AppCompatActivity {
         binding = ActivityPinCodeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        pin_code = 0;
         util = new Util();
         connection = new Connection();
         preferenceHandler = new PreferenceHandler();
 
-        getPinCode();
-        Toast.makeText(PinCodeActivity.this, pin_code + "", Toast.LENGTH_LONG).show();
+        checkConnectionAndPinCode();
         continueButtonClickListener();
         resendCode();
-    }
-
-    // get pin code which is passed by Email Activity
-    public void getPinCode() {
-        if (getIntent().getExtras() != null) {
-            pin_code = getIntent().getExtras().getInt("pin_code");
-        }
     }
 
     //check pin code field contain valid data
@@ -58,6 +52,8 @@ public class PinCodeActivity extends AppCompatActivity {
         String pinCode = binding.pinCodeEdit.getText().toString();
         if (pinCode.isEmpty()) {
             showPinCodeError("Error! Empty Field");
+        } else if (pin_code == 0) {
+            checkConnectionAndPinCode();
         } else if (Integer.parseInt(pinCode) == pin_code) {
             removePinCodeError();
             moveToNewPasswordActivity();
@@ -100,13 +96,13 @@ public class PinCodeActivity extends AppCompatActivity {
         binding.resendCodeTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkConnectionAndResendCode();
+                checkConnectionAndPinCode();
             }
         });
     }
 
-    //check internet connection and then resend code to email
-    public void checkConnectionAndResendCode() {
+    //check internet connection and then pin code to email
+    public void checkConnectionAndPinCode() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
@@ -129,7 +125,6 @@ public class PinCodeActivity extends AppCompatActivity {
 
     //send pin code to email user enter
     public void send_pin_code() {
-        showLoadingBar();
         Call<PinCodeResult> pinCodeCallable = HttpClient.getInstance().sendPinCode(
                 preferenceHandler.getEmailOfResetPasswordProcess(PinCodeActivity.this));
 
@@ -140,30 +135,19 @@ public class PinCodeActivity extends AppCompatActivity {
                 if (result != null) {
                     pin_code = result.getPin_code();
                     Toast.makeText(PinCodeActivity.this, pin_code + "", Toast.LENGTH_LONG).show();
+                    Log.d("PINCODE", pin_code + "");
 
+                } else {
+                    Toast.makeText(PinCodeActivity.this, "Unable to send pin code. Try resend code", Toast.LENGTH_SHORT).show();
                 }
-                hideLoadingBar();
+
             }
 
             @Override
             public void onFailure(@NonNull Call<PinCodeResult> call, @NonNull Throwable t) {
-                Toast.makeText(PinCodeActivity.this, "Unable to send pin code", Toast.LENGTH_SHORT).show();
-                hideLoadingBar();
+                Toast.makeText(PinCodeActivity.this, "Unable to send pin code. Try resend code", Toast.LENGTH_SHORT).show();
+
             }
         });
-    }
-
-    // show progress bar when user click on resend code
-    public void showLoadingBar() {
-        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
-        util.makeScreenNotTouchable(PinCodeActivity.this);
-
-    }
-
-    //hide progressbar when code is resend or error occurs
-    public void hideLoadingBar() {
-        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
-        util.makeScreenTouchable(PinCodeActivity.this);
-
     }
 }

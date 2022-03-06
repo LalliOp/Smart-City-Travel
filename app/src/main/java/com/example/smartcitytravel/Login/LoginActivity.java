@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.Result;
@@ -284,13 +285,13 @@ public class LoginActivity extends AppCompatActivity {
 
         verifyAccountResultCallable.enqueue(new Callback<Result>() {
             @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
+            public void onResponse(@NonNull Call<Result> call, @NonNull Response<Result> response) {
                 Result result = response.body();
                 if (result.getAccount_status() == 1) {
                     preferenceHandler.setLoginEmailPreference(binding.emailEdit.getText().toString().toLowerCase(), LoginActivity.this);
                     moveToHomeActivity();
                 } else if (result.getAccount_status() == 0) {
-                    util.createErrorDialog(LoginActivity.this, "Account", result.getMessage());
+                    showPasswordEmptyError("Error! " + result.getMessage());
                 } else if (result.getAccount_status() == -1) {
                     util.createErrorDialog(LoginActivity.this, "Account", "There are no account exist with this email");
                 } else if (result.getAccount_status() == 2) {
