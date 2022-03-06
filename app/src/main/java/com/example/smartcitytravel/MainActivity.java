@@ -11,6 +11,7 @@ import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Home.HomeActivity;
 import com.example.smartcitytravel.Login.LoginActivity;
 import com.example.smartcitytravel.ResetPassword.EmailActivity;
+import com.example.smartcitytravel.ResetPassword.PinCodeActivity;
 import com.example.smartcitytravel.Util.Util;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;

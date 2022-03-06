@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCityTravel">
         <activity
+            android:name=".ResetPassword.NewPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".ResetPassword.PinCodeActivity"
             android:exported="false" />
         <activity

@@ -6,21 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ResetPassword.EmailActivity">
 
-    <RelativeLayout
+    <include
+        android:id="@+id/resetPasswordBackground"
+        layout="@layout/reset_password_background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:alpha="0.6"
-            android:contentDescription="@string/image_of_badshahi_mosque"
-            android:scaleType="centerCrop"
-            android:src="@drawable/reset_password_background" />
-
-    </RelativeLayout>
+        android:layout_height="match_parent" />
 
     <include
         android:id="@+id/logoLayout"

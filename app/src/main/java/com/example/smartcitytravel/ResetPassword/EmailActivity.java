@@ -154,10 +154,11 @@ public class EmailActivity extends AppCompatActivity {
     }
 
     //Move from Email Activity to Pin Code Activity
-    //pass pin code from this activity to PinCode Activity
+    //pass pin code and email from this activity to PinCode Activity
     public void moveToPinCodeActivity(int pinCode) {
         Intent intent = new Intent(this, PinCodeActivity.class);
         intent.putExtra("pin_code", pinCode);
+        intent.putExtra("email", binding.emailEdit.getText().toString().toLowerCase());
         startActivity(intent);
 
     }

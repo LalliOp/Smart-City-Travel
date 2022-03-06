@@ -24,4 +24,7 @@
     <string name="forget_password">Forget password?</string>
     <string name="reset_your_password">Reset your password</string>
     <string name="continue_">Continue</string>
+    <string name="send_4_digits">We have send 4 digits pin code to your email</string>
+    <string name="pin_code">Pin Code</string>
+    <string name="resend_code">Resend Code</string>
 </resources>
