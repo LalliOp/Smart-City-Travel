@@ -13,6 +13,7 @@ import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
+import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityEmailBinding;
 
@@ -28,6 +29,7 @@ public class EmailActivity extends AppCompatActivity {
     private Util util;
     private Connection connection;
     private Color color;
+    private PreferenceHandler preferenceHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class EmailActivity extends AppCompatActivity {
         util = new Util();
         connection = new Connection();
         color = new Color();
+        preferenceHandler = new PreferenceHandler();
 
         continueButtonClickListener();
     }
@@ -126,13 +129,16 @@ public class EmailActivity extends AppCompatActivity {
 
     //send pin code to email user enter
     public void send_pin_code() {
-        Call<PinCodeResult> pinCodeCallable = HttpClient.getInstance().sendPinCode(binding.emailEdit.getText().toString().toLowerCase());
+        Call<PinCodeResult> pinCodeCallable = HttpClient.getInstance().sendPinCode(
+                binding.emailEdit.getText().toString().toLowerCase());
 
         pinCodeCallable.enqueue(new Callback<PinCodeResult>() {
             @Override
             public void onResponse(@NonNull Call<PinCodeResult> call, @NonNull Response<PinCodeResult> response) {
                 PinCodeResult result = response.body();
                 if (result != null) {
+                    preferenceHandler.saveEmailOfResetPasswordProcess(EmailActivity.this,
+                            binding.emailEdit.getText().toString().toLowerCase());
                     moveToPinCodeActivity(result.getPin_code());
                     hideLoadingBar();
                 }
@@ -161,11 +167,10 @@ public class EmailActivity extends AppCompatActivity {
     }
 
     //Move from Email Activity to Pin Code Activity
-    //pass pin code and email from this activity to PinCode Activity
+    //pass pin code from this activity to PinCode Activity
     public void moveToPinCodeActivity(int pinCode) {
         Intent intent = new Intent(this, PinCodeActivity.class);
         intent.putExtra("pin_code", pinCode);
-        intent.putExtra("email", binding.emailEdit.getText().toString().toLowerCase());
         startActivity(intent);
 
     }

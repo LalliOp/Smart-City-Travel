@@ -14,10 +14,12 @@
         android:theme="@style/Theme.SmartCityTravel">
         <activity
             android:name=".ResetPassword.NewPasswordActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ResetPassword.PinCodeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ResetPassword.EmailActivity"
             android:exported="false"

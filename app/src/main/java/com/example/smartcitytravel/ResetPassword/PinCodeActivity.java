@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.smartcitytravel.AWSService.DataModel.PinCodeResult;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Util.Connection;
+import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityPinCodeBinding;
 
@@ -25,8 +26,8 @@ public class PinCodeActivity extends AppCompatActivity {
     private ActivityPinCodeBinding binding;
     private Util util;
     private Connection connection;
+    private PreferenceHandler preferenceHandler;
     private int pin_code;
-    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +37,18 @@ public class PinCodeActivity extends AppCompatActivity {
 
         util = new Util();
         connection = new Connection();
-        getPinCodeAndEmail();
+        preferenceHandler = new PreferenceHandler();
+
+        getPinCode();
         Toast.makeText(PinCodeActivity.this, pin_code + "", Toast.LENGTH_LONG).show();
         continueButtonClickListener();
         resendCode();
     }
 
-    // get pin code and email which is passed by Email Activity
-    public void getPinCodeAndEmail() {
+    // get pin code which is passed by Email Activity
+    public void getPinCode() {
         if (getIntent().getExtras() != null) {
             pin_code = getIntent().getExtras().getInt("pin_code");
-            email = getIntent().getExtras().getString("email");
         }
     }
 
@@ -128,7 +130,8 @@ public class PinCodeActivity extends AppCompatActivity {
     //send pin code to email user enter
     public void send_pin_code() {
         showLoadingBar();
-        Call<PinCodeResult> pinCodeCallable = HttpClient.getInstance().sendPinCode(email);
+        Call<PinCodeResult> pinCodeCallable = HttpClient.getInstance().sendPinCode(
+                preferenceHandler.getEmailOfResetPasswordProcess(PinCodeActivity.this));
 
         pinCodeCallable.enqueue(new Callback<PinCodeResult>() {
             @Override

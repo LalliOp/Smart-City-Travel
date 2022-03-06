@@ -21,4 +21,7 @@ public interface HttpRequest {
 
     @GET("send-pin-code")
     Call<PinCodeResult> sendPinCode(@Query("email") String email);
+
+    @POST("change-password")
+    Call<Result> changePassword(@Query("email") String email, @Query("password") String password);
 }
