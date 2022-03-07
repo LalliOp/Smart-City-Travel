@@ -30,4 +30,12 @@
     <string name="resend_code">Resend Code</string>
     <string name="create_new_password">Create New Password</string>
     <string name="reset_password_">Reset Password</string>
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
+    <string name="about_us">About Us</string>
+    <string name="logout">Logout</string>
+    <string name="navigation_drawer_open">Open Navigation Drawer</string>
+    <string name="navigation_drawer_close">Close Navigation Drawer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
