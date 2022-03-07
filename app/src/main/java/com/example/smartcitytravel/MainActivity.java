@@ -12,7 +12,6 @@ import com.example.smartcitytravel.Home.HomeActivity;
 import com.example.smartcitytravel.Login.LoginActivity;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
-import com.example.smartcitytravel.Util.Util;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
@@ -24,7 +23,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-    private Util util;
     private Connection connection;
     private PreferenceHandler preferenceHandler;
 
@@ -32,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        util = new Util();
         connection = new Connection();
         preferenceHandler = new PreferenceHandler();
 
