@@ -9,15 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.smartcitytravel.databinding.FragmentHomeBinding;
+import com.example.smartcitytravel.databinding.FragmentSettingsBinding;
 
-public class HomeFragment extends Fragment {
-    private FragmentHomeBinding binding;
+public class SettingsFragment extends Fragment {
+    private FragmentSettingsBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentSettingsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -32,6 +32,5 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 
 }
