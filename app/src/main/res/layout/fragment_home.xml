@@ -17,8 +17,14 @@
             android:scaleType="centerCrop"
             android:src="@drawable/home_background" />
 
-
     </RelativeLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/card1"
+        android:text="hello"
+        />
 
 
     <TextView
@@ -38,4 +44,5 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:text="LogOut" />
+
 </RelativeLayout>
