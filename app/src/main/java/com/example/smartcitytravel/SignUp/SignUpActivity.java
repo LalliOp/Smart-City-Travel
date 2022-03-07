@@ -47,7 +47,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    //initialize validate variable for each field which help us to know which field contain error or not
+    //initialize validate variable for each edit field which help us to know which field contain error or not
     public void initializeValidator() {
         validate_full_name = false;
         validate_email = false;

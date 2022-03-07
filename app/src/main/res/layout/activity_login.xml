@@ -115,7 +115,7 @@
             android:clickable="true"
             android:focusable="true"
             android:text="@string/reset_password"
-            android:textColor="@color/light_pink"
+            android:textColor="@color/light_orange"
             android:textSize="13sp"
             android:theme="@style/WhiteRippleEffectTheme" />
     </RelativeLayout>

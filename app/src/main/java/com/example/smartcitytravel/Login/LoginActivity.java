@@ -43,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
     private Connection connection;
     private PreferenceHandler preferenceHandler;
     private Color color;
+    private boolean validate_email;
+    private boolean validate_password;
 
     //run when launch() function is called by GoogleSignUpActivityResult
     private ActivityResultLauncher<Intent> GoogleSignInActivityResult = registerForActivityResult(
@@ -70,11 +72,18 @@ public class LoginActivity extends AppCompatActivity {
         preferenceHandler = new PreferenceHandler();
         color = new Color();
 
+        initializeValidator();
         setEmail();
         login();
         signInWithGoogle();
         signUp();
         resetPassword();
+    }
+
+    //initialize validate variable for each edit field which help us to know which field contain error or not
+    public void initializeValidator() {
+        validate_email = false;
+        validate_password = false;
     }
 
     // set email in email field in login activity when create account from signup activity and move to login activity
@@ -215,23 +224,42 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 util.hideKeyboard(LoginActivity.this);
-                if (binding.emailEdit.getText().toString().isEmpty()) {
-                    showEmailEmptyError("Error! Empty Email");
-                } else {
-                    hideEmailEmptyError();
-                }
-                if (binding.passwordEdit.getText().toString().isEmpty()) {
-                    showPasswordEmptyError("Error! Empty Password");
-                } else {
-                    hidePasswordEmptyError();
-                }
-                if (!binding.emailEdit.getText().toString().isEmpty() &&
-                        !binding.passwordEdit.getText().toString().isEmpty()) {
+
+                validateEmail();
+                validatePassword();
+                if (validate_email && validate_password) {
                     checkConnectionAndVerifyAccount();
                 }
 
             }
         });
+    }
+
+    //check email field contain valid and allowed characters
+    public void validateEmail() {
+        String email = binding.emailEdit.getText().toString();
+        String emailRegex = "^[A-Za-z0-9.]+@[A-Za-z.]+$";
+        if (email.isEmpty()) {
+            showEmailError("Error! Empty Email");
+            validate_email = false;
+        } else if (!email.matches(emailRegex)) {
+            showEmailError("Error! Invalid Email");
+            validate_email = false;
+        } else {
+            hideEmailError();
+            validate_email = true;
+        }
+    }
+
+    //password field is empty or not
+    public void validatePassword() {
+        if (binding.passwordEdit.getText().toString().isEmpty()) {
+            showPasswordEmptyError("Error! Empty Password");
+            validate_email = false;
+        } else {
+            hidePasswordEmptyError();
+            validate_password = true;
+        }
     }
 
     //Move from Login Activity to SignUp Activity when user click signup from here text
@@ -253,14 +281,14 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //show error msg and error icon color in email field when email field is empty
-    public void showEmailEmptyError(String errorMsg) {
+    //show error msg and error icon color in email field
+    public void showEmailError(String errorMsg) {
         binding.emailLayout.setErrorIconTintList(color.iconRedColor(this));
         binding.emailLayout.setError(errorMsg);
     }
 
-    //hide error icon color and msg in email field when email field is not empty
-    public void hideEmailEmptyError() {
+    //hide error icon color and msg in email field when no error occurs
+    public void hideEmailError() {
         binding.emailLayout.setError(null);
     }
 

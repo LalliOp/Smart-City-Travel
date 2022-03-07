@@ -2,7 +2,6 @@ package com.example.smartcitytravel.ResetPassword;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -51,14 +50,13 @@ public class PinCodeActivity extends AppCompatActivity {
     public void validatePinCode() {
         String pinCode = binding.pinCodeEdit.getText().toString();
         if (pinCode.isEmpty()) {
-            showPinCodeError("Error! Empty Field");
-        } else if (pin_code == 0) {
-            checkConnectionAndPinCode();
+            showPinCodeError(" ");
         } else if (Integer.parseInt(pinCode) == pin_code) {
-            removePinCodeError();
             moveToNewPasswordActivity();
-        } else {
-            showPinCodeError("Error! Invalid Code");
+            removePinCodeError();
+        } else if (Integer.parseInt(pinCode) != pin_code) {
+            showPinCodeError(" ");
+            util.createErrorDialog(PinCodeActivity.this, "Error", "Incorrect pin code entered");
         }
     }
 
@@ -135,7 +133,6 @@ public class PinCodeActivity extends AppCompatActivity {
                 if (result != null) {
                     pin_code = result.getPin_code();
                     Toast.makeText(PinCodeActivity.this, pin_code + "", Toast.LENGTH_LONG).show();
-                    Log.d("PINCODE", pin_code + "");
 
                 } else {
                     Toast.makeText(PinCodeActivity.this, "Unable to send pin code. Try resend code", Toast.LENGTH_SHORT).show();

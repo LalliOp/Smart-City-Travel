@@ -29,6 +29,7 @@ public class EmailActivity extends AppCompatActivity {
     private Connection connection;
     private Color color;
     private PreferenceHandler preferenceHandler;
+    private boolean validate_email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class EmailActivity extends AppCompatActivity {
         connection = new Connection();
         color = new Color();
         preferenceHandler = new PreferenceHandler();
+        validate_email = false;
 
         continueButtonClickListener();
     }
@@ -51,24 +53,40 @@ public class EmailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 util.hideKeyboard(EmailActivity.this);
-                if (binding.emailEdit.getText().toString().isEmpty()) {
-                    showEmailEmptyError("Error! Empty Email");
-                } else {
-                    hideEmailEmptyError();
+                validateEmail();
+                if (validate_email) {
                     checkConnectionAndVerifyEmail();
                 }
+
+
             }
         });
     }
 
-    //show error msg and error icon color in email field when email field is empty
-    public void showEmailEmptyError(String errorMsg) {
+    //check email field contain valid and allowed characters
+    public void validateEmail() {
+        String email = binding.emailEdit.getText().toString();
+        String emailRegex = "^[A-Za-z0-9.]+@[A-Za-z.]+$";
+        if (email.isEmpty()) {
+            showEmailError("Error! Empty Email");
+            validate_email = false;
+        } else if (!email.matches(emailRegex)) {
+            showEmailError("Error! Invalid Email");
+            validate_email = false;
+        } else {
+            hideEmailError();
+            validate_email = true;
+        }
+    }
+
+    //show error msg and error icon color in email field
+    public void showEmailError(String errorMsg) {
         binding.emailLayout.setErrorIconTintList(color.iconRedColor(this));
         binding.emailLayout.setError(errorMsg);
     }
 
-    //hide error icon color and msg in email field when email field is not empty
-    public void hideEmailEmptyError() {
+    //hide error icon color and msg in email field when no error occurs
+    public void hideEmailError() {
         binding.emailLayout.setError(null);
     }
 
@@ -109,6 +127,7 @@ public class EmailActivity extends AppCompatActivity {
                     util.createErrorDialog(EmailActivity.this, "Account",
                             "Account exist with google. " + result.getMessage());
                 } else if (result.getAccount_status() == 1) {
+                    preferenceHandler.saveEmailOfResetPasswordProcess(EmailActivity.this, binding.emailEdit.getText().toString().toLowerCase());
                     moveToPinCodeActivity();
                 }
                 hideLoadingBar();

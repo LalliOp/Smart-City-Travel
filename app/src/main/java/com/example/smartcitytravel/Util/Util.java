@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.smartcitytravel.Dialogs.Dialog;
+import com.example.smartcitytravel.ResetPassword.PinCodeActivity;
 
 public class Util {
     public Util() {
