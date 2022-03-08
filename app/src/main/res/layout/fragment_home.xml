@@ -163,6 +163,4 @@
         android:textColor="@color/black"
         android:background="@color/brown_home"
         />
-
-
 </RelativeLayout>
