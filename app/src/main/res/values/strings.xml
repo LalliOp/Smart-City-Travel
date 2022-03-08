@@ -41,4 +41,10 @@
     <string name="destination_card">You can select desired city you want to visit</string>
     <string name="nearby_card">Get nearby places under desired radius</string>
     <string name="search_card">Generally search any location according to your interest</string>
+    <string name="destination_description">You can select desired city you want to visit</string>
+    <string name="destination">destination</string>
+    <string name="nearby_places">nearby\nplaces</string>
+    <string name="nearby_description">Get nearby places under desired radius</string>
+    <string name="general_search">general\nsearch</string>
+    <string name="general_search_description">Generally search any location according to your interest</string>
 </resources>

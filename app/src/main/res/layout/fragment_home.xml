@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.HomeFragment">
 
     <RelativeLayout
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black">
@@ -17,152 +16,184 @@
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:alpha="0.6"
+
             android:scaleType="centerCrop"
             android:src="@drawable/home_background" />
 
 
     </RelativeLayout>
+
     <include layout="@layout/logo_title" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardview1"
-        android:layout_width="142dp"
-        android:layout_height="320dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:cardBackgroundColor="@color/brown_home"
-        android:background="@drawable/round_corner">
+        android:orientation="horizontal">
 
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:adjustViewBounds="true"
-            android:alpha="0.6"
-            android:scaleType="centerCrop"
-            android:src="@drawable/destination_home" />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/destinationCardView"
+            android:layout_width="0dp"
+            android:layout_height="350dp"
+            android:layout_gravity="bottom"
+            android:layout_weight=".34"
+            android:alpha="0.9"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="@android:color/transparent">
 
-        <TextView
-            android:id="@+id/homeTxt1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="100dp"
-            android:text="Destination"
-            android:textColor="@color/white"
-            android:textSize="25sp" />
+            <RelativeLayout
 
-        <TextView
-            android:id="@+id/homeTxtcard5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="100dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="60dp"
-            android:text="@string/destination_card"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
+                android:id="@+id/destinationLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/round_corner"
+                android:backgroundTint="@color/brown_home">
 
 
-    </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
-        android:layout_width="142dp"
-        android:layout_height="300dp"
-        android:id="@+id/cardview2"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@id/cardview1"
-        app:cardBackgroundColor="@color/red_home"
-        android:background="@drawable/round_corner"
-        >
-        <ImageView
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:alpha="0.6"
-            android:scaleType="centerCrop"
-            android:src="@drawable/nearby_home" />
+                <ImageView
+                    android:id="@+id/destinationImg"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/ic_destination" />
 
-        <TextView
-            android:id="@+id/homeTxtcard2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:layout_marginLeft="5dp"
-            android:layout_centerInParent="true"
-            android:text="Nearby places"
-            android:textSize="25sp"
-            android:textColor="@color/white"/>
-        <TextView
-            android:id="@+id/homeTxtcard4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="0dp"
-            android:text="@string/nearby_card"
-            android:paddingTop="80dp"
-            android:paddingLeft="10dp"
-            android:textSize="15sp"
-            android:textColor="@color/white"/>
+                <TextView
+                    android:id="@+id/destinationTitleTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/destinationImg"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/segoe_ui"
+                    android:gravity="center"
+                    android:text="@string/destination"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
 
-    </androidx.cardview.widget.CardView>
+                <TextView
+                    android:id="@+id/destinationDescriptionTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/destinationTitleTxt"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="90dp"
+                    android:gravity="center"
+                    android:text="@string/destination_description" />
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="142dp"
-        android:layout_height="280dp"
-        android:id="@+id/cardview3"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@id/cardview2"
-        app:cardBackgroundColor="@color/green_home"
-        >
-        <ImageView
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:alpha="0.6"
-            android:scaleType="centerCrop"
-            android:src="@drawable/home_search" />
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/nearbyCardView"
+            android:layout_width="0dp"
+            android:layout_height="330dp"
+            android:layout_gravity="bottom"
+            android:layout_weight=".33"
+            android:alpha="0.9"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="@android:color/transparent">
 
-        <TextView
-            android:id="@+id/homeTxtcard3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="100dp"
-            android:layout_marginLeft="5dp"
-            android:text="General search "
-            android:textSize="25sp"
-            android:textColor="@color/white"/>
-        <TextView
-            android:id="@+id/homeTxtcard6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="0dp"
-            android:text="@string/search_card"
-            android:paddingTop="80dp"
-            android:paddingLeft="10dp"
-            android:textSize="15sp"
-            android:textColor="@color/white"/>
+            <RelativeLayout
 
-    </androidx.cardview.widget.CardView>
+                android:id="@+id/nearByLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/round_corner"
+                android:backgroundTint="@color/red_home">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="130dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:text="Live Chat"
-        android:textColor="@color/black"
-        />
+
+                <ImageView
+                    android:id="@+id/nearByImg"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/ic_nearby" />
+
+                <TextView
+                    android:id="@+id/nearByTitleTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/nearByImg"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/segoe_ui"
+                    android:gravity="center"
+                    android:text="@string/nearby_places"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/nearByDescriptionTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/nearByTitleTxt"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="40dp"
+                    android:gravity="center"
+                    android:text="@string/nearby_description" />
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/generalSearchCardView"
+            android:layout_width="0dp"
+            android:layout_height="310dp"
+            android:layout_gravity="bottom"
+            android:layout_weight=".33"
+            android:alpha="0.9"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="@android:color/transparent">
+
+            <RelativeLayout
+                android:id="@+id/generalSearchLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/round_corner"
+                android:backgroundTint="@color/green_home">
+
+
+                <ImageView
+                    android:id="@+id/generalSearchImg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/ic_location_search" />
+
+                <TextView
+                    android:id="@+id/generalSearchTitleTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/generalSearchImg"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/segoe_ui"
+                    android:gravity="center"
+                    android:text="@string/general_search"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/generalSearchDescriptionTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/generalSearchTitleTxt"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="40dp"
+                    android:gravity="center"
+                    android:text="@string/general_search_description" />
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 </RelativeLayout>
