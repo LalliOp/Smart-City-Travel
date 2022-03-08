@@ -38,4 +38,7 @@
     <string name="navigation_drawer_close">Close Navigation Drawer</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="destination_card">You can select desired city you want to visit</string>
+    <string name="nearby_card">Get nearby places under desired radius</string>
+    <string name="search_card">Generally search any location according to your interest</string>
 </resources>

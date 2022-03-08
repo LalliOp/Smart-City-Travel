@@ -3,23 +3,164 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.HomeFragment">
 
-    <TextView
-        android:id="@+id/homeTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="HOME Fragment"
-        android:textColor="@color/black"
-        android:textSize="25sp" />
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:alpha="0.6"
+            android:scaleType="centerCrop"
+            android:src="@drawable/home_background" />
+
+
+    </RelativeLayout>
+    <include layout="@layout/logo_title" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview1"
+        android:layout_width="142dp"
+        android:layout_height="320dp"
+        android:layout_alignParentBottom="true"
+        app:cardBackgroundColor="@color/brown_home">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:adjustViewBounds="true"
+            android:alpha="0.6"
+            android:scaleType="centerCrop"
+            android:src="@drawable/destination_home" />
+
+        <TextView
+            android:id="@+id/homeTxt1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="100dp"
+            android:text="Destination"
+            android:textColor="@color/white"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/homeTxtcard5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="100dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="60dp"
+            android:text="@string/destination_card"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:layout_width="142dp"
+        android:layout_height="300dp"
+        android:id="@+id/cardview2"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@id/cardview1"
+        app:cardBackgroundColor="@color/red_home"
+        >
+        <ImageView
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:alpha="0.6"
+            android:scaleType="centerCrop"
+            android:src="@drawable/nearby_home" />
+
+        <TextView
+            android:id="@+id/homeTxtcard2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_marginLeft="5dp"
+            android:layout_centerInParent="true"
+            android:text="Nearby places"
+            android:textSize="25sp"
+            android:textColor="@color/white"/>
+        <TextView
+            android:id="@+id/homeTxtcard4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="0dp"
+            android:text="@string/nearby_card"
+            android:paddingTop="80dp"
+            android:paddingLeft="10dp"
+            android:textSize="15sp"
+            android:textColor="@color/white"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="142dp"
+        android:layout_height="280dp"
+        android:id="@+id/cardview3"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@id/cardview2"
+        app:cardBackgroundColor="@color/green_home"
+        >
+        <ImageView
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:alpha="0.6"
+            android:scaleType="centerCrop"
+            android:src="@drawable/home_search" />
+
+        <TextView
+            android:id="@+id/homeTxtcard3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="100dp"
+            android:layout_marginLeft="5dp"
+            android:text="General search "
+            android:textSize="25sp"
+            android:textColor="@color/white"/>
+        <TextView
+            android:id="@+id/homeTxtcard6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="0dp"
+            android:text="@string/search_card"
+            android:paddingTop="80dp"
+            android:paddingLeft="10dp"
+            android:textSize="15sp"
+            android:textColor="@color/white"/>
+
+    </androidx.cardview.widget.CardView>
 
     <Button
-        android:id="@+id/logoutBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/homeTxt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="LogOut" />
+        android:id="@+id/button"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:text="Live Chat"
+        android:textColor="@color/black"
+        android:background="@color/brown_home"
+        />
 </RelativeLayout>

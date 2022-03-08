@@ -15,6 +15,9 @@
     <color name="default_black">#757575</color>
     <color name="light_orange">#FE9676</color>
     <color name="light_orange_2">#D98469</color>
+    <color name="brown_home">#934932</color>
+    <color name="red_home">#C62929</color>
+    <color name="green_home">#7DAA44</color>
     <color xmlns:tools="http://schemas.android.com/tools" name="mtrl_textinput_default_box_stroke_color" tools:override="true">
         @color/white
     </color>
