@@ -29,7 +29,9 @@
         android:layout_width="142dp"
         android:layout_height="320dp"
         android:layout_alignParentBottom="true"
-        app:cardBackgroundColor="@color/brown_home">
+        app:cardBackgroundColor="@color/brown_home"
+        android:background="@drawable/round_corner">
+
 
         <ImageView
             android:layout_width="100dp"
@@ -74,6 +76,7 @@
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@id/cardview1"
         app:cardBackgroundColor="@color/red_home"
+        android:background="@drawable/round_corner"
         >
         <ImageView
             android:layout_marginTop="10dp"
@@ -161,6 +164,5 @@
         android:layout_centerInParent="true"
         android:text="Live Chat"
         android:textColor="@color/black"
-        android:background="@color/brown_home"
         />
 </RelativeLayout>
