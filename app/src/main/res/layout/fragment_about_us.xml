@@ -9,10 +9,34 @@
         android:id="@+id/homeTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="About Us Fragment"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="25dp"
+        android:text="About Us "
         android:textColor="@color/black"
         android:textSize="25sp" />
+    <TextView
+        android:id="@+id/homeTxt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="50dp"
+        android:text="hello to the world"
+        android:textColor="@color/black"
+        android:layout_below="@id/homeTxt"
+        android:textSize="25sp"
 
+        />
+    <TextView
+        android:id="@+id/homeTxt2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="50dp"
+        android:text="hello to the world"
+        android:textColor="@color/black"
+        android:layout_below="@id/homeTxt1"
+        android:textSize="25sp"
+
+        />
 
 </RelativeLayout>
