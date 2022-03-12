@@ -47,4 +47,6 @@
     <string name="nearby_description">Get nearby places under desired radius</string>
     <string name="general_search">general\nsearch</string>
     <string name="general_search_description">Generally search any location according to your interest</string>
+    <string name="about_team_intro">This Application Develop By Team ZAM Tech Pvt.ltd</string>
+    <string name="about_us_intro">The best hotels available nearby and the restaurants to have food. Therefore, our app is going to provide all information under one roof so that they can have better experience in that city.</string>
 </resources>
