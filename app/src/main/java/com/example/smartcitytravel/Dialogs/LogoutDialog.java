@@ -74,8 +74,14 @@ public class LogoutDialog extends DialogFragment {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        showLogoutLoadingBar();
-                        logout();
+                        if(binding==null){
+                            Toast.makeText(requireActivity(), "ERROR", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            showLogoutLoadingBar();
+                            logout();
+                        }
+
                     }
                 });
         return builder.create();
@@ -89,8 +95,8 @@ public class LogoutDialog extends DialogFragment {
 
     //logout user from system whether google account or non google account
     public void logout() {
-        if (!preferenceHandler.getLoginEmailPreference(getContext()).isEmpty()) {
-            preferenceHandler.clearLoginEmailPreference(getContext());
+        if (!preferenceHandler.getLoginEmailPreference(requireActivity()).isEmpty()) {
+            preferenceHandler.clearLoginEmailPreference(requireActivity());
 
             moveToLoginActivity();
         } else {
@@ -98,7 +104,7 @@ public class LogoutDialog extends DialogFragment {
                     .requestEmail()
                     .build();
 
-            GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(getContext(), googleSignInOptions);
+            GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(requireActivity(), googleSignInOptions);
 
             googleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
@@ -116,7 +122,7 @@ public class LogoutDialog extends DialogFragment {
 
     //Move Home Activity to Login Activity
     public void moveToLoginActivity() {
-        Intent intent = new Intent(requireActivity(), LoginActivity.class);
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
         startActivity(intent);
     }
 
