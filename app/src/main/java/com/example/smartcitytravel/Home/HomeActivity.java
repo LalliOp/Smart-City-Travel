@@ -44,6 +44,7 @@ public class HomeActivity extends AppCompatActivity {
                             case R.id.home_menu:
                                 getSupportFragmentManager().beginTransaction()
                                         .setReorderingAllowed(true)
+                                        .addToBackStack("home")
                                         .replace(binding.fragmentContainer.getId(), new HomeFragment())
                                         .commit();
                                 break;
@@ -91,6 +92,7 @@ public class HomeActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
+                    .addToBackStack("home")
                     .add(binding.fragmentContainer.getId(), new HomeFragment())
                     .commit();
             binding.navigationView.setCheckedItem(R.id.home_menu);

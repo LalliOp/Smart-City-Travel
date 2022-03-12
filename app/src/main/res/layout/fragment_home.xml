@@ -16,7 +16,6 @@
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:alpha="0.6"
-
             android:scaleType="centerCrop"
             android:src="@drawable/home_background" />
 
@@ -25,6 +24,18 @@
 
     <include layout="@layout/logo_title" />
 
+    <ImageView
+        android:id="@+id/liveChatImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_alignParentEnd="true"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_live_chat"
+        android:theme="@style/WhiteRippleEffectTheme" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,7 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="350dp"
             android:layout_gravity="bottom"
-            android:layout_weight=".34"
+            android:layout_weight="1"
             android:alpha="0.9"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
@@ -55,8 +66,8 @@
 
                 <ImageView
                     android:id="@+id/destinationImg"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
                     android:src="@drawable/ic_destination" />
@@ -92,7 +103,7 @@
             android:layout_width="0dp"
             android:layout_height="330dp"
             android:layout_gravity="bottom"
-            android:layout_weight=".33"
+            android:layout_weight="1"
             android:alpha="0.9"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
@@ -110,8 +121,8 @@
 
                 <ImageView
                     android:id="@+id/nearByImg"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
                     android:src="@drawable/ic_nearby" />
@@ -147,7 +158,7 @@
             android:layout_width="0dp"
             android:layout_height="310dp"
             android:layout_gravity="bottom"
-            android:layout_weight=".33"
+            android:layout_weight="1"
             android:alpha="0.9"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
@@ -164,8 +175,8 @@
 
                 <ImageView
                     android:id="@+id/generalSearchImg"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
                     android:src="@drawable/ic_location_search" />
