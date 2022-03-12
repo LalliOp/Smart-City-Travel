@@ -65,13 +65,13 @@ public class LogoutDialog extends DialogFragment {
     public AlertDialog createDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(dialogView)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         showLogoutLoadingBar();
@@ -84,7 +84,7 @@ public class LogoutDialog extends DialogFragment {
     // show progress bar when user click on logout button
     public void showLogoutLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
-        util.makeScreenNotTouchable(getActivity());
+        util.makeScreenNotTouchable(requireActivity());
     }
 
     //logout user from system whether google account or non google account
@@ -116,7 +116,7 @@ public class LogoutDialog extends DialogFragment {
 
     //Move Home Activity to Login Activity
     public void moveToLoginActivity() {
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        Intent intent = new Intent(requireActivity(), LoginActivity.class);
         startActivity(intent);
     }
 

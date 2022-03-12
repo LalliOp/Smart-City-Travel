@@ -29,6 +29,8 @@ public class PreferenceHandler {
 
     }
 
+    //clear preference. No record left.
+    //only for non-google account
     public void clearLoginEmailPreference(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
                 Context.MODE_PRIVATE);
