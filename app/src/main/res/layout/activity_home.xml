@@ -35,4 +35,7 @@
         app:headerLayout="@layout/navigation_drawer_header"
         app:menu="@menu/navigation_drawer_menu" />
 
+    <include
+        android:id="@+id/loading_progress_bar"
+        layout="@layout/loading_progress_bar" />
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -16,7 +16,6 @@ public class PreferenceHandler {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-
         editor.putString(context.getString(R.string.LOGIN_EMAIL_KEY), value);
         editor.apply();
     }
@@ -28,6 +27,14 @@ public class PreferenceHandler {
                 Context.MODE_PRIVATE);
         return sharedPreferences.getString(context.getString(R.string.LOGIN_EMAIL_KEY), "");
 
+    }
+
+    public void clearLoginEmailPreference(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
     }
 
     //save email which is used during reset password process

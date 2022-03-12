@@ -21,5 +21,4 @@
         android:layout_marginHorizontal="17dp"
         android:textColor="@color/black"
         android:textSize="15sp" />
-
 </RelativeLayout>

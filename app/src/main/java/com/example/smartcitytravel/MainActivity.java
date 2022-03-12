@@ -2,7 +2,6 @@ package com.example.smartcitytravel;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -79,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Unable to save google account details", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -97,8 +95,6 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         if (connectionAvailable) {
                             saveGoogleAccount(googleSignInAccount);
-                        } else {
-                            Toast.makeText(MainActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
