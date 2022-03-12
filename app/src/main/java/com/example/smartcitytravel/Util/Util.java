@@ -9,8 +9,6 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.smartcitytravel.Dialogs.ErrorDialog;
-import com.example.smartcitytravel.Dialogs.LogoutDialog;
-import com.example.smartcitytravel.Home.HomeActivity;
 
 public class Util {
     public Util() {
@@ -42,13 +40,6 @@ public class Util {
         ErrorDialog errorDialog = new ErrorDialog(title, message);
         errorDialog.show(activity.getSupportFragmentManager(), "error_dialog");
         errorDialog.setCancelable(false);
-    }
-
-    //show logout dialog
-    public void createLogoutDialog(HomeActivity homeActivity, String title, String message) {
-        LogoutDialog logoutDialog = new LogoutDialog(homeActivity.getBinding(), title, message);
-        logoutDialog.show(homeActivity.getSupportFragmentManager(), "logout_dialog");
-        logoutDialog.setCancelable(false);
     }
 
 }

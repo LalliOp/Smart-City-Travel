@@ -1,8 +1,13 @@
 package com.example.smartcitytravel.Home;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,14 +16,22 @@ import androidx.core.view.GravityCompat;
 import com.example.smartcitytravel.Fragments.AboutUsFragment;
 import com.example.smartcitytravel.Fragments.HomeFragment;
 import com.example.smartcitytravel.Fragments.SettingsFragment;
+import com.example.smartcitytravel.Login.LoginActivity;
 import com.example.smartcitytravel.R;
+import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityHomeBinding;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
     private Util util;
+    private PreferenceHandler preferenceHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +40,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         util = new Util();
+        preferenceHandler = new PreferenceHandler();
 
         createHomeFragment(savedInstanceState);
         navigationDrawerToggle();
@@ -61,8 +75,7 @@ public class HomeActivity extends AppCompatActivity {
                                         .commit();
                                 break;
                             case R.id.logout_menu:
-                                util.createLogoutDialog(HomeActivity.this, "Logout",
-                                        "Do you want to logout?");
+                                showLogoutDialog("Logout", "Do you want to logout?");
                         }
                         binding.drawerLayout.closeDrawer(GravityCompat.START);
 
@@ -112,7 +125,80 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    public ActivityHomeBinding getBinding() {
-        return binding;
+    //create layout of dialog and set title and message in dialog textview
+    public View createLogoutLayout(String title, String message) {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog, null);
+
+        TextView titleTxt = dialogView.findViewById(R.id.titleTxt);
+        titleTxt.setText(title);
+
+        TextView messageTxt = dialogView.findViewById(R.id.messageTxt);
+        messageTxt.setText(message);
+
+        return dialogView;
+    }
+
+    //create and show logout dialog
+    public void showLogoutDialog(String title, String message) {
+        View dialogView = createLogoutLayout(title, message);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView)
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        showLogoutLoadingBar();
+                        logout();
+
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.setCancelable(false);
+    }
+
+    // show progress bar when user click on logout button
+    public void showLogoutLoadingBar() {
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
+        util.makeScreenNotTouchable(this);
+    }
+
+    //logout user from system whether google account or non google account
+    public void logout() {
+        if (!preferenceHandler.getLoginEmailPreference(this).isEmpty()) {
+            preferenceHandler.clearLoginEmailPreference(this);
+
+            moveToLoginActivity();
+        } else {
+            GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build();
+
+            GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+
+            googleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        moveToLoginActivity();
+                    } else if (task.isCanceled()) {
+                        Toast.makeText(HomeActivity.this, "Unable to logout", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+        }
+    }
+
+    //Move Home Activity to Login Activity
+    public void moveToLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }
