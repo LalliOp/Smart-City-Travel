@@ -13,12 +13,12 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.smartcitytravel.R;
 
-public class Dialog extends DialogFragment {
+public class ErrorDialog extends DialogFragment {
     private String title;
     private String message;
     private View dialogView;
 
-    public Dialog(String title, String message) {
+    public ErrorDialog(String title, String message) {
         this.title = title;
         this.message = message;
     }
@@ -27,7 +27,7 @@ public class Dialog extends DialogFragment {
     @Override
     public AlertDialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        dialogView = inflater.inflate(R.layout.error_dialog, null);
+        dialogView = inflater.inflate(R.layout.dialog, null);
 
         setTitle();
         setMessage();
@@ -56,4 +56,6 @@ public class Dialog extends DialogFragment {
                 });
         return builder.create();
     }
+
+
 }
