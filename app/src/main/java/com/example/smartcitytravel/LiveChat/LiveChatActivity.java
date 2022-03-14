@@ -44,7 +44,6 @@ public class LiveChatActivity extends AppCompatActivity {
         });
 
     }
-
     protected OpenChannelFragment createOpenChannelFragment(@NonNull String channelUrl) {
         return new OpenChannelFragment.Builder(channelUrl)
                 .setUseHeader(true)
