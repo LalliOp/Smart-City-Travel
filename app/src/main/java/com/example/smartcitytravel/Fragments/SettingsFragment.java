@@ -7,11 +7,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.databinding.FragmentSettingsBinding;
+import com.sendbird.uikit.databinding.SbFragmentOpenChannelBinding;
 
 public class SettingsFragment extends Fragment {
+
     private FragmentSettingsBinding binding;
 
     @Override

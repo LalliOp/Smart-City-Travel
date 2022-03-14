@@ -5,12 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".LiveChat.LiveChatActivity">
 
-    <TextView
+    <ProgressBar
+        android:id="@+id/chatLoadingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Live Chat Activity"
-        android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:indeterminate="true" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
