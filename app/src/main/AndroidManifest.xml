@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCityTravel">
         <activity
+            android:name=".destinationactivity"
+            android:exported="false" />
+        <activity
             android:name=".LiveChat.LiveChatActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
