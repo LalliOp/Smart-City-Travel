@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+   <include layout="@layout/toolbar"/>
     <ImageView
         android:id="@+id/dest_logo"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="60dp"
         android:layout_alignParentEnd="true"
         android:background="?attr/selectableItemBackground"
         android:focusable="true"
@@ -23,7 +23,7 @@
         android:layout_height="273dp"
         android:layout_below="@id/dest_logo"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:clickable="true"
         android:layout_marginRight="10dp"
         app:cardCornerRadius="20dp">
@@ -85,7 +85,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="50dp"
         android:layout_below="@id/dest_card2"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
