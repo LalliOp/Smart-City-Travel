@@ -121,7 +121,7 @@ public class HomeActivity extends AppCompatActivity {
         View headerLayout = binding.navigationView.getHeaderView(0);
 
         TextView nameTxt = headerLayout.findViewById(R.id.profileNameTxt);
-        nameTxt.setText(StringUtils.capitalize(user.getName()));
+        nameTxt.setText(capitalizedName(user.getName()));
 
         TextView emailTxt = headerLayout.findViewById(R.id.profileEmailTxt);
         emailTxt.setText(user.getEmail());
@@ -129,6 +129,18 @@ public class HomeActivity extends AppCompatActivity {
         Glide.with(HomeActivity.this)
                 .load(user.getImage_url())
                 .into((ImageView) headerLayout.findViewById(R.id.profileImg));
+    }
+
+    //make first word of name capital
+    public String capitalizedName(String full_name) {
+        String capitalizedName = "";
+        String[] split_full_name = full_name.split("\\s+");
+        for (String name : split_full_name) {
+            name = StringUtils.capitalize(name);
+
+            capitalizedName = capitalizedName + name + " ";
+        }
+        return capitalizedName;
     }
 
     //change fragment base on selected activity
