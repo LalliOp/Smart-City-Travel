@@ -55,7 +55,6 @@ public class LoginActivity extends AppCompatActivity {
                     hideGoogleSignInLoading();
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         getGoogleSignInResult(result);
-                        moveToHomeActivity();
                     }
                 }
             }
@@ -147,11 +146,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Return object whether user successfully signIn or signUp with google account or throw exception
+    //move to home activity
     public void getGoogleSignInResult(ActivityResult result) {
         Task<GoogleSignInAccount> googleSignInAccountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
 
         try {
             GoogleSignInAccount googleSignInAccount = googleSignInAccountTask.getResult(ApiException.class);
+            moveToHomeActivity(googleSignInAccount.getEmail().toLowerCase());
             checkConnectionAndSaveGoogleAccount(googleSignInAccount);
 
         } catch (ApiException e) {
@@ -177,14 +178,12 @@ public class LoginActivity extends AppCompatActivity {
     public void saveGoogleAccount(GoogleSignInAccount googleSignInAccount) {
 
         Call<Result> createAccountCallable = HttpClient.getInstance().createAccount(googleSignInAccount.getDisplayName().toLowerCase(),
-                googleSignInAccount.getEmail().toLowerCase(), "0", "1");
+                googleSignInAccount.getEmail().toLowerCase(), "0", "1", googleSignInAccount.getPhotoUrl().toString());
 
         createAccountCallable.enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
-                if (response.body().getAccount_status() == 0) {
-                    preferenceHandler.setLoginEmailPreference("", LoginActivity.this);
-                }
+
             }
 
             @Override
@@ -275,8 +274,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Move from Login Activity to Home Activity
-    public void moveToHomeActivity() {
+    public void moveToHomeActivity(String email) {
         Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("email", email);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
@@ -316,8 +316,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<Result> call, @NonNull Response<Result> response) {
                 Result result = response.body();
                 if (result.getAccount_status() == 1) {
-                    preferenceHandler.setLoginEmailPreference(binding.emailEdit.getText().toString().toLowerCase(), LoginActivity.this);
-                    moveToHomeActivity();
+                    moveToHomeActivity(binding.emailEdit.getText().toString().toLowerCase());
                 } else if (result.getAccount_status() == 0) {
                     showPasswordEmptyError("Error! " + result.getMessage());
                 } else if (result.getAccount_status() == -1) {

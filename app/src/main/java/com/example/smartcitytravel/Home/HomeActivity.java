@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,11 +14,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 
+import com.bumptech.glide.Glide;
+import com.example.smartcitytravel.AWSService.DataModel.User;
+import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Fragments.AboutUsFragment;
 import com.example.smartcitytravel.Fragments.HomeFragment;
 import com.example.smartcitytravel.Fragments.SettingsFragment;
 import com.example.smartcitytravel.Login.LoginActivity;
 import com.example.smartcitytravel.R;
+import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityHomeBinding;
@@ -28,10 +33,20 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
     private Util util;
     private PreferenceHandler preferenceHandler;
+    private Connection connection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +56,91 @@ public class HomeActivity extends AppCompatActivity {
 
         util = new Util();
         preferenceHandler = new PreferenceHandler();
+        connection = new Connection();
 
+        getLogInAccountDetails();
         createHomeFragment(savedInstanceState);
         navigationDrawerToggle();
         selectFragmentFromDrawer();
 
+    }
+
+    public void getLogInAccountDetails() {
+        String email = getIntent().getStringExtra("email");
+        if (email == null) {
+            User user = preferenceHandler.getLoginAccountPreference(HomeActivity.this);
+            setUserProfile(user);
+        } else {
+            checkConnectionAndGetAccount(email);
+        }
+    }
+
+    //check internet connection and get account detail from database
+    public void checkConnectionAndGetAccount(String email) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Boolean connectionAvailable = connection.isConnectionAvailable(HomeActivity.this);
+
+                HomeActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (connectionAvailable) {
+                            getAccountDetails(email);
+                        }
+                    }
+                });
+            }
+        });
+        executor.shutdown();
+    }
+
+    // get account details from database and set profile
+    public void getAccountDetails(String email) {
+        Call<User> CallableAccount = HttpClient.getInstance().getAccount(email);
+
+        CallableAccount.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User user = response.body();
+
+                setUserProfile(user);
+                preferenceHandler.setLoginAccountPreference(user, HomeActivity.this);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(HomeActivity.this, "Unable to get account details", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // set name , email and image of user profile
+    public void setUserProfile(User user) {
+        View headerLayout = binding.navigationView.getHeaderView(0);
+
+        TextView nameTxt = headerLayout.findViewById(R.id.profileNameTxt);
+        nameTxt.setText(capitalizedName(user.getName()));
+
+        TextView emailTxt = headerLayout.findViewById(R.id.profileEmailTxt);
+        emailTxt.setText(user.getEmail());
+
+        Glide.with(HomeActivity.this)
+                .load(user.getImage_url())
+                .into((ImageView) headerLayout.findViewById(R.id.profileImg));
+    }
+
+    //make first word of name capital
+    public String capitalizedName(String full_name) {
+        String capitalizedName = "";
+        String[] split_full_name = full_name.split("\\s+");
+        for (String name : split_full_name) {
+            name = StringUtils.capitalize(name);
+
+            capitalizedName = capitalizedName + name + " ";
+        }
+        return capitalizedName;
     }
 
     //change fragment base on selected activity
@@ -171,11 +266,12 @@ public class HomeActivity extends AppCompatActivity {
 
     //logout user from system whether google account or non google account
     public void logout() {
-        if (!preferenceHandler.getLoginEmailPreference(this).isEmpty()) {
-            preferenceHandler.clearLoginEmailPreference(this);
+        Integer account_type = preferenceHandler.getLoginAccountTypePreference(HomeActivity.this);
+        if (account_type == 0) {
+            preferenceHandler.clearLoginAccountPreference(HomeActivity.this);
 
             moveToLoginActivity();
-        } else {
+        } else if (account_type == 1) {
             GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .build();
@@ -193,6 +289,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 }
             });
+            preferenceHandler.clearLoginAccountPreference(HomeActivity.this);
         }
     }
 

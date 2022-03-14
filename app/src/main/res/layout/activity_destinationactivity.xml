@@ -31,7 +31,6 @@
         <RelativeLayout
             android:id="@+id/list_container_bg1"
             android:layout_width="match_parent"
-            android:background="@drawable/destination_lahore"
             android:layout_height="match_parent">
 
             <!--Add cardview contents-->
@@ -63,7 +62,6 @@
         <RelativeLayout
             android:id="@+id/list_container_bg"
             android:layout_width="match_parent"
-            android:background="@drawable/destination_islamabad"
             android:layout_height="match_parent">
 
             <!--Add cardview contents-->
