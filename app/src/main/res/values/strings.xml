@@ -43,6 +43,8 @@
     <string name="search_card">Generally search any location according to your interest</string>
     <string name="destination_description">You can select desired city you want to visit</string>
     <string name="destination">destination</string>
+    <string name="lahore_channel">sendbird_open_channel_15294_6376ff87db29bf9e7ea3fd0e145b71db56322ba1</string>
+    <string name="islamabad_channel">sendbird_open_channel_15294_200f1ed3198592726a8a55e81f00caf50483600a</string>
     <string name="nearby_places">nearby\nplaces</string>
     <string name="nearby_description">Get nearby places under desired radius</string>
     <string name="general_search">general\nsearch</string>

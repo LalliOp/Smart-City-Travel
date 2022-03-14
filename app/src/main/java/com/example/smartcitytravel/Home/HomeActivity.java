@@ -32,8 +32,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
-
-import org.apache.commons.lang3.StringUtils;
+import com.sendbird.android.SendBirdException;
+import com.sendbird.android.handlers.InitResultHandler;
+import com.sendbird.uikit.SendBirdUIKit;
+import com.sendbird.uikit.adapter.SendBirdUIKitAdapter;
+import com.sendbird.uikit.interfaces.UserInfo;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -89,6 +92,7 @@ public class HomeActivity extends AppCompatActivity {
                         if (connectionAvailable) {
                             getAccountDetails(email);
                         }
+
                     }
                 });
             }
@@ -121,7 +125,7 @@ public class HomeActivity extends AppCompatActivity {
         View headerLayout = binding.navigationView.getHeaderView(0);
 
         TextView nameTxt = headerLayout.findViewById(R.id.profileNameTxt);
-        nameTxt.setText(capitalizedName(user.getName()));
+        nameTxt.setText(util.capitalizedName(user.getName()));
 
         TextView emailTxt = headerLayout.findViewById(R.id.profileEmailTxt);
         emailTxt.setText(user.getEmail());
@@ -131,17 +135,6 @@ public class HomeActivity extends AppCompatActivity {
                 .into((ImageView) headerLayout.findViewById(R.id.profileImg));
     }
 
-    //make first word of name capital
-    public String capitalizedName(String full_name) {
-        String capitalizedName = "";
-        String[] split_full_name = full_name.split("\\s+");
-        for (String name : split_full_name) {
-            name = StringUtils.capitalize(name);
-
-            capitalizedName = capitalizedName + name + " ";
-        }
-        return capitalizedName;
-    }
 
     //change fragment base on selected activity
     public void selectFragmentFromDrawer() {

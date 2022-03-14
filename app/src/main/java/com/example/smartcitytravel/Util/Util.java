@@ -10,6 +10,8 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.smartcitytravel.Dialogs.ErrorDialog;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Util {
     public Util() {
     }
@@ -40,6 +42,18 @@ public class Util {
         ErrorDialog errorDialog = new ErrorDialog(title, message);
         errorDialog.show(activity.getSupportFragmentManager(), "error_dialog");
         errorDialog.setCancelable(false);
+    }
+
+    //make first word of name capital
+    public String capitalizedName(String full_name) {
+        String capitalizedName = "";
+        String[] split_full_name = full_name.split("\\s+");
+        for (String name : split_full_name) {
+            name = StringUtils.capitalize(name);
+
+            capitalizedName = capitalizedName + name + " ";
+        }
+        return capitalizedName;
     }
 
 }

@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".Application.SendBirdChatApplication"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/logo"
@@ -17,7 +16,8 @@
         android:theme="@style/Theme.SmartCityTravel">
         <activity
             android:name=".destinationactivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LiveChat.LiveChatActivity"
             android:exported="false"

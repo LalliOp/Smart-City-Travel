@@ -43,11 +43,14 @@ public class HomeFragment extends Fragment {
         binding.liveChatImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), LiveChatActivity.class);
-                startActivity(intent);
+                moveToLiveChatActivity();
             }
         });
     }
 
-
+    //move from home fragment to live chat activity
+    public void moveToLiveChatActivity() {
+        Intent intent = new Intent(getActivity(), LiveChatActivity.class);
+        startActivity(intent);
+    }
 }
