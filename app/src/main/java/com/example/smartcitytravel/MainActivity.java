@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.Result;
+import com.example.smartcitytravel.AWSService.DataModel.User;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Home.HomeActivity;
 import com.example.smartcitytravel.Login.LoginActivity;
@@ -29,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+
         connection = new Connection();
         preferenceHandler = new PreferenceHandler();
 
@@ -37,15 +41,17 @@ public class MainActivity extends AppCompatActivity {
 
     //Check whether user is already sign in
     public void checkUserAlreadySignIn() {
-        GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
+        Integer google_account = preferenceHandler.getLoginAccountTypePreference(MainActivity.this);
 
-        if (googleSignInAccount != null) {
+
+        if (google_account == -1) {
+            moveToLoginActivity();
+        } else if (google_account == 0) {
+            moveToHomeActivity();
+        } else if (google_account == 1) {
+            GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
             checkConnectionAndSaveGoogleAccount(googleSignInAccount);
             moveToHomeActivity();
-        } else if (!preferenceHandler.getLoginEmailPreference(this).isEmpty()) {
-            moveToHomeActivity();
-        } else {
-            moveToLoginActivity();
         }
     }
 
@@ -66,14 +72,12 @@ public class MainActivity extends AppCompatActivity {
     public void saveGoogleAccount(GoogleSignInAccount googleSignInAccount) {
 
         Call<Result> createAccountCallable = HttpClient.getInstance().createAccount(googleSignInAccount.getDisplayName().toLowerCase(),
-                googleSignInAccount.getEmail().toLowerCase(), "0", "1");
+                googleSignInAccount.getEmail().toLowerCase(), "0", "1",
+                googleSignInAccount.getPhotoUrl().toString());
 
         createAccountCallable.enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
-                if (response.body().getAccount_status() == 0) {
-                    preferenceHandler.setLoginEmailPreference("", MainActivity.this);
-                }
             }
 
             @Override

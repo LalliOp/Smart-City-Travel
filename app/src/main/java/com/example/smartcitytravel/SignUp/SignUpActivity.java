@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Login.LoginActivity;
+import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
@@ -214,7 +215,8 @@ public class SignUpActivity extends AppCompatActivity {
         showLoadingBar();
 
         Call<Result> createAccountCallable = HttpClient.getInstance().createAccount(binding.fullNameEdit.getText().toString().toLowerCase(),
-                binding.emailEdit.getText().toString().toLowerCase(), binding.passwordEdit.getText().toString(), "0");
+                binding.emailEdit.getText().toString().toLowerCase(), binding.passwordEdit.getText().toString(), "0",
+                getString(R.string.default_profile_image_url));
 
         createAccountCallable.enqueue(new Callback<Result>() {
             @Override

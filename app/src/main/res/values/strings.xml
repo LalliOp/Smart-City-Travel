@@ -37,7 +37,7 @@
     <string name="navigation_drawer_open">Open Navigation Drawer</string>
     <string name="navigation_drawer_close">Close Navigation Drawer</string>
     <string name="SENDBIRD_APP_ID">28540C9B-6DA7-47C0-972F-4C5D58B07B96</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="default_profile_image_url">https://profile-images-buckets.s3.ap-south-1.amazonaws.com/default_profile_image.jpg</string>
     <string name="destination_card">You can select desired city you want to visit</string>
     <string name="nearby_card">Get nearby places under desired radius</string>
     <string name="search_card">Generally search any location according to your interest</string>
