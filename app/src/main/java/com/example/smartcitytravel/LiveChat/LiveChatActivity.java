@@ -21,6 +21,7 @@ import com.sendbird.android.User;
 import com.sendbird.android.handlers.InitResultHandler;
 import com.sendbird.uikit.SendBirdUIKit;
 import com.sendbird.uikit.adapter.SendBirdUIKitAdapter;
+import com.sendbird.uikit.consts.ReplyType;
 import com.sendbird.uikit.fragments.OpenChannelFragment;
 import com.sendbird.uikit.interfaces.UserInfo;
 
@@ -39,6 +40,7 @@ public class LiveChatActivity extends AppCompatActivity {
         PreferenceHandler preferenceHandler = new PreferenceHandler();
         com.example.smartcitytravel.AWSService.DataModel.User user = preferenceHandler.getLoginAccountPreference(LiveChatActivity.this);
         Util util = new Util();
+
         checkConnectionAndCreateLiveChat(util, user);
 
     }
@@ -148,6 +150,8 @@ public class LiveChatActivity extends AppCompatActivity {
                 .setUseHeader(true)
                 .setUseHeaderLeftButton(true)
                 .setUseHeaderRightButton(false)
+                .setUseUserProfile(true)
+                .setUseMessageGroupUI(true)
                 .build();
     }
 
