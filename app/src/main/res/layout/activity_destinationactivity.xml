@@ -4,89 +4,103 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
    <include layout="@layout/toolbar"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/login_background">
-    <ImageView
-        android:id="@+id/dest_logo"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="60dp"
-        android:layout_alignParentEnd="true"
-        android:background="?attr/selectableItemBackground"
-        android:focusable="true"
-        android:src="@drawable/logo"
-        android:clickable="true"
-        android:theme="@style/WhiteRippleEffectTheme" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/dest_card1"
-        android:layout_width="match_parent"
-        android:layout_height="273dp"
-        android:layout_below="@id/dest_logo"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="15dp"
-        android:clickable="true"
-        android:layout_marginRight="10dp"
-        app:cardCornerRadius="20dp">
-
-        <RelativeLayout
-            android:id="@+id/list_container_bg1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/destination_lahore">
-
-            <!--Add cardview contents-->
-
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/lah_des"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:layout_marginTop="80dp"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/white"
-            android:text="Lahore"
-            android:textSize="30sp" />
-    </androidx.cardview.widget.CardView>
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="273dp"
-        android:layout_below="@id/dest_card1"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:clickable="true"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/dest_card2"
-        app:cardCornerRadius="20dp"
         >
-        <RelativeLayout
-            android:id="@+id/list_container_bg"
+
+        <ImageView
+            android:id="@+id/dest_logo"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="10dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/logo"
+            android:theme="@style/WhiteRippleEffectTheme" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/dest_card1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/destination_islamabad">
+            android:layout_height="273dp"
+            android:layout_below="@id/dest_logo"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            app:cardCornerRadius="20dp">
 
-            <!--Add cardview contents-->
+            <RelativeLayout
+                android:id="@+id/list_container_bg1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/destination_lahore">
 
-        </RelativeLayout>
+                <!--Add cardview contents-->
 
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/lah_des"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="80dp"
+                android:ems="10"
+                android:text="Lahore"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/dest_card2"
+            android:layout_width="match_parent"
+            android:layout_height="273dp"
+            android:layout_below="@id/dest_card1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            app:cardCornerRadius="20dp">
+
+            <RelativeLayout
+                android:id="@+id/list_container_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/destination_islamabad">
+
+                <!--Add cardview contents-->
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/isl_des"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="80dp"
+                android:ems="10"
+                android:text="Islamabad"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
+        </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/isl_des"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:layout_marginTop="80dp"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/white"
-            android:text="Islamabad"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/dest_card2"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:paddingVertical="10dp"
+            android:text="hello to the future"
+            android:textAlignment="center"
+            android:textColor="@color/black"
             android:textSize="30sp" />
-    </androidx.cardview.widget.CardView>
-
 
     </RelativeLayout>
 </RelativeLayout>
