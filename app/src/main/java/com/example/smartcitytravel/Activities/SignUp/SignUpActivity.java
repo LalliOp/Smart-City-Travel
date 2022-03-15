@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.SignUp;
+package com.example.smartcitytravel.Activities.SignUp;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
-import com.example.smartcitytravel.Login.LoginActivity;
+import com.example.smartcitytravel.Activities.Login.LoginActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;

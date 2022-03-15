@@ -1,108 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <include
-        android:id="@+id/toolbarLayout"
-        layout="@layout/toolbar" />
-
-    <RelativeLayout
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/lahoreCardView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="0dp">
 
         <ImageView
-            android:id="@+id/dest_logo"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="10dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/logo"
-            android:theme="@style/WhiteRippleEffectTheme" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/dest_card1"
+            android:id="@+id/lahoreImg"
             android:layout_width="match_parent"
-            android:layout_height="273dp"
-            android:layout_below="@id/dest_logo"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="10dp"
-            android:clickable="true"
-            app:cardCornerRadius="20dp">
-
-            <RelativeLayout
-                android:id="@+id/list_container_bg1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/destination_lahore">
-
-                <!--Add cardview contents-->
-
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/lah_des"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="80dp"
-                android:ems="10"
-                android:text="Lahore"
-                android:textColor="@color/white"
-                android:textSize="30sp" />
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/dest_card2"
-            android:layout_width="match_parent"
-            android:layout_height="273dp"
-            android:layout_below="@id/dest_card1"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:clickable="true"
-            app:cardCornerRadius="20dp">
-
-            <RelativeLayout
-                android:id="@+id/list_container_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/destination_islamabad">
-
-                <!--Add cardview contents-->
-
-            </RelativeLayout>
-
-
-            <TextView
-                android:id="@+id/isl_des"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="80dp"
-                android:ems="10"
-                android:text="Islamabad"
-                android:textColor="@color/white"
-                android:textSize="30sp" />
-        </androidx.cardview.widget.CardView>
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/destination_lahore" />
 
         <TextView
+            android:id="@+id/lahoreTxt"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_below="@id/dest_card2"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:paddingVertical="10dp"
-            android:text="hello to the future"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="30sp" />
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/lahore"
+            android:textColor="@color/white"
+            android:textSize="40sp" />
+    </com.google.android.material.card.MaterialCardView>
 
-    </RelativeLayout>
-</RelativeLayout>
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/islamabadCardView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="0dp">
+
+        <ImageView
+            android:id="@+id/islamabadImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/destination_islamabad" />
+
+        <TextView
+            android:id="@+id/islamabadTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/islamabad"
+            android:textColor="@color/white"
+            android:textSize="40sp" />
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

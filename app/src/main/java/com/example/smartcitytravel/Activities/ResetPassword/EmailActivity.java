@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.ResetPassword;
+package com.example.smartcitytravel.Activities.ResetPassword;
 
 import android.content.Intent;
 import android.os.Bundle;

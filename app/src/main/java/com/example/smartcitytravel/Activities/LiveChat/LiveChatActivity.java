@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.LiveChat;
+package com.example.smartcitytravel.Activities.LiveChat;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

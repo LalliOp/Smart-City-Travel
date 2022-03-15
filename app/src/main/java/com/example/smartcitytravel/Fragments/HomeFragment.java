@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.smartcitytravel.Destination.DestinationActivity;
-import com.example.smartcitytravel.LiveChat.LiveChatActivity;
+import com.example.smartcitytravel.Activities.Destination.DestinationActivity;
+import com.example.smartcitytravel.Activities.LiveChat.LiveChatActivity;
 import com.example.smartcitytravel.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
