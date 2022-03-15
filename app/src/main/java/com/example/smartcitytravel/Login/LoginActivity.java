@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Home.HomeActivity;
+import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.ResetPassword.EmailActivity;
 import com.example.smartcitytravel.SignUp.SignUpActivity;
 import com.example.smartcitytravel.Util.Color;
@@ -52,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    hideGoogleSignInLoading();
+                    hideLoginLoadingBar();
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         getGoogleSignInResult(result);
                     }
@@ -109,20 +110,27 @@ public class LoginActivity extends AppCompatActivity {
 
     //check internet connection and then start google sign in service
     public void checkConnectionAndSignInWithGoogle() {
+        boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(LoginActivity.this);
+        if (isConnectionSourceAvailable) {
+            showLoginLoadingBar();
+        }
+
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = connection.isConnectionAvailable(LoginActivity.this);
+                Boolean isInternetAvailable = connection.isInternetAvailable();
 
-                LoginActivity.this.runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (connectionAvailable) {
+                        if (isInternetAvailable) {
                             initializeGoogleSignIn();
                         } else {
+                            hideLoginLoadingBar();
                             Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                         }
+
                     }
                 });
             }
@@ -132,7 +140,6 @@ public class LoginActivity extends AppCompatActivity {
 
     // starting google sign in service
     public void initializeGoogleSignIn() {
-        showGoogleSignInLoading();
 
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -160,25 +167,16 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    // show progress bar when user click on signUp with Google Account
-    public void showGoogleSignInLoading() {
-        binding.googleSignInLoading.setVisibility(View.VISIBLE);
-        binding.emailEdit.setEnabled(false);
-        binding.passwordEdit.setEnabled(false);
-    }
-
-    //hide progress bar when signUp with Google Account is complete or user press back button
-    public void hideGoogleSignInLoading() {
-        binding.googleSignInLoading.setVisibility(View.GONE);
-        binding.emailEdit.setEnabled(true);
-        binding.passwordEdit.setEnabled(true);
-    }
-
     // save google account details in database when user login with google account
     public void saveGoogleAccount(GoogleSignInAccount googleSignInAccount) {
-
+        String profile_image_url;
+        if (googleSignInAccount.getPhotoUrl() == null) {
+            profile_image_url = getString(R.string.default_profile_image_url);
+        } else {
+            profile_image_url = googleSignInAccount.getPhotoUrl().toString();
+        }
         Call<Result> createAccountCallable = HttpClient.getInstance().createAccount(googleSignInAccount.getDisplayName().toLowerCase(),
-                googleSignInAccount.getEmail().toLowerCase(), "0", "1", googleSignInAccount.getPhotoUrl().toString());
+                googleSignInAccount.getEmail().toLowerCase(), "0", "1", profile_image_url);
 
         createAccountCallable.enqueue(new Callback<Result>() {
             @Override
@@ -199,12 +197,12 @@ public class LoginActivity extends AppCompatActivity {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = connection.isConnectionAvailable(LoginActivity.this);
+                Boolean internetAvailable = connection.isConnectionSourceAndInternetAvailable(LoginActivity.this);
 
                 LoginActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (connectionAvailable) {
+                        if (internetAvailable) {
                             saveGoogleAccount(googleSignInAccount);
                         } else {
                             Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
@@ -307,7 +305,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //check whether account exist or not
     public void verifyLogin() {
-        showLoginLoadingBar();
+
         Call<Result> verifyAccountResultCallable = HttpClient.getInstance().verifyAccount(binding.emailEdit.getText().toString().toLowerCase(),
                 binding.passwordEdit.getText().toString());
 
@@ -337,19 +335,27 @@ public class LoginActivity extends AppCompatActivity {
 
     //check internet connection and then verify account by database
     public void checkConnectionAndVerifyAccount() {
+        boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(LoginActivity.this);
+        if (isConnectionSourceAvailable) {
+            showLoginLoadingBar();
+        }
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = connection.isConnectionAvailable(LoginActivity.this);
-                LoginActivity.this.runOnUiThread(new Runnable() {
+                Boolean internetAvailable = connection.isInternetAvailable();
+
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (connectionAvailable) {
+                        if (internetAvailable) {
                             verifyLogin();
                         } else {
                             Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                            hideLoginLoadingBar();
+
                         }
+
                     }
                 });
             }

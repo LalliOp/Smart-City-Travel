@@ -21,7 +21,6 @@ import com.sendbird.android.User;
 import com.sendbird.android.handlers.InitResultHandler;
 import com.sendbird.uikit.SendBirdUIKit;
 import com.sendbird.uikit.adapter.SendBirdUIKitAdapter;
-import com.sendbird.uikit.consts.ReplyType;
 import com.sendbird.uikit.fragments.OpenChannelFragment;
 import com.sendbird.uikit.interfaces.UserInfo;
 
@@ -52,11 +51,12 @@ public class LiveChatActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Connection connection = new Connection();
-                Boolean connectionAvailable = connection.isConnectionAvailable(LiveChatActivity.this);
+                Boolean connectionAvailable = connection.isConnectionSourceAndInternetAvailable(LiveChatActivity.this);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        initLiveChat(util, user);
                         if (connectionAvailable) {
                             initLiveChat(util, user);
                         } else {

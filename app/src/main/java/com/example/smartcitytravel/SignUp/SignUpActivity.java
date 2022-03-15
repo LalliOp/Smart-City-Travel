@@ -1,6 +1,7 @@
 package com.example.smartcitytravel.SignUp;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -212,8 +213,6 @@ public class SignUpActivity extends AppCompatActivity {
     // check all fields are valid. If valid create account by passing user account info to database
     // and move to Login Activity if account created successfully
     public void createAccount() {
-        showLoadingBar();
-
         Call<Result> createAccountCallable = HttpClient.getInstance().createAccount(binding.fullNameEdit.getText().toString().toLowerCase(),
                 binding.emailEdit.getText().toString().toLowerCase(), binding.passwordEdit.getText().toString(), "0",
                 getString(R.string.default_profile_image_url));
@@ -255,6 +254,7 @@ public class SignUpActivity extends AppCompatActivity {
     // show progress bar when user click on register button
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
+        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_white)));
         util.makeScreenNotTouchable(SignUpActivity.this);
     }
 
@@ -266,19 +266,25 @@ public class SignUpActivity extends AppCompatActivity {
 
     //check internet connection and then create account in database
     public void checkConnectionAndCreateAccount() {
+        boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(SignUpActivity.this);
+        if (isConnectionSourceAvailable) {
+            showLoadingBar();
+        }
+
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = connection.isConnectionAvailable(SignUpActivity.this);
+                Boolean internetAvailable = connection.isInternetAvailable();
 
-                SignUpActivity.this.runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (connectionAvailable) {
+                        if (internetAvailable) {
                             createAccount();
                         } else {
                             Toast.makeText(SignUpActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                            hideLoadingBar();
                         }
                     }
                 });

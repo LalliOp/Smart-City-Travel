@@ -152,19 +152,25 @@ public class NewPasswordActivity extends AppCompatActivity {
 
     //check internet connection and then change account password in database
     public void checkConnectionAndChangePassword() {
+        boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(NewPasswordActivity.this);
+        if (isConnectionSourceAvailable) {
+            showLoadingBar();
+        }
+
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = connection.isConnectionAvailable(NewPasswordActivity.this);
+                Boolean internetAvailable = connection.isInternetAvailable();
 
                 NewPasswordActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (connectionAvailable) {
+                        if (internetAvailable) {
                             changePassword();
                         } else {
                             Toast.makeText(NewPasswordActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                            hideLoadingBar();
                         }
                     }
                 });
@@ -175,8 +181,6 @@ public class NewPasswordActivity extends AppCompatActivity {
 
     //change account password in database
     public void changePassword() {
-        showLoadingBar();
-
         Call<Result> changePasswordCallable = HttpClient.getInstance().changePassword(
                 preferenceHandler.getEmailOfResetPasswordProcess(NewPasswordActivity.this),
                 binding.passwordEdit.getText().toString());
@@ -220,6 +224,7 @@ public class NewPasswordActivity extends AppCompatActivity {
     public void moveToLoginActivity() {
         String email = preferenceHandler.getEmailOfResetPasswordProcess(NewPasswordActivity.this);
         preferenceHandler.saveEmailOfResetPasswordProcess(NewPasswordActivity.this, "");
+
         Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra("email", email);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

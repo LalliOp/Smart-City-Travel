@@ -99,17 +99,17 @@ public class PinCodeActivity extends AppCompatActivity {
         });
     }
 
-    //check internet connection and then pin code to email
+    //check internet connection and then send pin code to email
     public void checkConnectionAndPinCode() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = connection.isConnectionAvailable(PinCodeActivity.this);
-                PinCodeActivity.this.runOnUiThread(new Runnable() {
+                Boolean internetAvailable = connection.isConnectionSourceAndInternetAvailable(PinCodeActivity.this);
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (connectionAvailable) {
+                        if (internetAvailable) {
                             send_pin_code();
                         } else {
                             Toast.makeText(PinCodeActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();

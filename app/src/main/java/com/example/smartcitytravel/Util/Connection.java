@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class Connection {
     public Connection() {
@@ -14,10 +13,9 @@ public class Connection {
 
     //check whether system is connected with internet source (WIFI and Network) regardless of internet is working or not
     //then call isInternetAvailable() to check whether internet connection is working or not
-    public boolean isConnectionAvailable(Context context) {
+    public boolean isConnectionSourceAndInternetAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
         if (networkInfo == null || !networkInfo.isConnected()) {
             return false;
         } else {
@@ -30,15 +28,18 @@ public class Connection {
     public boolean isInternetAvailable() {
         try {
             InetAddress googleAddress = InetAddress.getByName("www.google.com");
-            InetAddress bingAddress = InetAddress.getByName("www.bing.com");
-            if (!googleAddress.toString().equals("") || !bingAddress.toString().equals("")) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (UnknownHostException e) {
+            return googleAddress.isReachable(2500);
+        } catch (Exception e) {
             return false;
         }
+    }
+
+    //check whether system is connected with internet source (WIFI and Network) regardless of internet is working or not
+    public boolean isConnectionSourceAvailable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+
     }
 
 }

@@ -92,18 +92,25 @@ public class EmailActivity extends AppCompatActivity {
 
     //check internet connection and then verify email by database
     public void checkConnectionAndVerifyEmail() {
+        boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(EmailActivity.this);
+        if (isConnectionSourceAvailable) {
+            showLoadingBar();
+        }
+
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = connection.isConnectionAvailable(EmailActivity.this);
-                EmailActivity.this.runOnUiThread(new Runnable() {
+                Boolean internetAvailable = connection.isInternetAvailable();
+
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (connectionAvailable) {
+                        if (internetAvailable) {
                             verifyEmail();
                         } else {
                             Toast.makeText(EmailActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                            hideLoadingBar();
                         }
                     }
                 });
@@ -114,7 +121,6 @@ public class EmailActivity extends AppCompatActivity {
 
     //check whether email exist or not
     public void verifyEmail() {
-        showLoadingBar();
         Call<Result> verifyEmailCallable = HttpClient.getInstance().verifyEmail(binding.emailEdit.getText().toString().toLowerCase());
 
         verifyEmailCallable.enqueue(new Callback<Result>() {

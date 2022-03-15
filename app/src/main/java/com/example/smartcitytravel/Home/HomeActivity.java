@@ -32,11 +32,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
-import com.sendbird.android.SendBirdException;
-import com.sendbird.android.handlers.InitResultHandler;
-import com.sendbird.uikit.SendBirdUIKit;
-import com.sendbird.uikit.adapter.SendBirdUIKitAdapter;
-import com.sendbird.uikit.interfaces.UserInfo;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -84,12 +79,12 @@ public class HomeActivity extends AppCompatActivity {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = connection.isConnectionAvailable(HomeActivity.this);
+                Boolean internetAvailable = connection.isConnectionSourceAndInternetAvailable(HomeActivity.this);
 
                 HomeActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (connectionAvailable) {
+                        if (internetAvailable) {
                             getAccountDetails(email);
                         }
 

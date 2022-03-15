@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.Result;
-import com.example.smartcitytravel.AWSService.DataModel.User;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Home.HomeActivity;
 import com.example.smartcitytravel.Login.LoginActivity;
@@ -92,12 +91,12 @@ public class MainActivity extends AppCompatActivity {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean connectionAvailable = connection.isConnectionAvailable(MainActivity.this);
+                Boolean internetAvailable = connection.isConnectionSourceAndInternetAvailable(MainActivity.this);
 
                 MainActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (connectionAvailable) {
+                        if (internetAvailable) {
                             saveGoogleAccount(googleSignInAccount);
                         }
                     }
