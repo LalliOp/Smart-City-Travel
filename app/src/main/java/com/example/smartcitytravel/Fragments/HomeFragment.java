@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.smartcitytravel.Destination.DestinationActivity;
 import com.example.smartcitytravel.LiveChat.LiveChatActivity;
 import com.example.smartcitytravel.databinding.FragmentHomeBinding;
 
@@ -27,6 +28,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         openLiveChat();
+        moveToDestinationActivity();
     }
 
     //make binding null which garbage collector auto collect and remove binding object with end of fragment
@@ -51,5 +53,16 @@ public class HomeFragment extends Fragment {
     public void moveToLiveChatActivity() {
         Intent intent = new Intent(getActivity(), LiveChatActivity.class);
         startActivity(intent);
+    }
+
+    //when user click on destination button, open destination activity
+    public void moveToDestinationActivity() {
+        binding.destinationCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DestinationActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
