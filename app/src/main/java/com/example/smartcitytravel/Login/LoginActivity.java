@@ -72,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         preferenceHandler = new PreferenceHandler();
         color = new Color();
 
+        util.setStatusBarColor(LoginActivity.this,R.color.brown);
         initializeValidator();
         setEmail();
         login();

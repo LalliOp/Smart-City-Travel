@@ -3,9 +3,11 @@ package com.example.smartcitytravel.Util;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.smartcitytravel.Dialogs.ErrorDialog;
@@ -54,6 +56,14 @@ public class Util {
             capitalizedName = capitalizedName + name + " ";
         }
         return capitalizedName;
+    }
+
+    //change color of status bar
+    public void setStatusBarColor(Activity activity, int colorResId) {
+        Window window = activity.getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(ContextCompat.getColor(activity, colorResId));
     }
 
 }

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
+import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
@@ -43,6 +44,7 @@ public class EmailActivity extends AppCompatActivity {
         preferenceHandler = new PreferenceHandler();
         validate_email = false;
 
+        util.setStatusBarColor(EmailActivity.this, R.color.black);
         continueButtonClickListener();
     }
 

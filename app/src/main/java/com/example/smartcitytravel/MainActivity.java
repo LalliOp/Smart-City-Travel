@@ -11,6 +11,7 @@ import com.example.smartcitytravel.Home.HomeActivity;
 import com.example.smartcitytravel.Login.LoginActivity;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
+import com.example.smartcitytravel.Util.Util;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
@@ -29,12 +30,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
-
         connection = new Connection();
         preferenceHandler = new PreferenceHandler();
+        Util util = new Util();
 
+        util.setStatusBarColor(MainActivity.this, R.color.white);
         checkUserAlreadySignIn();
     }
 

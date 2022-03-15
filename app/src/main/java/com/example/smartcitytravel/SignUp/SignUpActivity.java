@@ -44,6 +44,7 @@ public class SignUpActivity extends AppCompatActivity {
         connection = new Connection();
         color = new Color();
 
+        util.setStatusBarColor(SignUpActivity.this,R.color.dark_grey);
         initializeValidator();
         registerAccount();
 

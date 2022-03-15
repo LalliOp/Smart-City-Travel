@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.PinCodeResult;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
+import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
@@ -40,6 +41,7 @@ public class PinCodeActivity extends AppCompatActivity {
         connection = new Connection();
         preferenceHandler = new PreferenceHandler();
 
+        util.setStatusBarColor(PinCodeActivity.this, R.color.black);
         checkConnectionAndPinCode();
         continueButtonClickListener();
         resendCode();
