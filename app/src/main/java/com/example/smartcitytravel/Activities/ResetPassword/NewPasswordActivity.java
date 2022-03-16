@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.ResetPassword;
+package com.example.smartcitytravel.Activities.ResetPassword;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
-import com.example.smartcitytravel.Login.LoginActivity;
+import com.example.smartcitytravel.Activities.Login.LoginActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;

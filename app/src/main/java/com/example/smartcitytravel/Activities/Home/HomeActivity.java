@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Home;
+package com.example.smartcitytravel.Activities.Home;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -6,24 +6,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.AWSService.DataModel.User;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
+import com.example.smartcitytravel.Activities.Login.LoginActivity;
 import com.example.smartcitytravel.Fragments.AboutUsFragment;
 import com.example.smartcitytravel.Fragments.HomeFragment;
 import com.example.smartcitytravel.Fragments.SettingsFragment;
-import com.example.smartcitytravel.Login.LoginActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;

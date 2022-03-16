@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Login;
+package com.example.smartcitytravel.Activities.Login;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,10 +15,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
-import com.example.smartcitytravel.Home.HomeActivity;
+import com.example.smartcitytravel.Activities.Home.HomeActivity;
 import com.example.smartcitytravel.R;
-import com.example.smartcitytravel.ResetPassword.EmailActivity;
-import com.example.smartcitytravel.SignUp.SignUpActivity;
+import com.example.smartcitytravel.Activities.ResetPassword.EmailActivity;
+import com.example.smartcitytravel.Activities.SignUp.SignUpActivity;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;

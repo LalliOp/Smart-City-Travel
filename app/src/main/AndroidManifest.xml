@@ -15,35 +15,35 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCityTravel">
         <activity
-            android:name=".Destination.DestinationActivity"
+            android:name=".Activities.Destination.DestinationActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LiveChat.LiveChatActivity"
+            android:name=".Activities.LiveChat.LiveChatActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ResetPassword.NewPasswordActivity"
+            android:name=".Activities.ResetPassword.NewPasswordActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ResetPassword.PinCodeActivity"
+            android:name=".Activities.ResetPassword.PinCodeActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ResetPassword.EmailActivity"
+            android:name=".Activities.ResetPassword.EmailActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SignUp.SignUpActivity"
+            android:name=".Activities.SignUp.SignUpActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Home.HomeActivity"
+            android:name=".Activities.Home.HomeActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Login.LoginActivity"
+            android:name=".Activities.Login.LoginActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

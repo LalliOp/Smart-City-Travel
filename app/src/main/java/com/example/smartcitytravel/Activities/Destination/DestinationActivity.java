@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Destination;
+package com.example.smartcitytravel.Activities.Destination;
 
 import android.os.Bundle;
 
@@ -15,7 +15,7 @@ public class DestinationActivity extends AppCompatActivity {
         binding = ActivityDestinationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbarLayout.toolbar);
+//        setSupportActionBar(binding.toolbarLayout.toolbar);
     }
 
 }
