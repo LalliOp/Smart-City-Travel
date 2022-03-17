@@ -45,6 +45,7 @@ public class SignUpActivity extends AppCompatActivity {
         color = new Color();
 
         util.setStatusBarColor(SignUpActivity.this,R.color.dark_grey);
+        setLoadingBarColor();
         initializeValidator();
         registerAccount();
 
@@ -226,7 +227,7 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(SignUpActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
                     moveToLoginActivity();
                 } else if (result.getAccount_status() == 1) {
-                    util.createErrorDialog(SignUpActivity.this, "Account", "Error! " + result.getMessage());
+                    util.createErrorDialog(SignUpActivity.this, "Account",result.getMessage());
 
                 } else if (result.getAccount_status() == 3) {
                     util.createErrorDialog(SignUpActivity.this, "Account", "Google account exist with this email. " + result.getMessage());
@@ -251,11 +252,14 @@ public class SignUpActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+    //change default loading bar color
+    public void setLoadingBarColor(){
+        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_white)));
 
+    }
     // show progress bar when user click on register button
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
-        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_white)));
         util.makeScreenNotTouchable(SignUpActivity.this);
     }
 

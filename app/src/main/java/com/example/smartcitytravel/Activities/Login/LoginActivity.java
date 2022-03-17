@@ -2,6 +2,7 @@ package com.example.smartcitytravel.Activities.Login;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -53,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    hideLoginLoadingBar();
+                    hideGoogleSignInLoadingBar();
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         getGoogleSignInResult(result);
                     }
@@ -73,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         color = new Color();
 
         util.setStatusBarColor(LoginActivity.this,R.color.brown);
+        setLoadingBarColor();
         initializeValidator();
         setEmail();
         login();
@@ -113,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
     public void checkConnectionAndSignInWithGoogle() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(LoginActivity.this);
         if (isConnectionSourceAvailable) {
-            showLoginLoadingBar();
+            showGoogleSignInLoadingBar();
         }
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -128,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (isInternetAvailable) {
                             initializeGoogleSignIn();
                         } else {
-                            hideLoginLoadingBar();
+                            hideGoogleSignInLoadingBar();
                             Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                         }
 
@@ -364,6 +366,11 @@ public class LoginActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
+    //change default loading bar color
+    public void setLoadingBarColor(){
+        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
+
+    }
     // show progress bar when user click on login button
     public void showLoginLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
@@ -373,6 +380,20 @@ public class LoginActivity extends AppCompatActivity {
     //hide progressbar when login complete and move to home activity or error occurs
     public void hideLoginLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
+        util.makeScreenTouchable(LoginActivity.this);
+    }
+
+    // show progress bar when user click on google sign in button
+    public void showGoogleSignInLoadingBar() {
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
+        binding.loadingProgressBar.loadingBarBackground.setVisibility(View.GONE);
+        util.makeScreenNotTouchable(LoginActivity.this);
+    }
+
+    //hide progressbar when google sign in complete and move to home activity or error occurs
+    public void hideGoogleSignInLoadingBar() {
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
+        binding.loadingProgressBar.loadingBarBackground.setVisibility(View.VISIBLE);
         util.makeScreenTouchable(LoginActivity.this);
     }
 

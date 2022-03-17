@@ -1,6 +1,7 @@
 package com.example.smartcitytravel.Activities.ResetPassword;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ public class EmailActivity extends AppCompatActivity {
         validate_email = false;
 
         util.setStatusBarColor(EmailActivity.this, R.color.black);
+        setLoadingBarColor();
         continueButtonClickListener();
     }
 
@@ -148,6 +150,12 @@ public class EmailActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    //change default loading bar color
+    public void setLoadingBarColor(){
+        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
 
     }
 
