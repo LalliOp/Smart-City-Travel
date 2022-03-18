@@ -17,13 +17,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Activities.Home.HomeActivity;
-import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Activities.ResetPassword.EmailActivity;
 import com.example.smartcitytravel.Activities.SignUp.SignUpActivity;
+import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
-import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
+import com.example.smartcitytravel.Util.Validation;
 import com.example.smartcitytravel.databinding.ActivityLoginBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -43,8 +43,8 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private Util util;
     private Connection connection;
-    private PreferenceHandler preferenceHandler;
     private Color color;
+    private Validation validation;
     private boolean validate_email;
     private boolean validate_password;
 
@@ -70,10 +70,10 @@ public class LoginActivity extends AppCompatActivity {
 
         util = new Util();
         connection = new Connection();
-        preferenceHandler = new PreferenceHandler();
         color = new Color();
+        validation = new Validation();
 
-        util.setStatusBarColor(LoginActivity.this,R.color.brown);
+        util.setStatusBarColor(LoginActivity.this, R.color.brown);
         setLoadingBarColor();
         initializeValidator();
         setEmail();
@@ -238,16 +238,12 @@ public class LoginActivity extends AppCompatActivity {
     //check email field contain valid and allowed characters
     public void validateEmail() {
         String email = binding.emailEdit.getText().toString();
-        String emailRegex = "^[A-Za-z0-9.]+@[A-Za-z.]+$";
-        if (email.isEmpty()) {
-            showEmailError("Error! Empty Email");
-            validate_email = false;
-        } else if (!email.matches(emailRegex)) {
-            showEmailError("Error! Invalid Email");
-            validate_email = false;
-        } else {
+        String errorMessage = validation.validateEmail(email);
+        if (errorMessage.isEmpty()) {
             hideEmailError();
-            validate_email = true;
+
+        } else {
+            showEmailError(errorMessage);
         }
     }
 
@@ -286,11 +282,13 @@ public class LoginActivity extends AppCompatActivity {
     public void showEmailError(String errorMsg) {
         binding.emailLayout.setErrorIconTintList(color.iconRedColor(this));
         binding.emailLayout.setError(errorMsg);
+        validate_email = false;
     }
 
     //hide error icon color and msg in email field when no error occurs
     public void hideEmailError() {
         binding.emailLayout.setError(null);
+        validate_email = true;
     }
 
     //show error msg and hide error icon in password field when password field is empty
@@ -367,10 +365,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //change default loading bar color
-    public void setLoadingBarColor(){
+    public void setLoadingBarColor() {
         binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
-
     }
+
     // show progress bar when user click on login button
     public void showLoginLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);

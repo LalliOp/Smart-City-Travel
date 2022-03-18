@@ -16,6 +16,7 @@ import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
+import com.example.smartcitytravel.Util.Validation;
 import com.example.smartcitytravel.databinding.ActivityEmailBinding;
 
 import java.util.concurrent.ExecutorService;
@@ -31,6 +32,7 @@ public class EmailActivity extends AppCompatActivity {
     private Connection connection;
     private Color color;
     private PreferenceHandler preferenceHandler;
+    private Validation validation;
     private boolean validate_email;
 
     @Override
@@ -43,6 +45,7 @@ public class EmailActivity extends AppCompatActivity {
         connection = new Connection();
         color = new Color();
         preferenceHandler = new PreferenceHandler();
+        validation = new Validation();
         validate_email = false;
 
         util.setStatusBarColor(EmailActivity.this, R.color.black);
@@ -70,16 +73,12 @@ public class EmailActivity extends AppCompatActivity {
     //check email field contain valid and allowed characters
     public void validateEmail() {
         String email = binding.emailEdit.getText().toString();
-        String emailRegex = "^[A-Za-z0-9.]+@[A-Za-z.]+$";
-        if (email.isEmpty()) {
-            showEmailError("Error! Empty Email");
-            validate_email = false;
-        } else if (!email.matches(emailRegex)) {
-            showEmailError("Error! Invalid Email");
-            validate_email = false;
-        } else {
+        String errorMessage = validation.validateEmail(email);
+        if (errorMessage.isEmpty()) {
             hideEmailError();
-            validate_email = true;
+
+        } else {
+            showEmailError(errorMessage);
         }
     }
 
@@ -87,11 +86,13 @@ public class EmailActivity extends AppCompatActivity {
     public void showEmailError(String errorMsg) {
         binding.emailLayout.setErrorIconTintList(color.iconRedColor(this));
         binding.emailLayout.setError(errorMsg);
+        validate_email = false;
     }
 
     //hide error icon color and msg in email field when no error occurs
     public void hideEmailError() {
         binding.emailLayout.setError(null);
+        validate_email = true;
     }
 
     //check internet connection and then verify email by database
@@ -154,9 +155,8 @@ public class EmailActivity extends AppCompatActivity {
     }
 
     //change default loading bar color
-    public void setLoadingBarColor(){
+    public void setLoadingBarColor() {
         binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
-
     }
 
     // show progress bar when user click on continue button
