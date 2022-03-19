@@ -194,7 +194,10 @@ public class SignUpActivity extends AppCompatActivity {
     // check all fields are valid. If valid create account by passing user account info to database
     // and move to Login Activity if account created successfully
     public void createAccount() {
-        Call<Result> createAccountCallable = HttpClient.getInstance().createAccount(binding.fullNameEdit.getText().toString().toLowerCase(),
+        String normalizedFullName=binding.fullNameEdit.getText().toString().toLowerCase();
+        normalizedFullName=normalizedFullName.trim().replaceAll("\\s{2,}"," ");
+
+        Call<Result> createAccountCallable = HttpClient.getInstance().createAccount(normalizedFullName,
                 binding.emailEdit.getText().toString().toLowerCase(), binding.passwordEdit.getText().toString(), "0",
                 getString(R.string.default_profile_image_url));
 
@@ -209,7 +212,7 @@ public class SignUpActivity extends AppCompatActivity {
                     util.createErrorDialog(SignUpActivity.this, "Account", result.getMessage());
 
                 } else if (result.getAccount_status() == 3) {
-                    util.createErrorDialog(SignUpActivity.this, "Account", "Google account exist with this email. " + result.getMessage());
+                    util.createErrorDialog(SignUpActivity.this, "Account", "Account already registered with this email. " + result.getMessage());
                 }
                 hideLoadingBar();
             }
