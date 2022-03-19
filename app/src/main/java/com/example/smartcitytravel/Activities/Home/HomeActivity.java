@@ -307,6 +307,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, EditProfileActivity.class);
+                intent.putExtra("name", user.getName());
+                intent.putExtra("email", user.getEmail());
                 intent.putExtra("profile_img_url", user.getImage_url());
                 startActivity(intent);
             }

@@ -28,12 +28,14 @@
         app:shapeAppearanceOverlay="@style/CircularImage" />
 
     <RelativeLayout
+        android:id="@+id/profileImgLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@id/profileImg"
         android:layout_alignBottom="@id/profileImg">
 
         <RelativeLayout
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="7dp"
@@ -59,4 +61,30 @@
                 app:shapeAppearanceOverlay="@style/CircularImage" />
         </RelativeLayout>
     </RelativeLayout>
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/fullNameLayout"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profileImgLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:textColorHint="@color/black"
+        android:theme="@style/TextInputLayoutStyle"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@color/black"
+        app:boxStrokeErrorColor="@color/red"
+        app:errorEnabled="true"
+        app:errorTextColor="@color/red"
+        app:hintTextColor="@color/black">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/fullNameEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="name"
+            android:hint="@string/full_name"
+            android:inputType="textPersonName"
+            android:textColor="@color/black"
+            android:textCursorDrawable="@drawable/color_cursor" />
+    </com.google.android.material.textfield.TextInputLayout>
 </RelativeLayout>
