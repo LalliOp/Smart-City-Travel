@@ -42,6 +42,7 @@ public class PinCodeActivity extends AppCompatActivity {
         preferenceHandler = new PreferenceHandler();
 
         util.setStatusBarColor(PinCodeActivity.this, R.color.black);
+
         checkConnectionAndPinCode();
         continueButtonClickListener();
         resendCode();

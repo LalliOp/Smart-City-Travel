@@ -3,6 +3,7 @@ package com.example.smartcitytravel.Activities.Home;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,6 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         preferenceHandler = new PreferenceHandler();
         connection = new Connection();
 
+        setLoadingBarColor();
         getLogInAccountDetails();
         createHomeFragment(savedInstanceState);
         navigationDrawerToggle();
@@ -244,6 +246,11 @@ public class HomeActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
         alertDialog.setCancelable(false);
+    }
+
+    //change default loading bar color
+    public void setLoadingBarColor() {
+        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
     }
 
     // show progress bar when user click on logout button

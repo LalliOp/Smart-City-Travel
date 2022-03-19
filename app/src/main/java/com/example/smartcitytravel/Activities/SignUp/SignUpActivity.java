@@ -15,6 +15,7 @@ import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
+import com.example.smartcitytravel.Util.Validation;
 import com.example.smartcitytravel.databinding.ActivitySignUpBinding;
 
 import java.util.concurrent.ExecutorService;
@@ -29,6 +30,7 @@ public class SignUpActivity extends AppCompatActivity {
     private Util util;
     private Connection connection;
     private Color color;
+    private Validation validation;
     private boolean validate_full_name;
     private boolean validate_email;
     private boolean validate_password;
@@ -43,8 +45,10 @@ public class SignUpActivity extends AppCompatActivity {
         util = new Util();
         connection = new Connection();
         color = new Color();
+        validation = new Validation();
 
-        util.setStatusBarColor(SignUpActivity.this,R.color.dark_grey);
+        util.setStatusBarColor(SignUpActivity.this, R.color.dark_grey);
+        setLoadingBarColor();
         initializeValidator();
         registerAccount();
 
@@ -79,13 +83,12 @@ public class SignUpActivity extends AppCompatActivity {
     //check full name field contain valid and allowed characters
     public void validateFullName() {
         String fullName = binding.fullNameEdit.getText().toString();
-        String nameRegex = "[a-zA-Z\\s]+";
-        if (fullName.isEmpty()) {
-            showFullNameError("Error! Enter your name");
-        } else if (!fullName.matches(nameRegex)) {
-            showFullNameError("Error! Only alphabets and spaces are acceptable");
-        } else {
+        String errorMessage = validation.validateFullName(fullName);
+        if (errorMessage.isEmpty()) {
             removeFullNameError();
+
+        } else {
+            showFullNameError(errorMessage);
         }
     }
 
@@ -105,13 +108,12 @@ public class SignUpActivity extends AppCompatActivity {
     //check email field contain valid and allowed characters
     public void validateEmail() {
         String email = binding.emailEdit.getText().toString();
-        String emailRegex = "^[A-Za-z0-9.]+@[A-Za-z.]+$";
-        if (email.isEmpty()) {
-            showEmailError("Error! Enter email");
-        } else if (!email.matches(emailRegex)) {
-            showEmailError("Error! Invalid Email");
-        } else {
+        String errorMessage = validation.validateEmail(email);
+        if (errorMessage.isEmpty()) {
             removeEmailError();
+
+        } else {
+            showEmailError(errorMessage);
         }
     }
 
@@ -131,38 +133,12 @@ public class SignUpActivity extends AppCompatActivity {
     //check password field contain valid and allowed characters
     public void validatePassword() {
         String password = binding.passwordEdit.getText().toString();
-        boolean containOneDigit = false;
-        boolean containOneUpperCaseLetter = false;
-        boolean containOneLowerCaseLetter = false;
-
-        for (char oneChar : password.toCharArray()) {
-            if (!containOneDigit && Character.isDigit(oneChar)) {
-                containOneDigit = true;
-            }
-            if (!containOneUpperCaseLetter && Character.isUpperCase(oneChar)) {
-                containOneUpperCaseLetter = true;
-            }
-            if (!containOneLowerCaseLetter && Character.isLowerCase(oneChar)) {
-                containOneLowerCaseLetter = true;
-            }
-            if (containOneDigit && containOneUpperCaseLetter && containOneLowerCaseLetter) {
-                break;
-            }
-        }
-        if (password.isEmpty()) {
-            showPasswordError("Error! Enter password");
-        } else if (password.length() < 8) {
-            showPasswordError("Error! Password should contain 8 or more characters");
-        } else if (password.contains(" ")) {
-            showPasswordError("Error! Password should not contain spaces");
-        } else if (!containOneDigit) {
-            showPasswordError("Error! Password should contain at least one digit");
-        } else if (!containOneUpperCaseLetter) {
-            showPasswordError("Error! Password should contain at least one uppercase letter");
-        } else if (!containOneLowerCaseLetter) {
-            showPasswordError("Error! Password should contain at least one lowercase letter");
-        } else {
+        String errorMessage = validation.validatePassword(password);
+        if (errorMessage.isEmpty()) {
             removePasswordError();
+
+        } else {
+            showPasswordError(errorMessage);
         }
     }
 
@@ -186,13 +162,17 @@ public class SignUpActivity extends AppCompatActivity {
     public void matchPasswordAndConfirmPassword() {
         String password = binding.passwordEdit.getText().toString();
         String confirmPassword = binding.confirmPasswordEdit.getText().toString();
-        if (confirmPassword.isEmpty()) {
+        int errorCode = validation.matchPasswordAndConfirmPassword(password, confirmPassword);
+
+        if (errorCode == 2) {
             showConfirmPasswordError("ERROR! Re-enter password");
-        } else if (!password.equals(confirmPassword)) {
+        } else if (errorCode == 1) {
             showConfirmPasswordError("ERROR! Password not matched");
             showPasswordError(" ");
-        } else if (password.equals(confirmPassword)) {
+        } else if (errorCode == 0) {
             removeConfirmPasswordError();
+        } else {
+            showConfirmPasswordError("ERROR! Invalid password");
         }
     }
 
@@ -226,7 +206,7 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(SignUpActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
                     moveToLoginActivity();
                 } else if (result.getAccount_status() == 1) {
-                    util.createErrorDialog(SignUpActivity.this, "Account", "Error! " + result.getMessage());
+                    util.createErrorDialog(SignUpActivity.this, "Account", result.getMessage());
 
                 } else if (result.getAccount_status() == 3) {
                     util.createErrorDialog(SignUpActivity.this, "Account", "Google account exist with this email. " + result.getMessage());
@@ -252,10 +232,15 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
+    //change default loading bar color
+    public void setLoadingBarColor() {
+        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_white)));
+
+    }
+
     // show progress bar when user click on register button
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
-        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_white)));
         util.makeScreenNotTouchable(SignUpActivity.this);
     }
 

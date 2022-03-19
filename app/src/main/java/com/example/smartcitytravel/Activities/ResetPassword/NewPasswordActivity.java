@@ -1,6 +1,7 @@
 package com.example.smartcitytravel.Activities.ResetPassword;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
+import com.example.smartcitytravel.Util.Validation;
 import com.example.smartcitytravel.databinding.ActivityNewPasswordBinding;
 
 import java.util.concurrent.ExecutorService;
@@ -30,6 +32,7 @@ public class NewPasswordActivity extends AppCompatActivity {
     private Connection connection;
     private Util util;
     private PreferenceHandler preferenceHandler;
+    private Validation validation;
     private boolean validate_password;
     private boolean validate_confirm_password;
 
@@ -43,8 +46,10 @@ public class NewPasswordActivity extends AppCompatActivity {
         connection = new Connection();
         util = new Util();
         preferenceHandler = new PreferenceHandler();
+        validation = new Validation();
 
         util.setStatusBarColor(NewPasswordActivity.this, R.color.black);
+        setLoadingBarColor();
         initializeValidator();
         resetPassword();
     }
@@ -72,39 +77,18 @@ public class NewPasswordActivity extends AppCompatActivity {
     //check password field contain valid and allowed characters
     public void validatePassword() {
         String password = binding.passwordEdit.getText().toString();
-        boolean containOneDigit = false;
-        boolean containOneUpperCaseLetter = false;
-        boolean containOneLowerCaseLetter = false;
-
-        for (char oneChar : password.toCharArray()) {
-            if (!containOneDigit && Character.isDigit(oneChar)) {
-                containOneDigit = true;
-            }
-            if (!containOneUpperCaseLetter && Character.isUpperCase(oneChar)) {
-                containOneUpperCaseLetter = true;
-            }
-            if (!containOneLowerCaseLetter && Character.isLowerCase(oneChar)) {
-                containOneLowerCaseLetter = true;
-            }
-            if (containOneDigit && containOneUpperCaseLetter && containOneLowerCaseLetter) {
-                break;
-            }
-        }
-        if (password.isEmpty()) {
-            showPasswordError("Error! Enter password");
-        } else if (password.length() < 8) {
-            showPasswordError("Error! Password should contain 8 or more characters");
-        } else if (password.contains(" ")) {
-            showPasswordError("Error! Password should not contain spaces");
-        } else if (!containOneDigit) {
-            showPasswordError("Error! Password should contain at least one digit");
-        } else if (!containOneUpperCaseLetter) {
-            showPasswordError("Error! Password should contain at least one uppercase letter");
-        } else if (!containOneLowerCaseLetter) {
-            showPasswordError("Error! Password should contain at least one lowercase letter");
-        } else {
+        String errorMessage = validation.validatePassword(password);
+        if (errorMessage.isEmpty()) {
             removePasswordError();
+
+        } else {
+            showPasswordError(errorMessage);
         }
+    }
+
+    //change default loading bar color
+    public void setLoadingBarColor() {
+        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
     }
 
     //show error msg and hide error icon in password field
@@ -127,13 +111,16 @@ public class NewPasswordActivity extends AppCompatActivity {
     public void validateMatchPasswordAndConfirmPassword() {
         String password = binding.passwordEdit.getText().toString();
         String confirmPassword = binding.confirmPasswordEdit.getText().toString();
-        if (confirmPassword.isEmpty()) {
+        int errorCode = validation.matchPasswordAndConfirmPassword(password, confirmPassword);
+        if (errorCode == 2) {
             showConfirmPasswordError("ERROR! Re-enter password");
-        } else if (!password.equals(confirmPassword)) {
+        } else if (errorCode == 1) {
             showConfirmPasswordError("ERROR! Password not matched");
             showPasswordError(" ");
-        } else if (password.equals(confirmPassword)) {
+        } else if (errorCode == 0) {
             removeConfirmPasswordError();
+        } else {
+            showConfirmPasswordError("ERROR! Invalid password");
         }
     }
 

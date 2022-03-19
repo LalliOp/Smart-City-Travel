@@ -2,6 +2,7 @@ package com.example.smartcitytravel.Activities.Login;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -16,13 +17,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Activities.Home.HomeActivity;
-import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Activities.ResetPassword.EmailActivity;
 import com.example.smartcitytravel.Activities.SignUp.SignUpActivity;
+import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
-import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
+import com.example.smartcitytravel.Util.Validation;
 import com.example.smartcitytravel.databinding.ActivityLoginBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -42,8 +43,8 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private Util util;
     private Connection connection;
-    private PreferenceHandler preferenceHandler;
     private Color color;
+    private Validation validation;
     private boolean validate_email;
     private boolean validate_password;
 
@@ -53,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    hideLoginLoadingBar();
+                    hideGoogleSignInLoadingBar();
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         getGoogleSignInResult(result);
                     }
@@ -69,10 +70,11 @@ public class LoginActivity extends AppCompatActivity {
 
         util = new Util();
         connection = new Connection();
-        preferenceHandler = new PreferenceHandler();
         color = new Color();
+        validation = new Validation();
 
-        util.setStatusBarColor(LoginActivity.this,R.color.brown);
+        util.setStatusBarColor(LoginActivity.this, R.color.brown);
+        setLoadingBarColor();
         initializeValidator();
         setEmail();
         login();
@@ -113,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
     public void checkConnectionAndSignInWithGoogle() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(LoginActivity.this);
         if (isConnectionSourceAvailable) {
-            showLoginLoadingBar();
+            showGoogleSignInLoadingBar();
         }
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -128,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (isInternetAvailable) {
                             initializeGoogleSignIn();
                         } else {
-                            hideLoginLoadingBar();
+                            hideGoogleSignInLoadingBar();
                             Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                         }
 
@@ -236,16 +238,12 @@ public class LoginActivity extends AppCompatActivity {
     //check email field contain valid and allowed characters
     public void validateEmail() {
         String email = binding.emailEdit.getText().toString();
-        String emailRegex = "^[A-Za-z0-9.]+@[A-Za-z.]+$";
-        if (email.isEmpty()) {
-            showEmailError("Error! Empty Email");
-            validate_email = false;
-        } else if (!email.matches(emailRegex)) {
-            showEmailError("Error! Invalid Email");
-            validate_email = false;
-        } else {
+        String errorMessage = validation.validateEmail(email);
+        if (errorMessage.isEmpty()) {
             hideEmailError();
-            validate_email = true;
+
+        } else {
+            showEmailError(errorMessage);
         }
     }
 
@@ -284,11 +282,13 @@ public class LoginActivity extends AppCompatActivity {
     public void showEmailError(String errorMsg) {
         binding.emailLayout.setErrorIconTintList(color.iconRedColor(this));
         binding.emailLayout.setError(errorMsg);
+        validate_email = false;
     }
 
     //hide error icon color and msg in email field when no error occurs
     public void hideEmailError() {
         binding.emailLayout.setError(null);
+        validate_email = true;
     }
 
     //show error msg and hide error icon in password field when password field is empty
@@ -364,6 +364,11 @@ public class LoginActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
+    //change default loading bar color
+    public void setLoadingBarColor() {
+        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
+    }
+
     // show progress bar when user click on login button
     public void showLoginLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
@@ -373,6 +378,20 @@ public class LoginActivity extends AppCompatActivity {
     //hide progressbar when login complete and move to home activity or error occurs
     public void hideLoginLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
+        util.makeScreenTouchable(LoginActivity.this);
+    }
+
+    // show progress bar when user click on google sign in button
+    public void showGoogleSignInLoadingBar() {
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
+        binding.loadingProgressBar.loadingBarBackground.setVisibility(View.GONE);
+        util.makeScreenNotTouchable(LoginActivity.this);
+    }
+
+    //hide progressbar when google sign in complete and move to home activity or error occurs
+    public void hideGoogleSignInLoadingBar() {
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
+        binding.loadingProgressBar.loadingBarBackground.setVisibility(View.VISIBLE);
         util.makeScreenTouchable(LoginActivity.this);
     }
 
