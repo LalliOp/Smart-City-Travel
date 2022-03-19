@@ -17,6 +17,7 @@
         <activity
             android:name=".Activities.EditProfile.EditProfileActivity"
             android:exported="false"
+            android:parentActivityName=".Activities.Home.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.Destination.DestinationActivity"

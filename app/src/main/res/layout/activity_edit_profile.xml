@@ -6,24 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".Activities.EditProfile.EditProfileActivity">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/backImg"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="12dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:padding="3dp"
-        android:src="@drawable/ic_back"
-        app:shapeAppearanceOverlay="@style/CircularImage" />
+    <include
+        android:id="@+id/toolbarLayout"
+        layout="@layout/toolbar" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/profileImg"
         android:layout_width="120dp"
         android:layout_height="120dp"
+        android:layout_below="@id/toolbarLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="70dp"
         android:src="@mipmap/ic_launcher"
         app:shapeAppearanceOverlay="@style/CircularImage" />
 
@@ -68,15 +61,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/profileImgLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:textColorHint="@color/black"
-        android:theme="@style/TextInputLayoutStyle"
-        app:boxBackgroundMode="outline"
-        app:boxStrokeColor="@color/black"
-        app:boxStrokeErrorColor="@color/red"
+        android:layout_marginTop="60dp"
+        android:textColorHint="@color/default_black"
+        app:boxBackgroundMode="filled"
+        app:boxStrokeColor="@color/default_black"
+        app:boxStrokeErrorColor="@color/theme_light"
         app:errorEnabled="true"
-        app:errorTextColor="@color/red"
-        app:hintTextColor="@color/black">
+        app:errorTextColor="@color/theme_light"
+        app:hintTextColor="@color/default_black">
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/fullNameEdit"
             android:layout_width="match_parent"
@@ -84,7 +77,36 @@
             android:autofillHints="name"
             android:hint="@string/full_name"
             android:inputType="textPersonName"
-            android:textColor="@color/black"
-            android:textCursorDrawable="@drawable/color_cursor" />
+            android:textColor="@color/black" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/emailLayout"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fullNameLayout"
+        android:layout_centerHorizontal="true"
+        android:textColorHint="@color/default_black"
+        app:boxBackgroundMode="filled"
+        app:boxStrokeColor="@color/default_black"
+        app:hintTextColor="@color/default_black">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/emailEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="emailAddress"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/default_black" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/saveBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/emailLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:text="@string/save" />
 </RelativeLayout>

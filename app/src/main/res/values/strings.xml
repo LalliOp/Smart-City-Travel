@@ -54,4 +54,5 @@
     <string name="lahore">Lahore</string>
     <string name="islamabad">Islamabad</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="save">Save</string>
 </resources>
