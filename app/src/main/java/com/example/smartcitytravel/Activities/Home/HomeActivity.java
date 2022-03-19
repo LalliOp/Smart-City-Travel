@@ -311,6 +311,8 @@ public class HomeActivity extends AppCompatActivity {
                 intent.putExtra("email", user.getEmail());
                 intent.putExtra("profile_img_url", user.getImage_url());
                 startActivity(intent);
+
+                binding.drawerLayout.closeDrawer(GravityCompat.START);
             }
         });
 

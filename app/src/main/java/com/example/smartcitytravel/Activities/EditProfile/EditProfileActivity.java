@@ -111,6 +111,7 @@ public class EditProfileActivity extends AppCompatActivity {
         binding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                util.hideKeyboard(EditProfileActivity.this);
                 validateFullName();
             }
         });
