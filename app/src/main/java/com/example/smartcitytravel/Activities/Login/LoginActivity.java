@@ -250,10 +250,10 @@ public class LoginActivity extends AppCompatActivity {
     //password field is empty or not
     public void validatePassword() {
         if (binding.passwordEdit.getText().toString().isEmpty()) {
-            showPasswordEmptyError("Error! Empty Password");
+            showPasswordError("Error! Empty Password");
             validate_email = false;
         } else {
-            hidePasswordEmptyError();
+            hidePasswordError();
             validate_password = true;
         }
     }
@@ -291,15 +291,15 @@ public class LoginActivity extends AppCompatActivity {
         validate_email = true;
     }
 
-    //show error msg and hide error icon in password field when password field is empty
-    public void showPasswordEmptyError(String errorMsg) {
+    //show error msg and hide error icon in password field
+    public void showPasswordError(String errorMsg) {
         binding.passwordLayout.setEndIconTintList(color.iconRedColor(this));
         binding.passwordLayout.setError(errorMsg);
         binding.passwordLayout.setErrorIconDrawable(null);
     }
 
-    //hide msg in password field when password field is not empty
-    public void hidePasswordEmptyError() {
+    //hide error msg in password field
+    public void hidePasswordError() {
         binding.passwordLayout.setEndIconTintList(color.iconWhiteColor(this));
         binding.passwordLayout.setError(null);
     }
@@ -317,9 +317,9 @@ public class LoginActivity extends AppCompatActivity {
                 if (result.getAccount_status() == 1) {
                     moveToHomeActivity(binding.emailEdit.getText().toString().toLowerCase());
                 } else if (result.getAccount_status() == 0) {
-                    showPasswordEmptyError("Error! " + result.getMessage());
+                    util.createErrorDialog(LoginActivity.this, "Password", result.getMessage());
                 } else if (result.getAccount_status() == -1) {
-                    util.createErrorDialog(LoginActivity.this, "Account", "There are no account exist with this email");
+                    util.createErrorDialog(LoginActivity.this, "Account", "No account exist with this email");
                 } else if (result.getAccount_status() == 2) {
                     util.createErrorDialog(LoginActivity.this, "Account", "Google account exist with this email. " + result.getMessage());
                 }
