@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+     <include layout="@layout/toolbar"/>
+
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/lahoreCardView"
@@ -12,7 +14,8 @@
         android:layout_weight="1"
         android:clickable="true"
         android:focusable="true"
-        app:cardCornerRadius="0dp">
+        app:cardCornerRadius="20dp"
+        android:layout_margin="15dp">
 
         <ImageView
             android:id="@+id/lahoreImg"
@@ -41,7 +44,8 @@
         android:layout_weight="1"
         android:clickable="true"
         android:focusable="true"
-        app:cardCornerRadius="0dp">
+        app:cardCornerRadius="20dp"
+        android:layout_margin="15dp">
 
         <ImageView
             android:id="@+id/islamabadImg"
@@ -62,4 +66,16 @@
             android:textColor="@color/white"
             android:textSize="40sp" />
     </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
 </LinearLayout>
