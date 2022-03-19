@@ -63,6 +63,7 @@ public class EditProfileActivity extends AppCompatActivity {
         save();
     }
 
+    //customize and add toolbar
     void addToolbar() {
         setSupportActionBar(binding.toolbarLayout.toolbar);
         getSupportActionBar().setTitle("Edit Profile");

@@ -22,6 +22,7 @@
         <activity
             android:name=".Activities.Destination.DestinationActivity"
             android:exported="false"
+            android:parentActivityName=".Activities.Home.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.LiveChat.LiveChatActivity"
