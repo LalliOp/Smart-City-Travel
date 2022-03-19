@@ -18,6 +18,7 @@ import androidx.core.view.GravityCompat;
 import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.AWSService.DataModel.User;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
+import com.example.smartcitytravel.Activities.EditProfile.EditProfileActivity;
 import com.example.smartcitytravel.Activities.Login.LoginActivity;
 import com.example.smartcitytravel.Fragments.AboutUsFragment;
 import com.example.smartcitytravel.Fragments.HomeFragment;
@@ -32,6 +33,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.concurrent.ExecutorService;
@@ -46,6 +48,7 @@ public class HomeActivity extends AppCompatActivity {
     private Util util;
     private PreferenceHandler preferenceHandler;
     private Connection connection;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,14 +65,15 @@ public class HomeActivity extends AppCompatActivity {
         createHomeFragment(savedInstanceState);
         navigationDrawerToggle();
         selectFragmentFromDrawer();
+        editUserProfile();
 
     }
 
     public void getLogInAccountDetails() {
         String email = getIntent().getStringExtra("email");
         if (email == null) {
-            User user = preferenceHandler.getLoginAccountPreference(HomeActivity.this);
-            setUserProfile(user);
+            user = preferenceHandler.getLoginAccountPreference(HomeActivity.this);
+            setUserProfile();
         } else {
             checkConnectionAndGetAccount(email);
         }
@@ -104,9 +108,9 @@ public class HomeActivity extends AppCompatActivity {
         CallableAccount.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                User user = response.body();
+                user = response.body();
 
-                setUserProfile(user);
+                setUserProfile();
                 preferenceHandler.setLoginAccountPreference(user, HomeActivity.this);
             }
 
@@ -118,7 +122,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     // set name , email and image of user profile
-    public void setUserProfile(User user) {
+    public void setUserProfile() {
         View headerLayout = binding.navigationView.getHeaderView(0);
 
         TextView nameTxt = headerLayout.findViewById(R.id.profileNameTxt);
@@ -292,6 +296,22 @@ public class HomeActivity extends AppCompatActivity {
     public void moveToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    //move to edit user profile activity
+    public void editUserProfile() {
+        View headerLayout = binding.navigationView.getHeaderView(0);
+        ShapeableImageView editProfileImg = headerLayout.findViewById(R.id.editProfileImg);
+
+        editProfileImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, EditProfileActivity.class);
+                intent.putExtra("profile_img_url", user.getImage_url());
+                startActivity(intent);
+            }
+        });
+
     }
 
 }

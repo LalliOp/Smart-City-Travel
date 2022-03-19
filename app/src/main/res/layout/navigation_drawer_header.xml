@@ -11,7 +11,6 @@
         android:layout_height="70dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="40dp"
-        android:src="@mipmap/ic_launcher"
         app:shapeAppearanceOverlay="@style/CircularImage" />
 
     <TextView
@@ -22,23 +21,35 @@
         android:layout_alignStart="@id/profileImg"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/segoe_ui"
-        android:text="Abdul Muqeet"
         android:textSize="17sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/profileEmailTxt"
         android:layout_width="wrap_content"
-        android:text="muqeeta96@gmail.com"
-        android:fontFamily="@font/segoe_ui"
         android:layout_height="wrap_content"
         android:layout_below="@id/profileNameTxt"
         android:layout_alignStart="@id/profileNameTxt"
-        />
+        android:fontFamily="@font/segoe_ui" />
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_alignParentBottom="true" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/editProfileImg"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="3dp"
+        android:src="@drawable/ic_edit"
+        android:theme="@style/WhiteRippleEffectTheme"
+        app:shapeAppearanceOverlay="@style/CircularImage" />
 
 </RelativeLayout>

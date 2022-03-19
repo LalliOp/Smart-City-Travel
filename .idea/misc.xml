@@ -6,10 +6,12 @@
         <entry key="..\:/Users/AbdulMuqeet/.gradle/caches/transforms-3/380fb7b71deb593c4006b148c0b16fcf/transformed/jetified-uikit-2.2.4/res/layout/sb_activity.xml" value="0.1641025641025641" />
         <entry key="..\:/Users/AbdulMuqeet/.gradle/caches/transforms-3/380fb7b71deb593c4006b148c0b16fcf/transformed/jetified-uikit-2.2.4/res/layout/sb_view_channel_preview.xml" value="0.1641025641025641" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable-anydpi/ic_action_name.xml" value="0.10989583333333333" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable-anydpi/ic_back.xml" value="0.167" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable-anydpi/ic_navigation_drawer_menu.xml" value="0.167" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.21614583333333334" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable/color_cursor.xml" value="0.21614583333333334" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable/ic_launcher_background.xml" value="0.21614583333333334" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable/round_all_corner.xml" value="0.167" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable/round_corner.xml" value="0.167" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable/shadow.xml" value="0.167" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable/splash_screen_background.xml" value="0.20104166666666667" />
@@ -17,6 +19,7 @@
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable/text_view_stroke_color.xml" value="0.21614583333333334" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_destination.xml" value="0.2" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_destinationactivity.xml" value="0.1641025641025641" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_edit_profile.xml" value="0.25" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_email.xml" value="0.22" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_home.xml" value="0.2" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_live_chat.xml" value="0.13043478260869565" />
@@ -30,6 +33,7 @@
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/dialog.xml" value="0.13043478260869565" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/error_dialog.xml" value="0.2" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/fragment_about_us.xml" value="0.1641025641025641" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/fragment_edit_profile_info.xml" value="0.1641025641025641" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/fragment_home.xml" value="0.21" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/fragment_seetings.xml" value="0.1641025641025641" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/fragment_settings.xml" value="0.1641025641025641" />

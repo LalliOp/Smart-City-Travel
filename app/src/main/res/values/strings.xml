@@ -53,4 +53,6 @@
     <string name="about_us_intro">The best hotels available nearby and the restaurants to have food. Therefore, our app is going to provide all information under one roof so that they can have better experience in that city.</string>
     <string name="lahore">Lahore</string>
     <string name="islamabad">Islamabad</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
