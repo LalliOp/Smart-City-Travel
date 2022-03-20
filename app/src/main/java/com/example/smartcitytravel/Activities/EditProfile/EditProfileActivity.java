@@ -61,7 +61,6 @@ public class EditProfileActivity extends AppCompatActivity {
                     if (result != null && result.getData() != null) {
                         Uri imageUri = result.getData().getData();
                         binding.loadingImg.setVisibility(View.VISIBLE);
-                        setProfileImage(imageUri.toString());
                         checkConnectionAndUpdateProfileImage(imageUri);
 
                     }
