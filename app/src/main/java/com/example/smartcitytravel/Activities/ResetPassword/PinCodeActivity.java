@@ -36,16 +36,20 @@ public class PinCodeActivity extends AppCompatActivity {
         binding = ActivityPinCodeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
+        initialize();
+        util.setStatusBarColor(PinCodeActivity.this, R.color.black);
+        checkConnectionAndPinCode();
+        continueButtonClickListener();
+        resendCode();
+    }
+
+    //initialize variables
+    public void initialize() {
         pin_code = 0;
         util = new Util();
         connection = new Connection();
         preferenceHandler = new PreferenceHandler();
-
-        util.setStatusBarColor(PinCodeActivity.this, R.color.black);
-
-        checkConnectionAndPinCode();
-        continueButtonClickListener();
-        resendCode();
     }
 
     //check pin code field contain valid data

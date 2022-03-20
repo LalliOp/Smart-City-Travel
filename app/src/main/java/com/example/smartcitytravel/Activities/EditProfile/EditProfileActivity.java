@@ -57,10 +57,11 @@ public class EditProfileActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
+
                     if (result != null && result.getData() != null) {
                         Uri imageUri = result.getData().getData();
                         binding.loadingImg.setVisibility(View.VISIBLE);
-                        setProfileImage("");
+                        setProfileImage(imageUri.toString());
                         checkConnectionAndUpdateProfileImage(imageUri);
 
                     }
@@ -74,6 +75,18 @@ public class EditProfileActivity extends AppCompatActivity {
         binding = ActivityEditProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        binding.saveBtn.setEnabled(false);
+        initialize();
+        setToolBarTheme();
+        setUserProfile();
+        openGallery();
+        nameChangeListener();
+        save();
+
+    }
+
+    //initialize variables
+    public void initialize() {
         util = new Util();
         color = new Color();
         validation = new Validation();
@@ -82,18 +95,20 @@ public class EditProfileActivity extends AppCompatActivity {
 
         changeName = "";
         user = preferenceHandler.getLoginAccountPreference(this);
-        binding.saveBtn.setEnabled(false);
+    }
+
+    // style and customize toolbar and theme
+    public void setToolBarTheme() {
         util.setStatusBarColor(this, R.color.theme_dark);
         util.addToolbar(this, binding.toolbarLayout.toolbar, "Edit Profile");
+    }
+
+    //set name, email and image profile of user
+    public void setUserProfile() {
         setProfileImage(user.getImage_url());
         setName();
         setEmail();
-        openGallery();
-        nameChangeListener();
-        save();
-
     }
-
 
     //get name from activity intent and set name in name field
     public void setName() {
@@ -123,7 +138,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK);
                 galleryIntent.setType("image/*");
                 imagePickerActivityResultLauncher.launch(galleryIntent);
-
             }
         });
     }

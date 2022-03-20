@@ -47,10 +47,7 @@ public class HomeActivity extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        util = new Util();
-        preferenceHandler = new PreferenceHandler();
-        connection = new Connection();
-
+        initialize();
         setLoadingBarColor();
         createHomeFragment(savedInstanceState);
         navigationDrawerToggle();
@@ -63,6 +60,13 @@ public class HomeActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         setUserProfile();
+    }
+
+    //initialize variables
+    public void initialize() {
+        util = new Util();
+        preferenceHandler = new PreferenceHandler();
+        connection = new Connection();
     }
 
     // set name , email and image of user profile
@@ -187,7 +191,7 @@ public class HomeActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        showLogoutLoadingBar();
+                        showLoadingBar();
                         logout();
 
                     }
@@ -202,8 +206,8 @@ public class HomeActivity extends AppCompatActivity {
         binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
     }
 
-    // show progress bar when user click on logout button
-    public void showLogoutLoadingBar() {
+    // show progress bar
+    public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
         util.makeScreenNotTouchable(this);
     }
@@ -255,9 +259,11 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
 
                 binding.drawerLayout.closeDrawer(GravityCompat.START);
+
             }
         });
 
     }
+
 
 }

@@ -41,16 +41,21 @@ public class EmailActivity extends AppCompatActivity {
         binding = ActivityEmailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
+        initialize();
+        util.setStatusBarColor(EmailActivity.this, R.color.black);
+        setLoadingBarColor();
+        continueButtonClickListener();
+    }
+
+    //initialize variables
+    public void initialize() {
         util = new Util();
         connection = new Connection();
         color = new Color();
         preferenceHandler = new PreferenceHandler();
         validation = new Validation();
         validate_email = false;
-
-        util.setStatusBarColor(EmailActivity.this, R.color.black);
-        setLoadingBarColor();
-        continueButtonClickListener();
     }
 
     // call when user click on continue button

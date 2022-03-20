@@ -73,12 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        util = new Util();
-        connection = new Connection();
-        color = new Color();
-        validation = new Validation();
-        preferenceHandler = new PreferenceHandler();
-
+        initialize();
         util.setStatusBarColor(LoginActivity.this, R.color.brown);
         setLoadingBarColor();
         initializeValidator();
@@ -93,6 +88,15 @@ public class LoginActivity extends AppCompatActivity {
     public void initializeValidator() {
         validate_email = false;
         validate_password = false;
+    }
+
+    //initialize variables
+    public void initialize() {
+        util = new Util();
+        connection = new Connection();
+        color = new Color();
+        validation = new Validation();
+        preferenceHandler = new PreferenceHandler();
     }
 
     // set email in email field in login activity when create account from signup activity and move to login activity

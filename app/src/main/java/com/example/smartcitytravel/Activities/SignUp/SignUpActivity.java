@@ -42,16 +42,21 @@ public class SignUpActivity extends AppCompatActivity {
         binding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        util = new Util();
-        connection = new Connection();
-        color = new Color();
-        validation = new Validation();
 
+        initialize();
         util.setStatusBarColor(SignUpActivity.this, R.color.dark_grey);
         setLoadingBarColor();
         initializeValidator();
         registerAccount();
 
+    }
+
+    //initialize variables
+    public void initialize() {
+        util = new Util();
+        connection = new Connection();
+        color = new Color();
+        validation = new Validation();
     }
 
     //initialize validate variable for each edit field which help us to know which field contain error or not

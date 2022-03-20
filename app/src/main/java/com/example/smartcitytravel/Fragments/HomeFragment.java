@@ -1,6 +1,7 @@
 package com.example.smartcitytravel.Fragments;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,13 @@ import androidx.fragment.app.Fragment;
 
 import com.example.smartcitytravel.Activities.Destination.DestinationActivity;
 import com.example.smartcitytravel.Activities.LiveChat.LiveChatActivity;
+import com.example.smartcitytravel.R;
+import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
+    private Util util;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,15 +31,17 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        util = new Util();
+
+        setLoadingBarColor();
         openLiveChat();
         moveToDestinationActivity();
     }
 
-    //make binding null which garbage collector auto collect and remove binding object with end of fragment
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onStop() {
+        super.onStop();
+        hideLoadingBar();
     }
 
     //run when user click on live chat image
@@ -60,9 +66,36 @@ public class HomeFragment extends Fragment {
         binding.destinationCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showLoadingBar();
                 Intent intent = new Intent(getActivity(), DestinationActivity.class);
                 startActivity(intent);
+//                hideLoadingBar();
             }
         });
     }
+
+    //change default loading bar color
+    public void setLoadingBarColor() {
+        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
+    }
+
+    // show progress bar when user click on destination button
+    public void showLoadingBar() {
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
+        util.makeScreenNotTouchable(requireActivity());
+    }
+
+    //hide progressbar when move to destination activity
+    public void hideLoadingBar() {
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
+        util.makeScreenTouchable(requireActivity());
+    }
+
+    //make binding null which garbage collector auto collect and remove binding object with end of fragment
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
 }

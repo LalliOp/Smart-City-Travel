@@ -42,16 +42,21 @@ public class NewPasswordActivity extends AppCompatActivity {
         binding = ActivityNewPasswordBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
+        initialize();
+        util.setStatusBarColor(NewPasswordActivity.this, R.color.black);
+        setLoadingBarColor();
+        initializeValidator();
+        resetPassword();
+    }
+
+    //initialize variables
+    public void initialize() {
         color = new Color();
         connection = new Connection();
         util = new Util();
         preferenceHandler = new PreferenceHandler();
         validation = new Validation();
-
-        util.setStatusBarColor(NewPasswordActivity.this, R.color.black);
-        setLoadingBarColor();
-        initializeValidator();
-        resetPassword();
     }
 
     //initialize validate variable for each field which help us to know which field contain error or not
