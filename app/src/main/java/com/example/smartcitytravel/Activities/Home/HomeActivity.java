@@ -52,12 +52,17 @@ public class HomeActivity extends AppCompatActivity {
         connection = new Connection();
 
         setLoadingBarColor();
-        setUserProfile();
         createHomeFragment(savedInstanceState);
         navigationDrawerToggle();
         selectFragmentFromDrawer();
         editUserProfile();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setUserProfile();
     }
 
     // set name , email and image of user profile

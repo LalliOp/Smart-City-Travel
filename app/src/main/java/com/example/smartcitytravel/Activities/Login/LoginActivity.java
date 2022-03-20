@@ -57,9 +57,11 @@ public class LoginActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    hideGoogleSignInLoadingBar();
+
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         getGoogleSignInResult(result);
+                    } else {
+                        hideGoogleSignInLoadingBar();
                     }
                 }
             }
@@ -242,11 +244,13 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(LoginActivity.this, "Unable to setup Account", Toast.LENGTH_SHORT).show();
                 }
+                hideGoogleSignInLoadingBar();
             }
 
             @Override
             public void onFailure(@NonNull Call<Result> call, @NonNull Throwable t) {
                 Toast.makeText(LoginActivity.this, "Unable to verify email", Toast.LENGTH_SHORT).show();
+                hideGoogleSignInLoadingBar();
             }
         });
 
