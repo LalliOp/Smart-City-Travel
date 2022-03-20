@@ -194,8 +194,10 @@ public class SignUpActivity extends AppCompatActivity {
     // check all fields are valid. If valid create account by passing user account info to database
     // and move to Login Activity if account created successfully
     public void createAccount() {
-        String normalizedFullName=binding.fullNameEdit.getText().toString().toLowerCase();
-        normalizedFullName=normalizedFullName.trim().replaceAll("\\s{2,}"," ");
+
+
+        String normalizedFullName = binding.fullNameEdit.getText().toString().toLowerCase();
+        normalizedFullName = normalizedFullName.trim().replaceAll("\\s{2,}", " ");
 
         Call<Result> createAccountCallable = HttpClient.getInstance().createAccount(normalizedFullName,
                 binding.emailEdit.getText().toString().toLowerCase(), binding.passwordEdit.getText().toString(), "0",

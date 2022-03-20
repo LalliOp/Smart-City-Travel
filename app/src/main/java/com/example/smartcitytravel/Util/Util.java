@@ -7,10 +7,13 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.smartcitytravel.Dialogs.ErrorDialog;
+import com.example.smartcitytravel.R;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -65,6 +68,14 @@ public class Util {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(activity, colorResId));
+    }
+
+    //customize and add toolbar
+    public void addToolbar(AppCompatActivity activity, Toolbar toolbar,String title) {
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setTitle(title);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
     }
 
 }

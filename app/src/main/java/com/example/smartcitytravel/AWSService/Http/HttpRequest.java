@@ -29,4 +29,10 @@ public interface HttpRequest {
 
     @POST("get-account")
     Call<User> getAccount(@Query("email") String email);
+
+    @POST("update-profile-name")
+    Call<Result> updateProfileName(@Query("email") String email, @Query("name") String name);
+
+    @POST("update-profile-image")
+    Call<Result> updateProfileImage(@Query("email") String email, @Query("image_url") String image_url);
 }

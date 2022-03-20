@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.Result;
+import com.example.smartcitytravel.AWSService.DataModel.User;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Activities.Home.HomeActivity;
 import com.example.smartcitytravel.Activities.ResetPassword.EmailActivity;
@@ -22,6 +23,7 @@ import com.example.smartcitytravel.Activities.SignUp.SignUpActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
+import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.Util.Validation;
 import com.example.smartcitytravel.databinding.ActivityLoginBinding;
@@ -45,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     private Connection connection;
     private Color color;
     private Validation validation;
+    private PreferenceHandler preferenceHandler;
     private boolean validate_email;
     private boolean validate_password;
 
@@ -72,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         connection = new Connection();
         color = new Color();
         validation = new Validation();
+        preferenceHandler = new PreferenceHandler();
 
         util.setStatusBarColor(LoginActivity.this, R.color.brown);
         setLoadingBarColor();
@@ -162,8 +166,7 @@ public class LoginActivity extends AppCompatActivity {
 
         try {
             GoogleSignInAccount googleSignInAccount = googleSignInAccountTask.getResult(ApiException.class);
-            moveToHomeActivity(googleSignInAccount.getEmail().toLowerCase());
-            checkConnectionAndSaveGoogleAccount(googleSignInAccount);
+            checkConnectionAndVerifyEmail(googleSignInAccount);
 
         } catch (ApiException e) {
             Toast.makeText(LoginActivity.this, "Unable to Sign In with Google", Toast.LENGTH_SHORT).show();
@@ -184,6 +187,9 @@ public class LoginActivity extends AppCompatActivity {
         createAccountCallable.enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
+                if (response.body() != null) {
+                    getAccountDetails(googleSignInAccount.getEmail().toLowerCase());
+                }
 
             }
 
@@ -194,19 +200,19 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    //first check internet connection and then save google account details
-    public void checkConnectionAndSaveGoogleAccount(GoogleSignInAccount googleSignInAccount) {
+    //check internet connection and then verify email by database
+    public void checkConnectionAndVerifyEmail(GoogleSignInAccount googleSignInAccount) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 Boolean internetAvailable = connection.isConnectionSourceAndInternetAvailable(LoginActivity.this);
 
-                LoginActivity.this.runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (internetAvailable) {
-                            saveGoogleAccount(googleSignInAccount);
+                            verifyEmail(googleSignInAccount);
                         } else {
                             Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                         }
@@ -215,6 +221,58 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         executor.shutdown();
+    }
+
+    //check whether google email already exist or not
+    //if account already exist get details otherwise create new account with google info
+    public void verifyEmail(GoogleSignInAccount googleSignInAccount) {
+        Call<Result> verifyEmailCallable = HttpClient.getInstance().verifyEmail(googleSignInAccount.getEmail());
+
+        verifyEmailCallable.enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(@NonNull Call<Result> call, @NonNull Response<Result> response) {
+                Result result = response.body();
+                if (result != null) {
+                    if (result.getAccount_status() == -1) {
+                        saveGoogleAccount(googleSignInAccount);
+                    } else if (result.getAccount_status() == 1 || result.getAccount_status() == 0) {
+                        getAccountDetails(googleSignInAccount.getEmail());
+                    }
+
+                } else {
+                    Toast.makeText(LoginActivity.this, "Unable to setup Account", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Result> call, @NonNull Throwable t) {
+                Toast.makeText(LoginActivity.this, "Unable to verify email", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+
+    // get account details from database and save in shared preference
+    public void getAccountDetails(String email) {
+        Call<User> CallableAccount = HttpClient.getInstance().getAccount(email);
+
+        CallableAccount.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User user = response.body();
+                if (user != null) {
+                    moveToHomeActivity();
+                    preferenceHandler.setLoginAccountPreference(user, LoginActivity.this);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "Unable to get account details", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //run by user click on login button
@@ -271,9 +329,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //Move from Login Activity to Home Activity
-    public void moveToHomeActivity(String email) {
+    public void moveToHomeActivity() {
         Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("email", email);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
@@ -314,14 +371,19 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<Result> call, @NonNull Response<Result> response) {
                 Result result = response.body();
-                if (result.getAccount_status() == 1) {
-                    moveToHomeActivity(binding.emailEdit.getText().toString().toLowerCase());
-                } else if (result.getAccount_status() == 0) {
-                    util.createErrorDialog(LoginActivity.this, "Password", result.getMessage());
-                } else if (result.getAccount_status() == -1) {
-                    util.createErrorDialog(LoginActivity.this, "Account", "No account exist with this email");
-                } else if (result.getAccount_status() == 2) {
-                    util.createErrorDialog(LoginActivity.this, "Account", "Google account exist with this email. " + result.getMessage());
+                if (result != null) {
+                    if (result.getAccount_status() == 1) {
+                        getAccountDetails(binding.emailEdit.getText().toString().toLowerCase());
+                    } else if (result.getAccount_status() == 0) {
+                        util.createErrorDialog(LoginActivity.this, "Password", result.getMessage());
+                    } else if (result.getAccount_status() == -1) {
+                        util.createErrorDialog(LoginActivity.this, "Account", "No account exist with this email");
+                    } else if (result.getAccount_status() == 2) {
+                        util.createErrorDialog(LoginActivity.this, "Account", "Google account exist with this email. " + result.getMessage());
+                    }
+
+                } else {
+                    Toast.makeText(LoginActivity.this, "Unable to sign in", Toast.LENGTH_SHORT).show();
                 }
                 hideLoginLoadingBar();
             }

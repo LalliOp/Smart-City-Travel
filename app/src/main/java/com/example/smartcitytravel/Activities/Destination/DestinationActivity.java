@@ -18,18 +18,10 @@ public class DestinationActivity extends AppCompatActivity {
         binding = ActivityDestinationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        util=new Util();
+        util = new Util();
 
         util.setStatusBarColor(this, R.color.theme_dark);
-        addToolbar();
-    }
-
-    //customize and add toolbar
-    void addToolbar() {
-        setSupportActionBar(binding.toolbarLayout.toolbar);
-        getSupportActionBar().setTitle("Destination");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+        util.addToolbar(this, binding.toolbarLayout.toolbar, "Destination");
     }
 
 }

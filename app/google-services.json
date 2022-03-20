@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "200125527649",
+    "project_id": "smart-city-travel-c2eb1",
+    "storage_bucket": "smart-city-travel-c2eb1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200125527649:android:948a675fd5d15617115c20",
+        "android_client_info": {
+          "package_name": "com.example.smartcitytravel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "200125527649-iv8rl8u525aqpa2135e8advkpf7r6s6l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYqD5so9SAYZON7-uwv42HcAUEk1sEl2o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "200125527649-iv8rl8u525aqpa2135e8advkpf7r6s6l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

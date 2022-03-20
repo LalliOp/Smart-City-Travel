@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     public void checkUserAlreadySignIn() {
         Integer google_account = preferenceHandler.getLoginAccountTypePreference(MainActivity.this);
 
-
         if (google_account == -1) {
             moveToLoginActivity();
         } else if (google_account == 0) {

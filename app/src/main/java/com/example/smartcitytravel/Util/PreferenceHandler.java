@@ -55,6 +55,24 @@ public class PreferenceHandler {
         editor.apply();
     }
 
+    //update name of logged in account
+    public void updateNameLoginAccountPreference(String name, Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("name", name);
+        editor.apply();
+    }
+
+    //update profile image of logged in account
+    public void updateImageLoginAccountPreference(String image_url, Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("image_url", image_url);
+        editor.apply();
+    }
+
     //save email which is used during reset password process
     public void saveEmailOfResetPasswordProcess(Context context, String value) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),

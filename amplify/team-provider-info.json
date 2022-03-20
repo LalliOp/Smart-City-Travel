@@ -1,0 +1,21 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-smartcitytravel-dev-83008-authRole",
+      "UnauthRoleArn": "arn:aws:iam::502099461537:role/amplify-smartcitytravel-dev-83008-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::502099461537:role/amplify-smartcitytravel-dev-83008-authRole",
+      "Region": "ap-south-1",
+      "DeploymentBucketName": "amplify-smartcitytravel-dev-83008-deployment",
+      "UnauthRoleName": "amplify-smartcitytravel-dev-83008-unauthRole",
+      "StackName": "amplify-smartcitytravel-dev-83008",
+      "StackId": "arn:aws:cloudformation:ap-south-1:502099461537:stack/amplify-smartcitytravel-dev-83008/0ed7acb0-a7fe-11ec-b480-065e276eb942",
+      "AmplifyAppId": "d1kfs46tkzdhym"
+    },
+    "categories": {
+      "auth": {
+        "smartcitytravele3cd1007": {},
+        "true": {}
+      }
+    }
+  }
+}

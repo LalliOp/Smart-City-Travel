@@ -17,7 +17,6 @@ import androidx.core.view.GravityCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.AWSService.DataModel.User;
-import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Activities.EditProfile.EditProfileActivity;
 import com.example.smartcitytravel.Activities.Login.LoginActivity;
 import com.example.smartcitytravel.Fragments.AboutUsFragment;
@@ -36,19 +35,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
     private Util util;
     private PreferenceHandler preferenceHandler;
     private Connection connection;
-    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +52,7 @@ public class HomeActivity extends AppCompatActivity {
         connection = new Connection();
 
         setLoadingBarColor();
-        getLogInAccountDetails();
+        setUserProfile();
         createHomeFragment(savedInstanceState);
         navigationDrawerToggle();
         selectFragmentFromDrawer();
@@ -69,60 +60,10 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    public void getLogInAccountDetails() {
-        String email = getIntent().getStringExtra("email");
-        if (email == null) {
-            user = preferenceHandler.getLoginAccountPreference(HomeActivity.this);
-            setUserProfile();
-        } else {
-            checkConnectionAndGetAccount(email);
-        }
-    }
-
-    //check internet connection and get account detail from database
-    public void checkConnectionAndGetAccount(String email) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                Boolean internetAvailable = connection.isConnectionSourceAndInternetAvailable(HomeActivity.this);
-
-                HomeActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (internetAvailable) {
-                            getAccountDetails(email);
-                        }
-
-                    }
-                });
-            }
-        });
-        executor.shutdown();
-    }
-
-    // get account details from database and set profile
-    public void getAccountDetails(String email) {
-        Call<User> CallableAccount = HttpClient.getInstance().getAccount(email);
-
-        CallableAccount.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                user = response.body();
-
-                setUserProfile();
-                preferenceHandler.setLoginAccountPreference(user, HomeActivity.this);
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(HomeActivity.this, "Unable to get account details", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     // set name , email and image of user profile
     public void setUserProfile() {
+        User user = preferenceHandler.getLoginAccountPreference(HomeActivity.this);
+
         View headerLayout = binding.navigationView.getHeaderView(0);
 
         TextView nameTxt = headerLayout.findViewById(R.id.profileNameTxt);
@@ -135,7 +76,6 @@ public class HomeActivity extends AppCompatActivity {
                 .load(user.getImage_url())
                 .into((ImageView) headerLayout.findViewById(R.id.profileImg));
     }
-
 
     //change fragment base on selected activity
     public void selectFragmentFromDrawer() {
@@ -307,9 +247,6 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, EditProfileActivity.class);
-                intent.putExtra("name", user.getName());
-                intent.putExtra("email", user.getEmail());
-                intent.putExtra("profile_img_url", user.getImage_url());
                 startActivity(intent);
 
                 binding.drawerLayout.closeDrawer(GravityCompat.START);
