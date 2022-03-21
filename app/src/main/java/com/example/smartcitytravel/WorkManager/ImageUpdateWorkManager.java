@@ -3,7 +3,6 @@ package com.example.smartcitytravel.WorkManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,6 +13,7 @@ import androidx.work.WorkerParameters;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
+import com.example.smartcitytravel.Util.Util;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,21 +29,19 @@ import retrofit2.Response;
 
 public class ImageUpdateWorkManager extends Worker {
     private Connection connection;
-    private Context context;
     private PreferenceHandler preferenceHandler;
+    private Util util;
     private Uri imageUri;
     private String email;
-    private boolean resultType;
 
     public ImageUpdateWorkManager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
 
-        this.context = context;
         connection = new Connection();
         preferenceHandler = new PreferenceHandler();
+        util = new Util();
         imageUri = Uri.parse(getInputData().getString("image_url"));
         email = getInputData().getString("email");
-        resultType = false;
 
     }
 
@@ -52,6 +50,7 @@ public class ImageUpdateWorkManager extends Worker {
     public Result doWork() {
         uploadProfileImage();
         return Result.success();
+
     }
 
     //check internet connection and then upload image in firebase cloud and update image in database
@@ -70,6 +69,7 @@ public class ImageUpdateWorkManager extends Worker {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                 if (!task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "Unable to update image", Toast.LENGTH_SHORT).show();
                     throw task.getException();
 
                 } else {
@@ -81,12 +81,10 @@ public class ImageUpdateWorkManager extends Worker {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
-                    resultType = true;
                     Uri downloadImageUri = task.getResult();
                     updateProfileImage(downloadImageUri);
-
                 } else {
-                    resultType = false;
+                    Toast.makeText(getApplicationContext(), "Unable to update image", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -101,16 +99,16 @@ public class ImageUpdateWorkManager extends Worker {
             public void onResponse(Call<com.example.smartcitytravel.AWSService.DataModel.Result> call, Response<com.example.smartcitytravel.AWSService.DataModel.Result> response) {
                 com.example.smartcitytravel.AWSService.DataModel.Result result = response.body();
                 if (result != null && result.getAccount_status() == 0) {
-                    preferenceHandler.updateImageLoginAccountPreference(downloadImageUri.toString(), context);
+                    preferenceHandler.updateImageLoginAccountPreference(downloadImageUri.toString(), getApplicationContext());
                     sendUpdateProfileBroadcast();
                 } else {
-                    Log.d("Error","Unable to update profile image");
+                    Toast.makeText(getApplicationContext(), "Unable to update profile image", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<com.example.smartcitytravel.AWSService.DataModel.Result> call, Throwable t) {
-                Log.d("Error","Unable to update profile image");
+                Toast.makeText(getApplicationContext(), "Unable to update profile image", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -55,12 +55,11 @@ public class EditProfileActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-
                     if (result != null && result.getData() != null) {
                         Uri imageUri = result.getData().getData();
-
                         checkConnectionAndUpdateProfileImage(imageUri);
-
+                    } else {
+                        Toast.makeText(EditProfileActivity.this, "Unable to retrieve image", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

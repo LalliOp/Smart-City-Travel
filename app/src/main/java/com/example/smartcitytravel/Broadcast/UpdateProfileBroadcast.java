@@ -41,6 +41,7 @@ public class UpdateProfileBroadcast extends BroadcastReceiver {
 
         Glide.with(context)
                 .load(user.getImage_url())
+                .timeout(60000)
                 .into((ImageView) headerLayout.findViewById(R.id.profileImg));
     }
 }
