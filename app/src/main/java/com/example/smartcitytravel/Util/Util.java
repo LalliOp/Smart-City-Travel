@@ -71,7 +71,7 @@ public class Util {
     }
 
     //customize and add toolbar
-    public void addToolbar(AppCompatActivity activity, Toolbar toolbar,String title) {
+    public void addToolbar(AppCompatActivity activity, Toolbar toolbar, String title) {
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setTitle(title);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -12,8 +12,12 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.AWSService.DataModel.Result;
@@ -25,15 +29,9 @@ import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.Util.Validation;
+import com.example.smartcitytravel.WorkManager.ImageUpdateWorkManager;
 import com.example.smartcitytravel.databinding.ActivityEditProfileBinding;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -52,7 +50,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private String changeName;
 
     //run when launch() function is called
-    //get image from gallery
+    //get image from gallery and save new image
     private ActivityResultLauncher<Intent> imagePickerActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -60,8 +58,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                     if (result != null && result.getData() != null) {
                         Uri imageUri = result.getData().getData();
-                        setProfileImage("");
-                        binding.loadingImg.setVisibility(View.VISIBLE);
+
                         checkConnectionAndUpdateProfileImage(imageUri);
 
                     }
@@ -83,6 +80,7 @@ public class EditProfileActivity extends AppCompatActivity {
         nameChangeListener();
         save();
 
+
     }
 
     //initialize variables
@@ -96,6 +94,7 @@ public class EditProfileActivity extends AppCompatActivity {
         changeName = "";
         user = preferenceHandler.getLoginAccountPreference(this);
     }
+
 
     // style and customize toolbar and theme
     public void setToolBarTheme() {
@@ -142,68 +141,8 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
-    //save new profile image in firebase store
-    public void uploadProfileImage(Uri imageUri) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageReference = storage.getReference().child("profile-images");
-
-        Random random1 = new Random();
-        Random random2 = new Random();
-        String imageName = imageUri.getAuthority() + random1.nextInt() + random2.nextInt();
-
-        StorageReference imageReference = storageReference.child(imageName);
-        UploadTask uploadImage = imageReference.putFile(imageUri);
-
-        uploadImage.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                } else {
-                    return imageReference.getDownloadUrl();
-                }
-
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Uri imageUri = task.getResult();
-                    updateProfileImage(imageUri);
-                    setProfileImage(imageUri.toString());
-                    binding.loadingImg.setVisibility(View.GONE);
-                }
-            }
-        });
-    }
-
-    //update profile image in database
-    public void updateProfileImage(Uri imageUri) {
-        Call<Result> callableProfileImage = HttpClient.getInstance().updateProfileImage(user.getEmail(),
-                imageUri.toString());
-        callableProfileImage.enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                Result result = response.body();
-
-                if (result != null && result.getAccount_status() == 0) {
-                    preferenceHandler.updateImageLoginAccountPreference(imageUri.toString(), EditProfileActivity.this);
-                } else {
-                    Toast.makeText(EditProfileActivity.this, "Unable to update profile image", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                Toast.makeText(EditProfileActivity.this, "Unable to update profile image", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-    }
-
-    //check internet connection and then upload image in firebase cloud and update image in database
-    public void checkConnectionAndUpdateProfileImage(Uri image_uri) {
+    //check internet connection and then upload profile image and update in database
+    public void checkConnectionAndUpdateProfileImage(Uri imageUri) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
@@ -214,15 +153,33 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (internetAvailable) {
-                            uploadProfileImage(image_uri);
+                            setProfileImage(imageUri.toString());
+                            startUpdateImageWorkManager(imageUri);
                         } else {
                             Toast.makeText(EditProfileActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                            hideLoadingBar();
                         }
                     }
                 });
             }
         });
         executor.shutdown();
+    }
+
+    // start background service to update profile image
+    public void startUpdateImageWorkManager(Uri imageUri) {
+        Data data = new Data.Builder()
+                .putString("image_url", imageUri.toString())
+                .putString("email", user.getEmail())
+                .build();
+
+        WorkRequest imageUpdateWorkRequest = new OneTimeWorkRequest.
+                Builder(ImageUpdateWorkManager.class)
+                .setInputData(data)
+                .build();
+
+        WorkManager.getInstance(EditProfileActivity.this)
+                .enqueue(imageUpdateWorkRequest);
     }
 
     //validate and save record in database
@@ -329,6 +286,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 Result result = response.body();
                 if (result != null) {
                     binding.fullNameEdit.setText(user.getName());
+                    sendUpdateProfileBroadcast();
                 }
                 hideLoadingBar();
             }
@@ -354,4 +312,9 @@ public class EditProfileActivity extends AppCompatActivity {
         util.makeScreenTouchable(this);
     }
 
+    // send broadcast to update profile
+    public void sendUpdateProfileBroadcast() {
+        Intent updateProfileIntent = new Intent("com.example.smartcitytravel.UPDATE_PROFILE");
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(updateProfileIntent);
+    }
 }

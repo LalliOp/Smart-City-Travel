@@ -3,6 +3,7 @@ package com.example.smartcitytravel.Activities.Home;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -14,11 +15,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.AWSService.DataModel.User;
 import com.example.smartcitytravel.Activities.EditProfile.EditProfileActivity;
 import com.example.smartcitytravel.Activities.Login.LoginActivity;
+import com.example.smartcitytravel.Broadcast.UpdateProfileBroadcast;
 import com.example.smartcitytravel.Fragments.AboutUsFragment;
 import com.example.smartcitytravel.Fragments.HomeFragment;
 import com.example.smartcitytravel.Fragments.SettingsFragment;
@@ -39,6 +42,7 @@ public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
     private Util util;
     private PreferenceHandler preferenceHandler;
+    private UpdateProfileBroadcast updateProfileBroadcast;
     private Connection connection;
 
     @Override
@@ -48,18 +52,15 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         initialize();
+        User user = preferenceHandler.getLoginAccountPreference(HomeActivity.this);
+        registerUpdateProfileBroadcastReceiver();
         setLoadingBarColor();
+        setUserProfile(user);
         createHomeFragment(savedInstanceState);
         navigationDrawerToggle();
         selectFragmentFromDrawer();
         editUserProfile();
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setUserProfile();
     }
 
     //initialize variables
@@ -69,9 +70,17 @@ public class HomeActivity extends AppCompatActivity {
         connection = new Connection();
     }
 
+    // register to listen for profile image broadcast
+    public void registerUpdateProfileBroadcastReceiver() {
+        updateProfileBroadcast = new UpdateProfileBroadcast(binding);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.example.smartcitytravel.UPDATE_PROFILE");
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(updateProfileBroadcast, intentFilter);
+    }
+
     // set name , email and image of user profile
-    public void setUserProfile() {
-        User user = preferenceHandler.getLoginAccountPreference(HomeActivity.this);
+    public void setUserProfile(User user) {
 
         View headerLayout = binding.navigationView.getHeaderView(0);
 
@@ -265,5 +274,10 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(updateProfileBroadcast);
+    }
 
 }

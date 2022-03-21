@@ -10,38 +10,22 @@
         android:id="@+id/toolbarLayout"
         layout="@layout/toolbar" />
 
-    <RelativeLayout
-        android:id="@+id/profileImgLay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profileImg"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_below="@id/toolbarLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/profileImg"
-            android:layout_width="120dp"
-            android:background="@color/grey"
-            android:layout_height="120dp"
-            app:shapeAppearanceOverlay="@style/CircularImage" />
-
-        <ProgressBar
-            android:id="@+id/loadingImg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true"
-            android:indeterminate="true"
-            android:visibility="gone" />
-    </RelativeLayout>
-
+        android:layout_marginTop="70dp"
+        android:background="@color/grey"
+        app:shapeAppearanceOverlay="@style/CircularImage" />
 
     <RelativeLayout
-        android:id="@+id/profileImgLayout"
+        android:id="@+id/changeProfileImgLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/profileImgLay"
-        android:layout_alignBottom="@id/profileImgLay">
+        android:layout_alignEnd="@id/profileImg"
+        android:layout_alignBottom="@id/profileImg">
 
         <RelativeLayout
 
@@ -75,7 +59,7 @@
         android:id="@+id/fullNameLayout"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/profileImgLayout"
+        android:layout_below="@id/changeProfileImgLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:textColorHint="@color/default_black"
