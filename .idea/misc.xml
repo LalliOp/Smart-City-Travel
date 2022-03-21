@@ -28,6 +28,8 @@
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_main.xml" value="0.12771739130434784" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_new_password.xml" value="0.1641025641025641" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_pin_code.xml" value="0.25" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_place_listas.xml" value="0.1641025641025641" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_place_recycler_view.xml" value="0.16" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_sign_up.xml" value="0.22" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/add_borrower_dialog.xml" value="0.12972972972972974" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/card_view_top_right_round_corner.xml" value="0.1641025641025641" />
@@ -43,6 +45,7 @@
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/movie_item.xml" value="0.1641025641025641" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/navigation_drawer.xml" value="0.22" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/navigation_drawer_header.xml" value="0.2" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/place_view.xml" value="0.2" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/recyclerview_listing.xml" value="0.1641025641025641" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/recyclerview_page.xml" value="0.1641025641025641" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/reset_password_background.xml" value="0.1641025641025641" />

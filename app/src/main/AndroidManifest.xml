@@ -15,6 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCityTravel">
         <activity
+            android:name=".Activities.PlaceRecyclerView.PlaceRecyclerViewActivity"
+            android:exported="false"
+            android:parentActivityName=".Activities.Destination.DestinationActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".Activities.EditProfile.EditProfileActivity"
             android:exported="false"
             android:parentActivityName=".Activities.Home.HomeActivity"
@@ -52,6 +57,7 @@
             android:name=".Activities.Login.LoginActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
