@@ -176,6 +176,7 @@ public class LoginActivity extends AppCompatActivity {
 
         } catch (ApiException e) {
             Toast.makeText(LoginActivity.this, "Unable to Sign In with Google", Toast.LENGTH_SHORT).show();
+            hideGoogleSignInLoadingBar();
         }
     }
 
@@ -221,6 +222,7 @@ public class LoginActivity extends AppCompatActivity {
                             verifyEmail(googleSignInAccount);
                         } else {
                             Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                            hideGoogleSignInLoadingBar();
                         }
                     }
                 });
@@ -244,7 +246,6 @@ public class LoginActivity extends AppCompatActivity {
                     } else if (result.getAccount_status() == 1 || result.getAccount_status() == 0) {
                         getAccountDetails(googleSignInAccount.getEmail());
                     }
-
                 } else {
                     Toast.makeText(LoginActivity.this, "Unable to setup Account", Toast.LENGTH_SHORT).show();
                 }
@@ -270,8 +271,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();
                 if (user != null) {
-                    moveToHomeActivity();
                     preferenceHandler.setLoginAccountPreference(user, LoginActivity.this);
+                    moveToHomeActivity();
                 }
 
             }
