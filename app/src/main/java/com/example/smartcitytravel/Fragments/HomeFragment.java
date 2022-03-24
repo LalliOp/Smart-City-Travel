@@ -69,7 +69,6 @@ public class HomeFragment extends Fragment {
                 showLoadingBar();
                 Intent intent = new Intent(getActivity(), DestinationActivity.class);
                 startActivity(intent);
-//                hideLoadingBar();
             }
         });
     }

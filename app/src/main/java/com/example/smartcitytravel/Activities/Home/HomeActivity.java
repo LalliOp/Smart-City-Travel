@@ -43,7 +43,6 @@ public class HomeActivity extends AppCompatActivity {
     private Util util;
     private PreferenceHandler preferenceHandler;
     private UpdateProfileBroadcast updateProfileBroadcast;
-    private Connection connection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +66,6 @@ public class HomeActivity extends AppCompatActivity {
     public void initialize() {
         util = new Util();
         preferenceHandler = new PreferenceHandler();
-        connection = new Connection();
     }
 
     // register to listen for profile image broadcast
@@ -92,39 +90,36 @@ public class HomeActivity extends AppCompatActivity {
 
         Glide.with(HomeActivity.this)
                 .load(user.getImage_url())
+                .timeout(60000)
                 .into((ImageView) headerLayout.findViewById(R.id.profileImg));
     }
 
-    //change fragment base on selected activity
+    //change or select fragment from navigation drawer
     public void selectFragmentFromDrawer() {
         binding.navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.home_menu:
-                                getSupportFragmentManager().beginTransaction()
-                                        .setReorderingAllowed(true)
-                                        .replace(binding.fragmentContainer.getId(), new HomeFragment())
-                                        .commit();
-                                break;
-                            case R.id.settings_menu:
-                                getSupportFragmentManager().beginTransaction()
-                                        .setReorderingAllowed(true)
-                                        .replace(binding.fragmentContainer.getId(), new SettingsFragment())
-                                        .commit();
-                                break;
-                            case R.id.about_us_menu:
-                                getSupportFragmentManager().beginTransaction()
-                                        .setReorderingAllowed(true)
-                                        .replace(binding.fragmentContainer.getId(), new AboutUsFragment())
-                                        .commit();
-                                break;
-                            case R.id.logout_menu:
-                                showLogoutDialog("Logout", "Do you want to logout?");
+                        if (item.getItemId() == R.id.home_menu) {
+                            getSupportFragmentManager().beginTransaction()
+                                    .setReorderingAllowed(true)
+                                    .replace(binding.fragmentContainer.getId(), new HomeFragment())
+                                    .commit();
+                        } else if (item.getItemId() == R.id.settings_menu) {
+                            getSupportFragmentManager().beginTransaction()
+                                    .setReorderingAllowed(true)
+                                    .replace(binding.fragmentContainer.getId(), new SettingsFragment())
+                                    .commit();
+                        } else if (item.getItemId() == R.id.about_us_menu) {
+                            getSupportFragmentManager().beginTransaction()
+                                    .setReorderingAllowed(true)
+                                    .replace(binding.fragmentContainer.getId(), new AboutUsFragment())
+                                    .commit();
+                        } else if (item.getItemId() == R.id.logout_menu) {
+                            showLogoutDialog("Logout", "Do you want to logout?");
                         }
-                        binding.drawerLayout.closeDrawer(GravityCompat.START);
 
+                        binding.drawerLayout.closeDrawer(GravityCompat.START);
                         return true;
                     }
                 });
