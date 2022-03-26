@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         getGoogleSignInResult(result);
                     } else {
-                        hideGoogleSignInLoadingBar();
+                        hideLoadingBar();
                     }
                 }
             }
@@ -125,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
     public void checkConnectionAndSignInWithGoogle() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(LoginActivity.this);
         if (isConnectionSourceAvailable) {
-            showGoogleSignInLoadingBar();
+            showLoadingBar();
         }
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -140,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (isInternetAvailable) {
                             initializeGoogleSignIn();
                         } else {
-                            hideGoogleSignInLoadingBar();
+                            hideLoadingBar();
                             Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                         }
 
@@ -176,7 +176,7 @@ public class LoginActivity extends AppCompatActivity {
 
         } catch (ApiException e) {
             Toast.makeText(LoginActivity.this, "Unable to Sign In with Google", Toast.LENGTH_SHORT).show();
-            hideGoogleSignInLoadingBar();
+            hideLoadingBar();
         }
     }
 
@@ -197,12 +197,17 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.body() != null) {
                     getAccountDetails(googleSignInAccount.getEmail().toLowerCase());
                 }
+                else{
+                    Toast.makeText(LoginActivity.this, "Unable to save google account details", Toast.LENGTH_SHORT).show();
+                    hideLoadingBar();
+                }
 
             }
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
                 Toast.makeText(LoginActivity.this, "Unable to save google account details", Toast.LENGTH_SHORT).show();
+                hideLoadingBar();
             }
         });
     }
@@ -222,7 +227,7 @@ public class LoginActivity extends AppCompatActivity {
                             verifyEmail(googleSignInAccount);
                         } else {
                             Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                            hideGoogleSignInLoadingBar();
+                            hideLoadingBar();
                         }
                     }
                 });
@@ -248,14 +253,15 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 } else {
                     Toast.makeText(LoginActivity.this, "Unable to setup Account", Toast.LENGTH_SHORT).show();
+                    hideLoadingBar();
                 }
-                hideGoogleSignInLoadingBar();
+
             }
 
             @Override
             public void onFailure(@NonNull Call<Result> call, @NonNull Throwable t) {
                 Toast.makeText(LoginActivity.this, "Unable to verify email", Toast.LENGTH_SHORT).show();
-                hideGoogleSignInLoadingBar();
+                hideLoadingBar();
             }
         });
 
@@ -273,13 +279,17 @@ public class LoginActivity extends AppCompatActivity {
                 if (user != null) {
                     preferenceHandler.setLoginAccountPreference(user, LoginActivity.this);
                     moveToHomeActivity();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Unable to get account details", Toast.LENGTH_SHORT).show();
                 }
+                hideLoadingBar();
 
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 Toast.makeText(LoginActivity.this, "Unable to get account details", Toast.LENGTH_SHORT).show();
+                hideLoadingBar();
             }
         });
     }
@@ -385,22 +395,26 @@ public class LoginActivity extends AppCompatActivity {
                         getAccountDetails(binding.emailEdit.getText().toString().toLowerCase());
                     } else if (result.getAccount_status() == 0) {
                         util.createErrorDialog(LoginActivity.this, "Password", result.getMessage());
+                        hideLoadingBar();
                     } else if (result.getAccount_status() == -1) {
                         util.createErrorDialog(LoginActivity.this, "Account", "No account exist with this email");
+                        hideLoadingBar();
                     } else if (result.getAccount_status() == 2) {
                         util.createErrorDialog(LoginActivity.this, "Account", "Google account exist with this email. " + result.getMessage());
+                        hideLoadingBar();
                     }
 
                 } else {
                     Toast.makeText(LoginActivity.this, "Unable to sign in", Toast.LENGTH_SHORT).show();
+                    hideLoadingBar();
                 }
-                hideLoginLoadingBar();
+
             }
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
                 Toast.makeText(LoginActivity.this, "Unable to sign in", Toast.LENGTH_SHORT).show();
-                hideLoginLoadingBar();
+                hideLoadingBar();
             }
         });
     }
@@ -409,7 +423,7 @@ public class LoginActivity extends AppCompatActivity {
     public void checkConnectionAndVerifyAccount() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(LoginActivity.this);
         if (isConnectionSourceAvailable) {
-            showLoginLoadingBar();
+            showLoadingBar();
         }
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -424,7 +438,7 @@ public class LoginActivity extends AppCompatActivity {
                             verifyLogin();
                         } else {
                             Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                            hideLoginLoadingBar();
+                            hideLoadingBar();
 
                         }
 
@@ -440,29 +454,15 @@ public class LoginActivity extends AppCompatActivity {
         binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
     }
 
-    // show progress bar when user click on login button
-    public void showLoginLoadingBar() {
+    // show progress bar
+    public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
         util.makeScreenNotTouchable(LoginActivity.this);
     }
 
-    //hide progressbar when login complete and move to home activity or error occurs
-    public void hideLoginLoadingBar() {
+    //hide progressbar
+    public void hideLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
-        util.makeScreenTouchable(LoginActivity.this);
-    }
-
-    // show progress bar when user click on google sign in button
-    public void showGoogleSignInLoadingBar() {
-        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
-        binding.loadingProgressBar.loadingBarBackground.setVisibility(View.GONE);
-        util.makeScreenNotTouchable(LoginActivity.this);
-    }
-
-    //hide progressbar when google sign in complete and move to home activity or error occurs
-    public void hideGoogleSignInLoadingBar() {
-        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
-        binding.loadingProgressBar.loadingBarBackground.setVisibility(View.VISIBLE);
         util.makeScreenTouchable(LoginActivity.this);
     }
 

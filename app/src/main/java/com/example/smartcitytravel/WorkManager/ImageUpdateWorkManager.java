@@ -30,7 +30,6 @@ import retrofit2.Response;
 public class ImageUpdateWorkManager extends Worker {
     private Connection connection;
     private PreferenceHandler preferenceHandler;
-    private Util util;
     private Uri imageUri;
     private String email;
 
@@ -39,7 +38,6 @@ public class ImageUpdateWorkManager extends Worker {
 
         connection = new Connection();
         preferenceHandler = new PreferenceHandler();
-        util = new Util();
         imageUri = Uri.parse(getInputData().getString("image_url"));
         email = getInputData().getString("email");
 

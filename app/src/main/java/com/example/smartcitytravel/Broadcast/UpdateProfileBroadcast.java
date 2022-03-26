@@ -31,7 +31,6 @@ public class UpdateProfileBroadcast extends BroadcastReceiver {
         setUserProfile(context, user);
 
     }
-
     // set name , email and image of user profile
     public void setUserProfile(Context context, User user) {
         View headerLayout = binding.navigationView.getHeaderView(0);
