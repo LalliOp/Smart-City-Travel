@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import java.io.IOException;
 import java.net.InetAddress;
 
 public class Connection {
@@ -14,6 +15,7 @@ public class Connection {
     //check whether system is connected with internet source (WIFI and Network) regardless of internet is working or not
     //then call isInternetAvailable() to check whether internet connection is working or not
     public boolean isConnectionSourceAndInternetAvailable(Context context) {
+
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo == null || !networkInfo.isConnected()) {
@@ -29,7 +31,7 @@ public class Connection {
         try {
             InetAddress googleAddress = InetAddress.getByName("www.google.com");
             return googleAddress.isReachable(2500);
-        } catch (Exception e) {
+        } catch (IOException | IllegalArgumentException e) {
             return false;
         }
     }
