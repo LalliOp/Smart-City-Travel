@@ -1,6 +1,7 @@
 package com.example.smartcitytravel.AWSService.Http;
 
 import com.example.smartcitytravel.AWSService.DataModel.PinCodeResult;
+import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.PlaceResult;
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.DataModel.User;
 
@@ -27,7 +28,7 @@ public interface HttpRequest {
     @POST("change-password")
     Call<Result> changePassword(@Query("email") String email, @Query("password") String password);
 
-    @POST("get-account")
+    @GET("get-account")
     Call<User> getAccount(@Query("email") String email);
 
     @POST("update-profile-name")
@@ -35,4 +36,11 @@ public interface HttpRequest {
 
     @POST("update-profile-image")
     Call<Result> updateProfileImage(@Query("email") String email, @Query("image_url") String image_url);
+
+    @GET("get-popular-place-list")
+    Call<PlaceResult> getPopularPlaceList();
+
+    @GET("get-place-list")
+    Call<PlaceResult> getPlaceList(@Query("place_type") String placeType);
+
 }

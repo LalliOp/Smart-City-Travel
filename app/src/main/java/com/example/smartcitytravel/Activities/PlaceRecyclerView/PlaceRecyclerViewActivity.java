@@ -1,10 +1,14 @@
 package com.example.smartcitytravel.Activities.PlaceRecyclerView;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.Place;
+import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.PlaceResult;
+import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.ItemDecoration.GridSpaceItemDecoration;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.RecyclerView.PlaceRecyclerViewAdapter;
@@ -12,6 +16,11 @@ import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityPlaceRecyclerViewBinding;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PlaceRecyclerViewActivity extends AppCompatActivity {
     private ActivityPlaceRecyclerViewBinding binding;
@@ -27,31 +36,42 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         util.setStatusBarColor(PlaceRecyclerViewActivity.this, R.color.theme_dark);
         util.addToolbar(PlaceRecyclerViewActivity.this, binding.toolbarLayout.toolbar, getIntent().getExtras().getString("destination_name"));
 
-        ArrayList<Place> placeArrayList = new ArrayList<>();
-        placeArrayList.add(new Place("Avengers", R.drawable.home_background));
-        placeArrayList.add(new Place("Venom", R.drawable.home_background));
-        placeArrayList.add(new Place("Batman Begins", R.drawable.home_background));
-        placeArrayList.add(new Place("Jumanji", R.drawable.home_background));
-        placeArrayList.add(new Place("Good Deeds", R.drawable.home_background));
-        placeArrayList.add(new Place("Hulk", R.drawable.home_background));
-        placeArrayList.add(new Place("Avatar", R.drawable.home_background));
-
-        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this, placeArrayList);
-        GridSpaceItemDecoration gridSpaceItemDecoration = new GridSpaceItemDecoration(0, 0, 15, 0);
-
-        createPopularRecyclerView(placeRecyclerViewAdapter, gridSpaceItemDecoration);
-        createRecommendationRecyclerView(placeRecyclerViewAdapter, gridSpaceItemDecoration);
-        createRestaurantRecyclerView(placeRecyclerViewAdapter, gridSpaceItemDecoration);
-        createPlaceRecyclerView(placeRecyclerViewAdapter, gridSpaceItemDecoration);
-        createHotelRecyclerView(placeRecyclerViewAdapter, gridSpaceItemDecoration);
+        getPopularPlaces();
+        getRestaurantPlaces();
+        getFamousSpots();
+        getHotelPlaces();
     }
 
-    public void createPopularRecyclerView(PlaceRecyclerViewAdapter placeRecyclerViewAdapter, GridSpaceItemDecoration gridSpaceItemDecoration) {
+    public void getPopularPlaces() {
+        Call<PlaceResult> callablePopularPlaceResult = HttpClient.getInstance().getPopularPlaceList();
+        callablePopularPlaceResult.enqueue(new Callback<PlaceResult>() {
+            @Override
+            public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
+                if (response.body() != null) {
+                    List<Place> popularPlaceList = response.body().getPlaceList();
+                    showPopularPlaces((ArrayList<Place>) popularPlaceList);
+                } else {
+                    Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PlaceResult> call, Throwable t) {
+                Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+    }
+
+    public void showPopularPlaces(ArrayList<Place> popularPlaceList) {
+        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this, popularPlaceList);
 
         binding.popularRecyclerView.setAdapter(placeRecyclerViewAdapter);
         binding.popularRecyclerView.setHasFixedSize(true);
         binding.popularRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        binding.popularRecyclerView.addItemDecoration(gridSpaceItemDecoration);
+        binding.popularRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 15, 0));
     }
 
     public void createRecommendationRecyclerView(PlaceRecyclerViewAdapter placeRecyclerViewAdapter, GridSpaceItemDecoration gridSpaceItemDecoration) {
@@ -62,27 +82,100 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         binding.recommendationRecyclerView.addItemDecoration(gridSpaceItemDecoration);
     }
 
-    public void createRestaurantRecyclerView(PlaceRecyclerViewAdapter placeRecyclerViewAdapter, GridSpaceItemDecoration gridSpaceItemDecoration) {
+    public void getRestaurantPlaces() {
+        Call<PlaceResult> callableRestaurantPlaceResult = HttpClient.getInstance().getPlaceList("Restaurant");
+
+        callableRestaurantPlaceResult.enqueue(new Callback<PlaceResult>() {
+            @Override
+            public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
+                if (response.body() != null) {
+                    List<Place> restaurantPlaceList = response.body().getPlaceList();
+                    showRestaurantPlaces((ArrayList<Place>) restaurantPlaceList);
+                } else {
+                    Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PlaceResult> call, Throwable t) {
+                Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_LONG).show();
+
+            }
+        });
+    }
+
+    public void showRestaurantPlaces(ArrayList<Place> restaurantPlaceList) {
+        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this, restaurantPlaceList);
 
         binding.restaurantRecyclerView.setAdapter(placeRecyclerViewAdapter);
         binding.restaurantRecyclerView.setHasFixedSize(true);
         binding.restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        binding.restaurantRecyclerView.addItemDecoration(gridSpaceItemDecoration);
+        binding.restaurantRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 15, 0));
     }
 
-    public void createPlaceRecyclerView(PlaceRecyclerViewAdapter placeRecyclerViewAdapter, GridSpaceItemDecoration gridSpaceItemDecoration) {
+    public void getFamousSpots() {
+        Call<PlaceResult> callableFamousSpotResult = HttpClient.getInstance().getPlaceList("Tourism_spot");
 
-        binding.placeRecyclerView.setAdapter(placeRecyclerViewAdapter);
-        binding.placeRecyclerView.setHasFixedSize(true);
-        binding.placeRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        binding.placeRecyclerView.addItemDecoration(gridSpaceItemDecoration);
+        callableFamousSpotResult.enqueue(new Callback<PlaceResult>() {
+            @Override
+            public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
+                if (response.body() != null) {
+                    List<Place> famousSpotList = response.body().getPlaceList();
+                    showFamousSpots((ArrayList<Place>) famousSpotList);
+                } else {
+                    Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PlaceResult> call, Throwable t) {
+                Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
-    public void createHotelRecyclerView(PlaceRecyclerViewAdapter placeRecyclerViewAdapter, GridSpaceItemDecoration gridSpaceItemDecoration) {
+
+    public void showFamousSpots(ArrayList<Place> famousSpotList) {
+        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this, famousSpotList);
+
+        binding.famousSpotRecyclerView.setAdapter(placeRecyclerViewAdapter);
+        binding.famousSpotRecyclerView.setHasFixedSize(true);
+        binding.famousSpotRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        binding.famousSpotRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 15, 0));
+    }
+
+    public void getHotelPlaces() {
+        Call<PlaceResult> callableHotelPlaceResult = HttpClient.getInstance().getPlaceList("Hotel");
+
+        callableHotelPlaceResult.enqueue(new Callback<PlaceResult>() {
+            @Override
+            public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
+                if (response.body() != null) {
+                    List<Place> hotelPlaceList = response.body().getPlaceList();
+                    showHotelPlaces((ArrayList<Place>) hotelPlaceList);
+                } else {
+                    Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PlaceResult> call, Throwable t) {
+                Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_LONG).show();
+
+            }
+        });
+    }
+
+    public void showHotelPlaces(ArrayList<Place> hotelPlaceList) {
+        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this, hotelPlaceList);
 
         binding.hotelRecyclerView.setAdapter(placeRecyclerViewAdapter);
         binding.hotelRecyclerView.setHasFixedSize(true);
         binding.hotelRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        binding.hotelRecyclerView.addItemDecoration(gridSpaceItemDecoration);
+        binding.hotelRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 15, 0));
     }
 }

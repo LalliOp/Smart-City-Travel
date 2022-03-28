@@ -5,6 +5,8 @@
       <map>
         <entry key="..\:/Users/AbdulMuqeet/.gradle/caches/transforms-3/380fb7b71deb593c4006b148c0b16fcf/transformed/jetified-uikit-2.2.4/res/layout/sb_activity.xml" value="0.1641025641025641" />
         <entry key="..\:/Users/AbdulMuqeet/.gradle/caches/transforms-3/380fb7b71deb593c4006b148c0b16fcf/transformed/jetified-uikit-2.2.4/res/layout/sb_view_channel_preview.xml" value="0.1641025641025641" />
+        <entry key="..\:/Users/AbdulMuqeet/.gradle/caches/transforms-3/8a3f81eeb7257ad15c30b8d339854c86/transformed/jetified-uikit-2.2.4/res/layout/sb_activity.xml" value="0.1641025641025641" />
+        <entry key="..\:/Users/AbdulMuqeet/.gradle/caches/transforms-3/8a3f81eeb7257ad15c30b8d339854c86/transformed/jetified-uikit-2.2.4/res/layout/sb_view_status_frame.xml" value="0.1641025641025641" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable-anydpi/ic_action_name.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable-anydpi/ic_back.xml" value="0.167" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable-anydpi/ic_navigation_drawer_menu.xml" value="0.167" />
@@ -23,7 +25,7 @@
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_edit_profile.xml" value="0.2" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_email.xml" value="0.22" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_home.xml" value="0.2" />
-        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_live_chat.xml" value="0.13043478260869565" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_live_chat.xml" value="0.25" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_login.xml" value="0.15" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_main.xml" value="0.12771739130434784" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/activity_new_password.xml" value="0.1641025641025641" />
@@ -43,9 +45,10 @@
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/logo.xml" value="0.1641025641025641" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/logo_title.xml" value="0.1644021739130435" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/movie_item.xml" value="0.1641025641025641" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/my_message.xml" value="0.1641025641025641" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/navigation_drawer.xml" value="0.22" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/navigation_drawer_header.xml" value="0.2" />
-        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/place_view.xml" value="0.2" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/place_view.xml" value="0.25" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/recyclerview_listing.xml" value="0.1641025641025641" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/recyclerview_page.xml" value="0.1641025641025641" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/layout/reset_password_background.xml" value="0.1641025641025641" />

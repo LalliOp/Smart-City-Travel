@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.smartcitytravel.Activities.PlaceRecyclerView.Place;
+import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.Place;
 import com.example.smartcitytravel.databinding.PlaceViewBinding;
 
 import java.util.ArrayList;
@@ -35,6 +35,7 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
     @Override
     public void onBindViewHolder(@NonNull PlaceViewHolder holder, int position) {
         holder.binding.placeName.setText(placeArrayList.get(position).getName());
+        holder.binding.placeRatingTxt.setText(placeArrayList.get(position).getRating().toString());
         Glide.with(context)
                 .load(placeArrayList.get(position).getImageUrl())
                 .into(holder.binding.placeImg);

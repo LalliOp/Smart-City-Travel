@@ -20,6 +20,16 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:src="@color/light_white" />
+        <TextView
+            android:id="@+id/placeRatingTxt"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_alignParentEnd="true"
+            android:background="@color/blue"
+            android:gravity="center"
+            android:text="0.0"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/placeName"

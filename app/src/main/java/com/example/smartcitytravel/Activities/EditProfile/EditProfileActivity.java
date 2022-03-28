@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.work.Data;
@@ -32,6 +33,10 @@ import com.example.smartcitytravel.Util.Validation;
 import com.example.smartcitytravel.WorkManager.ImageUpdateWorkManager;
 import com.example.smartcitytravel.databinding.ActivityEditProfileBinding;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -64,6 +69,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             }
     );
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +117,6 @@ public class EditProfileActivity extends AppCompatActivity {
     //get name from activity intent and set name in name field
     public void setName() {
         String name = util.capitalizedName(user.getName());
-
         binding.fullNameEdit.setText(name);
     }
 

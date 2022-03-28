@@ -2,12 +2,14 @@ package com.example.smartcitytravel.Activities.LiveChat;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.R;
@@ -35,7 +37,6 @@ public class LiveChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLiveChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         PreferenceHandler preferenceHandler = new PreferenceHandler();
         com.example.smartcitytravel.AWSService.DataModel.User user = preferenceHandler.getLoginAccountPreference(LiveChatActivity.this);
         Util util = new Util();
@@ -129,13 +130,14 @@ public class LiveChatActivity extends AppCompatActivity {
     // connect user to live chat server and create live chat
     public void connectUser() {
         SendBirdUIKit.connect(new SendBird.ConnectHandler() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onConnected(User user, SendBirdException e) {
                 if (e == null) {
                     OpenChannelFragment openChannelFragment = createLiveChatFragment(getString(R.string.lahore_channel));
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
-                            .add(binding.fragmentContainer.getId(), openChannelFragment)
+                            .add(binding.liveChatFragmentContainer.getId(), openChannelFragment)
                             .commit();
 
                     binding.chatLoadingBar.setVisibility(View.GONE);
@@ -149,7 +151,7 @@ public class LiveChatActivity extends AppCompatActivity {
         return new OpenChannelFragment.Builder(channelUrl)
                 .setUseHeader(true)
                 .setUseHeaderLeftButton(true)
-                .setUseHeaderRightButton(false)
+                .setUseHeaderRightButton(true)
                 .setUseUserProfile(true)
                 .setUseMessageGroupUI(true)
                 .build();
@@ -185,6 +187,4 @@ public class LiveChatActivity extends AppCompatActivity {
         alertDialog.show();
         alertDialog.setCancelable(false);
     }
-
-
 }
