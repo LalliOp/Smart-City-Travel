@@ -63,16 +63,15 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (internetAvailable) {
-                            binding.recyclerViewLayout.setVisibility(View.VISIBLE);
-
                             getPopularPlaces();
                             getRestaurantPlaces();
                             getFamousSpots();
                             getHotelPlaces();
                         } else {
                             binding.noConnectionLayout.setVisibility(View.VISIBLE);
+                            binding.loadingBar.setVisibility(View.GONE);
                         }
-                        binding.connectionLoadingBar.setVisibility(View.GONE);
+
                     }
                 });
             }
@@ -85,7 +84,8 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         binding.retryConnectionImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.connectionLoadingBar.setVisibility(View.VISIBLE);
+                Toast.makeText(PlaceRecyclerViewActivity.this, "Retrying...", Toast.LENGTH_SHORT).show();
+                binding.loadingBar.setVisibility(View.VISIBLE);
                 binding.noConnectionLayout.setVisibility(View.GONE);
 
                 checkConnectionAndGetPlaces();
@@ -100,13 +100,13 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         callablePopularPlaceResult.enqueue(new Callback<PlaceResult>() {
             @Override
             public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
-                if (response.body() != null) {
+                if (response.body() != null || !response.body().getPlaceList().isEmpty()) {
+                    binding.popularLayout.setVisibility(View.VISIBLE);
+
                     List<Place> popularPlaceList = response.body().getPlaceList();
                     showPopularPlaces((ArrayList<Place>) popularPlaceList);
-                    binding.popularLoadingBar.setVisibility(View.GONE);
-                } else {
-                    Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_SHORT).show();
 
+                    binding.loadingBar.setVisibility(View.GONE);
                 }
             }
 
@@ -144,13 +144,13 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         callableRestaurantPlaceResult.enqueue(new Callback<PlaceResult>() {
             @Override
             public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
-                if (response.body() != null) {
+                if (response.body() != null || !response.body().getPlaceList().isEmpty()) {
+                    binding.restaurantLayout.setVisibility(View.VISIBLE);
+
                     List<Place> restaurantPlaceList = response.body().getPlaceList();
                     showRestaurantPlaces((ArrayList<Place>) restaurantPlaceList);
-                    binding.restaurantLoadingBar.setVisibility(View.GONE);
-                } else {
-                    Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_SHORT).show();
 
+                    binding.loadingBar.setVisibility(View.GONE);
                 }
             }
 
@@ -179,13 +179,13 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         callableFamousSpotResult.enqueue(new Callback<PlaceResult>() {
             @Override
             public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
-                if (response.body() != null) {
+                if (response.body() != null || !response.body().getPlaceList().isEmpty()) {
+                    binding.famousSpotLayout.setVisibility(View.VISIBLE);
+
                     List<Place> famousSpotList = response.body().getPlaceList();
                     showFamousSpots((ArrayList<Place>) famousSpotList);
-                    binding.famousSpotLoadingBar.setVisibility(View.GONE);
-                } else {
-                    Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_SHORT).show();
 
+                    binding.loadingBar.setVisibility(View.GONE);
                 }
             }
 
@@ -214,13 +214,13 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         callableHotelPlaceResult.enqueue(new Callback<PlaceResult>() {
             @Override
             public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
-                if (response.body() != null) {
+                if (response.body() != null || !response.body().getPlaceList().isEmpty()) {
+                    binding.hotelLayout.setVisibility(View.VISIBLE);
+
                     List<Place> hotelPlaceList = response.body().getPlaceList();
                     showHotelPlaces((ArrayList<Place>) hotelPlaceList);
-                    binding.hotelLoadingBar.setVisibility(View.GONE);
-                } else {
-                    Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_SHORT).show();
 
+                    binding.loadingBar.setVisibility(View.GONE);
                 }
             }
 

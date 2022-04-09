@@ -137,12 +137,12 @@ public class EmailActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<Result> call, @NonNull Response<Result> response) {
                 Result result = response.body();
-                if (result.getAccount_status() == -1) {
+                if (result.getStatus() == -1) {
                     util.createErrorDialog(EmailActivity.this, "Account", result.getMessage());
-                } else if (result.getAccount_status() == 0) {
+                } else if (result.getStatus() == 0) {
                     util.createErrorDialog(EmailActivity.this, "Account",
                             "Account exist with google. " + result.getMessage());
-                } else if (result.getAccount_status() == 1) {
+                } else if (result.getStatus() == 1) {
                     preferenceHandler.saveEmailOfResetPasswordProcess(EmailActivity.this, binding.emailEdit.getText().toString().toLowerCase());
                     moveToPinCodeActivity();
                 }

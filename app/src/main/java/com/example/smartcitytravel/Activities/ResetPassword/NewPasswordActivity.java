@@ -183,7 +183,7 @@ public class NewPasswordActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 Result result = response.body();
-                if (result != null && result.getAccount_status() == 0) {
+                if (result != null && result.getStatus() == 0) {
                     Toast.makeText(NewPasswordActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
                     moveToLoginActivity();
                 } else {

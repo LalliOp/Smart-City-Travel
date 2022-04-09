@@ -3,6 +3,7 @@ package com.example.smartcitytravel.WorkManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -51,14 +52,12 @@ public class ImageUpdateWorkManager extends Worker {
 
     }
 
-    //check internet connection and then upload image in firebase cloud and update image in database
+    //upload image in firebase cloud and update image in database
     public void uploadProfileImage() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference().child("profile-images");
 
-        Random random1 = new Random();
-        Random random2 = new Random();
-        String imageName = random1.nextInt() + random2.nextInt() + "";
+        String imageName=getImageName();
 
         StorageReference imageReference = storageReference.child(imageName);
         UploadTask uploadImage = imageReference.putFile(imageUri);
@@ -96,7 +95,7 @@ public class ImageUpdateWorkManager extends Worker {
             @Override
             public void onResponse(Call<com.example.smartcitytravel.AWSService.DataModel.Result> call, Response<com.example.smartcitytravel.AWSService.DataModel.Result> response) {
                 com.example.smartcitytravel.AWSService.DataModel.Result result = response.body();
-                if (result != null && result.getAccount_status() == 0) {
+                if (result != null && result.getStatus() == 0) {
                     preferenceHandler.updateImageLoginAccountPreference(downloadImageUri.toString(), getApplicationContext());
                     sendUpdateProfileBroadcast();
                 } else {
@@ -116,6 +115,20 @@ public class ImageUpdateWorkManager extends Worker {
     public void sendUpdateProfileBroadcast() {
         Intent updateProfileIntent = new Intent("com.example.smartcitytravel.UPDATE_PROFILE");
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(updateProfileIntent);
+    }
+
+    //create name for image file
+    public String getImageName(){
+        int startIndex=imageUri.getLastPathSegment().lastIndexOf("/");
+        int endIndex=imageUri.getLastPathSegment().lastIndexOf(".");
+
+        String rawImgName=imageUri.getLastPathSegment().substring(startIndex,endIndex);
+        rawImgName=rawImgName.replace("/","");
+
+        Random randomNumber1 = new Random();
+        Random randomNumber2 = new Random();
+
+        return rawImgName + randomNumber1.nextInt() + randomNumber2.nextInt();
     }
 
 }

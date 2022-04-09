@@ -12,7 +12,6 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.work.Data;
@@ -33,10 +32,6 @@ import com.example.smartcitytravel.Util.Validation;
 import com.example.smartcitytravel.WorkManager.ImageUpdateWorkManager;
 import com.example.smartcitytravel.databinding.ActivityEditProfileBinding;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
-
-import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -63,8 +58,6 @@ public class EditProfileActivity extends AppCompatActivity {
                     if (result != null && result.getData() != null) {
                         Uri imageUri = result.getData().getData();
                         checkConnectionAndUpdateProfileImage(imageUri);
-                    } else {
-                        Toast.makeText(EditProfileActivity.this, "Unable to retrieve image", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -135,12 +128,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
     //open gallery to select image
     public void openGallery() {
-        binding.changeProfileImg.setOnClickListener(new View.OnClickListener() {
+        binding.changeProfileImgLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK);
                 galleryIntent.setType("image/*");
                 imagePickerActivityResultLauncher.launch(galleryIntent);
+
+
             }
         });
     }

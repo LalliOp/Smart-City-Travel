@@ -212,13 +212,13 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
                 Result result = response.body();
-                if (result.getAccount_status() == 0) {
+                if (result.getStatus() == 0) {
                     Toast.makeText(SignUpActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
                     moveToLoginActivity();
-                } else if (result.getAccount_status() == 1) {
+                } else if (result.getStatus() == 1) {
                     util.createErrorDialog(SignUpActivity.this, "Account", result.getMessage());
 
-                } else if (result.getAccount_status() == 3) {
+                } else if (result.getStatus() == 3) {
                     util.createErrorDialog(SignUpActivity.this, "Account", "Account already registered with this email. " + result.getMessage());
                 }
                 hideLoadingBar();

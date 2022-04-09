@@ -246,9 +246,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<Result> call, @NonNull Response<Result> response) {
                 Result result = response.body();
                 if (result != null) {
-                    if (result.getAccount_status() == -1) {
+                    if (result.getStatus() == -1) {
                         saveGoogleAccount(googleSignInAccount);
-                    } else if (result.getAccount_status() == 1 || result.getAccount_status() == 0) {
+                    } else if (result.getStatus() == 1 || result.getStatus() == 0) {
                         getAccountDetails(googleSignInAccount.getEmail());
                     }
                 } else {
@@ -391,15 +391,15 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<Result> call, @NonNull Response<Result> response) {
                 Result result = response.body();
                 if (result != null) {
-                    if (result.getAccount_status() == 1) {
+                    if (result.getStatus() == 1) {
                         getAccountDetails(binding.emailEdit.getText().toString().toLowerCase());
-                    } else if (result.getAccount_status() == 0) {
+                    } else if (result.getStatus() == 0) {
                         util.createErrorDialog(LoginActivity.this, "Password", result.getMessage());
                         hideLoadingBar();
-                    } else if (result.getAccount_status() == -1) {
+                    } else if (result.getStatus() == -1) {
                         util.createErrorDialog(LoginActivity.this, "Account", "No account exist with this email");
                         hideLoadingBar();
-                    } else if (result.getAccount_status() == 2) {
+                    } else if (result.getStatus() == 2) {
                         util.createErrorDialog(LoginActivity.this, "Account", "Google account exist with this email. " + result.getMessage());
                         hideLoadingBar();
                     }

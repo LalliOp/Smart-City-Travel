@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -257,10 +258,14 @@ public class HomeActivity extends AppCompatActivity {
         editProfileImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, EditProfileActivity.class);
-                startActivity(intent);
 
-                binding.drawerLayout.closeDrawer(GravityCompat.START);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(HomeActivity.this, EditProfileActivity.class);
+                        startActivity(intent);
+                    }
+                },50);
 
             }
         });

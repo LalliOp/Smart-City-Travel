@@ -11,6 +11,7 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="20dp"
+        android:scaleType="centerCrop"
         android:layout_marginTop="40dp"
         app:shapeAppearanceOverlay="@style/CircularImage" />
 
