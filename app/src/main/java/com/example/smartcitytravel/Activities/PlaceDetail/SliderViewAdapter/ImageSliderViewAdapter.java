@@ -27,7 +27,6 @@ public class ImageSliderViewAdapter extends SliderViewAdapter<ImageSliderViewAda
 
     @Override
     public void onBindViewHolder(ImageSliderHolder viewHolder, int position) {
-        viewHolder.binding.placeName.setText("Place: " + position);
         Glide.with(context)
                 .load(imageList.get(position))
                 .into(viewHolder.binding.placeImg);

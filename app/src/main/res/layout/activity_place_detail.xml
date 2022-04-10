@@ -10,27 +10,63 @@
         android:id="@+id/toolbarLayout"
         layout="@layout/toolbar" />
 
-    <com.smarteist.autoimageslider.SliderView
-        android:id="@+id/imageSliderView"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_below="@id/toolbarLayout"
-        app:sliderAnimationDuration="600"
-        app:sliderAutoCycleDirection="right"
-        app:sliderIndicatorAnimationDuration="600"
-        app:sliderIndicatorEnabled="true"
-        app:sliderIndicatorGravity="center_horizontal|bottom"
-        app:sliderIndicatorOrientation="horizontal"
-        app:sliderIndicatorRadius="2dp"
-        app:sliderIndicatorSelectedColor="@color/default_black"
-        app:sliderIndicatorUnselectedColor="@color/white"
-        app:sliderScrollTimeInSec="1" />
+    <RelativeLayout
+        android:id="@+id/imageSliderViewLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbarLayout">
+
+        <com.smarteist.autoimageslider.SliderView
+            android:id="@+id/imageSliderView"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            app:sliderAnimationDuration="600"
+            app:sliderAutoCycleDirection="right"
+            app:sliderIndicatorAnimationDuration="600"
+            app:sliderIndicatorEnabled="true"
+            app:sliderIndicatorGravity="center_horizontal|bottom"
+            app:sliderIndicatorOrientation="horizontal"
+            app:sliderIndicatorRadius="2dp"
+            app:sliderIndicatorSelectedColor="@color/default_black"
+            app:sliderIndicatorUnselectedColor="@color/white"
+            app:sliderScrollTimeInSec="1" />
+
+        <RelativeLayout
+            android:id="@+id/txtStyleLayout"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_alignBottom="@+id/imageSliderView"
+            android:background="@drawable/black_background_gradient">
+
+            <TextView
+                android:id="@+id/placeName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="20dp"
+                android:text="PLACE"
+                android:textSize="20sp" />
+
+            <RatingBar
+                android:id="@+id/placeRating"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/placeName"
+                android:layout_alignStart="@id/placeName"
+                android:numStars="5"
+                android:theme="@style/RatingBarColor" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageSliderView" />
+        android:layout_below="@id/imageSliderViewLayout" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/placeDetailViewPager2"

@@ -1,9 +1,11 @@
 package com.example.smartcitytravel.Activities.PlaceRecyclerView;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -11,8 +13,8 @@ import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.Place;
 import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.PlaceResult;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Activities.PlaceRecyclerView.ItemDecoration.GridSpaceItemDecoration;
-import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Activities.PlaceRecyclerView.RecyclerView.PlaceRecyclerViewAdapter;
+import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityPlaceRecyclerViewBinding;
@@ -30,6 +32,11 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
     private ActivityPlaceRecyclerViewBinding binding;
     private Util util;
     private Connection connection;
+    private boolean popularPlacesAvailable;
+    private boolean restaurantPlacesAvailable;
+    private boolean famousSpotsAvailable;
+    private boolean hotelPlacesAvailable;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,12 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         connection = new Connection();
         util = new Util();
 
+        popularPlacesAvailable = false;
+        restaurantPlacesAvailable = false;
+        famousSpotsAvailable = false;
+        hotelPlacesAvailable = false;
+
+        getParentActivityIntent();
         setToolbar();
         checkConnectionAndGetPlaces();
         retryConnection();
@@ -49,7 +62,6 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
     public void setToolbar() {
         util.setStatusBarColor(PlaceRecyclerViewActivity.this, R.color.theme_dark);
         util.addToolbar(PlaceRecyclerViewActivity.this, binding.toolbarLayout.toolbar, getIntent().getExtras().getString("destination_name"));
-
     }
 
     public void checkConnectionAndGetPlaces() {
@@ -63,14 +75,19 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (internetAvailable) {
+                            binding.popularLayout.setVisibility(View.VISIBLE);
+                            binding.restaurantLayout.setVisibility(View.VISIBLE);
+                            binding.famousSpotLayout.setVisibility(View.VISIBLE);
+                            binding.hotelLayout.setVisibility(View.VISIBLE);
+
                             getPopularPlaces();
                             getRestaurantPlaces();
                             getFamousSpots();
                             getHotelPlaces();
                         } else {
                             binding.noConnectionLayout.setVisibility(View.VISIBLE);
-                            binding.loadingBar.setVisibility(View.GONE);
                         }
+                        binding.loadingBar.setVisibility(View.GONE);
 
                     }
                 });
@@ -84,7 +101,6 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         binding.retryConnectionImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(PlaceRecyclerViewActivity.this, "Retrying...", Toast.LENGTH_SHORT).show();
                 binding.loadingBar.setVisibility(View.VISIBLE);
                 binding.noConnectionLayout.setVisibility(View.GONE);
 
@@ -100,19 +116,23 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         callablePopularPlaceResult.enqueue(new Callback<PlaceResult>() {
             @Override
             public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
-                if (response.body() != null || !response.body().getPlaceList().isEmpty()) {
-                    binding.popularLayout.setVisibility(View.VISIBLE);
-
+                if (response.body() != null) {
                     List<Place> popularPlaceList = response.body().getPlaceList();
                     showPopularPlaces((ArrayList<Place>) popularPlaceList);
 
-                    binding.loadingBar.setVisibility(View.GONE);
+                    popularPlacesAvailable = true;
+                } else {
+                    retryPopularListener();
+                    popularPlacesAvailable = false;
                 }
+                binding.popularLoadingBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<PlaceResult> call, Throwable t) {
-                Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_LONG).show();
+                binding.popularLoadingBar.setVisibility(View.GONE);
+                retryPopularListener();
+                popularPlacesAvailable = false;
 
             }
         });
@@ -129,7 +149,19 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         binding.popularRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 15, 0));
     }
 
-    public void createRecommendationRecyclerView(PlaceRecyclerViewAdapter placeRecyclerViewAdapter, GridSpaceItemDecoration gridSpaceItemDecoration) {
+    //retry to get all places which is unable to get when click on popular retry button
+    public void retryPopularListener() {
+        binding.popularNoConnectionLayout.retryConnectionImg.setVisibility(View.VISIBLE);
+        binding.popularNoConnectionLayout.retryConnectionImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                retryGetPlaces();
+            }
+        });
+    }
+
+    public void createRecommendationRecyclerView(PlaceRecyclerViewAdapter
+                                                         placeRecyclerViewAdapter, GridSpaceItemDecoration gridSpaceItemDecoration) {
 
         binding.recommendationRecyclerView.setAdapter(placeRecyclerViewAdapter);
         binding.recommendationRecyclerView.setHasFixedSize(true);
@@ -144,20 +176,23 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         callableRestaurantPlaceResult.enqueue(new Callback<PlaceResult>() {
             @Override
             public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
-                if (response.body() != null || !response.body().getPlaceList().isEmpty()) {
-                    binding.restaurantLayout.setVisibility(View.VISIBLE);
-
+                if (response.body() != null) {
                     List<Place> restaurantPlaceList = response.body().getPlaceList();
                     showRestaurantPlaces((ArrayList<Place>) restaurantPlaceList);
+                    restaurantPlacesAvailable = true;
+                } else {
+                    retryRestaurantListener();
+                    restaurantPlacesAvailable = false;
 
-                    binding.loadingBar.setVisibility(View.GONE);
                 }
+                binding.restaurantLoadingBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<PlaceResult> call, Throwable t) {
-                Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_LONG).show();
-
+                binding.restaurantLoadingBar.setVisibility(View.GONE);
+                restaurantPlacesAvailable = false;
+                retryRestaurantListener();
             }
         });
     }
@@ -172,6 +207,18 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         binding.restaurantRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 15, 0));
     }
 
+    //retry to get all places which is unable to get when click on restaurant retry button
+    public void retryRestaurantListener() {
+        binding.restaurantNoConnectionLayout.retryConnectionImg.setVisibility(View.VISIBLE);
+        binding.restaurantNoConnectionLayout.retryConnectionImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                retryGetPlaces();
+
+            }
+        });
+    }
+
     //get famous spots from database
     public void getFamousSpots() {
         Call<PlaceResult> callableFamousSpotResult = HttpClient.getInstance().getPlaceList("Tourism_spot");
@@ -179,20 +226,22 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         callableFamousSpotResult.enqueue(new Callback<PlaceResult>() {
             @Override
             public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
-                if (response.body() != null || !response.body().getPlaceList().isEmpty()) {
-                    binding.famousSpotLayout.setVisibility(View.VISIBLE);
-
+                if (response.body() != null) {
                     List<Place> famousSpotList = response.body().getPlaceList();
                     showFamousSpots((ArrayList<Place>) famousSpotList);
-
-                    binding.loadingBar.setVisibility(View.GONE);
+                    famousSpotsAvailable = true;
+                } else {
+                    retryFamousSpotListener();
+                    famousSpotsAvailable = false;
                 }
+                binding.famousSpotLoadingBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<PlaceResult> call, Throwable t) {
-                Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_LONG).show();
-
+                binding.famousSpotLoadingBar.setVisibility(View.GONE);
+                famousSpotsAvailable = false;
+                retryFamousSpotListener();
             }
         });
     }
@@ -207,6 +256,18 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         binding.famousSpotRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 15, 0));
     }
 
+    //retry to get all places which is unable to get when click on famous spots retry button
+    public void retryFamousSpotListener() {
+        binding.famousSpotNoConnectionLayout.retryConnectionImg.setVisibility(View.VISIBLE);
+        binding.famousSpotNoConnectionLayout.retryConnectionImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                retryGetPlaces();
+
+            }
+        });
+    }
+
     //get hotel places from database
     public void getHotelPlaces() {
         Call<PlaceResult> callableHotelPlaceResult = HttpClient.getInstance().getPlaceList("Hotel");
@@ -214,20 +275,23 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         callableHotelPlaceResult.enqueue(new Callback<PlaceResult>() {
             @Override
             public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
-                if (response.body() != null || !response.body().getPlaceList().isEmpty()) {
-                    binding.hotelLayout.setVisibility(View.VISIBLE);
-
+                if (response.body() != null) {
                     List<Place> hotelPlaceList = response.body().getPlaceList();
                     showHotelPlaces((ArrayList<Place>) hotelPlaceList);
-
-                    binding.loadingBar.setVisibility(View.GONE);
+                    hotelPlacesAvailable = true;
+                } else {
+                    retryHotelListener();
+                    hotelPlacesAvailable = false;
                 }
+                binding.hotelLoadingBar.setVisibility(View.GONE);
+
             }
 
             @Override
             public void onFailure(Call<PlaceResult> call, Throwable t) {
-                Toast.makeText(PlaceRecyclerViewActivity.this, "Unable to get places", Toast.LENGTH_LONG).show();
-
+                retryHotelListener();
+                binding.hotelLoadingBar.setVisibility(View.GONE);
+                hotelPlacesAvailable = false;
             }
         });
     }
@@ -240,5 +304,41 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         binding.hotelRecyclerView.setHasFixedSize(true);
         binding.hotelRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         binding.hotelRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 15, 0));
+    }
+
+    //retry to get all places which is unable to get when click on hotel retry button
+    public void retryHotelListener() {
+        binding.hotelNoConnectionLayout.retryConnectionImg.setVisibility(View.VISIBLE);
+        binding.hotelNoConnectionLayout.retryConnectionImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                retryGetPlaces();
+            }
+        });
+    }
+
+    // retry to get places
+    public void retryGetPlaces() {
+        if (!popularPlacesAvailable) {
+            binding.popularLoadingBar.setVisibility(View.VISIBLE);
+            binding.popularNoConnectionLayout.retryConnectionImg.setVisibility(View.GONE);
+            getPopularPlaces();
+        }
+        if (!restaurantPlacesAvailable) {
+            binding.restaurantLoadingBar.setVisibility(View.VISIBLE);
+            binding.restaurantNoConnectionLayout.retryConnectionImg.setVisibility(View.GONE);
+            getRestaurantPlaces();
+        }
+        if (!famousSpotsAvailable) {
+            binding.famousSpotLoadingBar.setVisibility(View.VISIBLE);
+            binding.famousSpotNoConnectionLayout.retryConnectionImg.setVisibility(View.GONE);
+            getFamousSpots();
+        }
+        if (!hotelPlacesAvailable) {
+            binding.hotelLoadingBar.setVisibility(View.VISIBLE);
+            binding.hotelNoConnectionLayout.retryConnectionImg.setVisibility(View.GONE);
+            getHotelPlaces();
+        }
+
     }
 }

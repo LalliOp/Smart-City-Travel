@@ -1,11 +1,13 @@
 package com.example.smartcitytravel.Activities.PlaceDetail;
 
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.Activities.PlaceDetail.ViewPager2Adapter.PlaceDetailPagerAdapter;
 import com.example.smartcitytravel.Activities.PlaceDetail.SliderViewAdapter.ImageSliderViewAdapter;
+import com.example.smartcitytravel.Activities.PlaceDetail.ViewPager2Adapter.PlaceDetailPagerAdapter;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityPlaceDetailBinding;
@@ -30,7 +32,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
         setToolbar();
         showImageSliderView();
-        testing();
+        showPlaceDetails();
 
     }
 
@@ -44,6 +46,9 @@ public class PlaceDetailActivity extends AppCompatActivity {
     //create and show place images slider
     //change images after few seconds
     public void showImageSliderView() {
+        binding.placeName.setText("Place Name");
+        binding.placeRating.setRating(3.5F);
+
         ArrayList<String> imageList = new ArrayList<>();
         String url1 = "https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200-1.png";
         String url2 = "https://qphs.fs.quoracdn.net/main-qimg-8e203d34a6a56345f86f1a92570557ba.webp";
@@ -58,7 +63,9 @@ public class PlaceDetailActivity extends AppCompatActivity {
         binding.imageSliderView.startAutoCycle();
     }
 
-    public void testing() {
+    //create viewpager2 and tab layout
+    //show tabs which show place detail
+    public void showPlaceDetails() {
         PlaceDetailPagerAdapter placeDetailPagerAdapter = new PlaceDetailPagerAdapter(this);
 
         binding.placeDetailViewPager2.setAdapter(placeDetailPagerAdapter);
@@ -80,5 +87,18 @@ public class PlaceDetailActivity extends AppCompatActivity {
             }
         });
         tabLayoutMediator.attach();
+    }
+
+    // return to previous activity when user click on up button (which is back button on top life side)
+    @Override
+    public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Toast.makeText(this, "WORKING", Toast.LENGTH_SHORT).show();
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+
     }
 }

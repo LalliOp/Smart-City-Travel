@@ -37,11 +37,30 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/popularRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_below="@id/popularTitle" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/popularTitle">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/popularRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp" />
+
+                    <ProgressBar
+                        android:id="@+id/popularLoadingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:indeterminate="true" />
+
+                    <include
+                        android:id="@+id/popularNoConnectionLayout"
+                        layout="@layout/no_connection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
             </RelativeLayout>
 
             <RelativeLayout
@@ -63,11 +82,30 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recommendationRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_below="@id/recommendationTitle" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/recommendationTitle">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recommendationRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp" />
+
+                    <ProgressBar
+                        android:id="@+id/recommendationLoadingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:indeterminate="true" />
+
+                    <include
+                        android:id="@+id/recommendation_no_connection_layout"
+                        layout="@layout/no_connection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
             </RelativeLayout>
 
             <RelativeLayout
@@ -89,11 +127,31 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/restaurantRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_below="@id/restaurantTitle" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/restaurantTitle">
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/restaurantRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp" />
+
+                    <ProgressBar
+                        android:id="@+id/restaurantLoadingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:indeterminate="true" />
+
+                    <include
+                        android:id="@+id/restaurant_no_connection_layout"
+                        layout="@layout/no_connection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
 
             </RelativeLayout>
 
@@ -117,11 +175,31 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/famousSpotRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_below="@id/famousSpotTitle" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/famousSpotTitle">
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/famousSpotRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp" />
+
+                    <ProgressBar
+                        android:id="@+id/famousSpotLoadingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:indeterminate="true" />
+
+                    <include
+                        android:id="@+id/famous_spot_no_connection_layout"
+                        layout="@layout/no_connection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
 
             </RelativeLayout>
 
@@ -145,11 +223,31 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/hotelRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_below="@id/hotelTitle" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/hotelTitle">
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/hotelRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp" />
+
+                    <ProgressBar
+                        android:id="@+id/hotelLoadingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:indeterminate="true" />
+
+                    <include
+                        android:id="@+id/hotel_no_connection_layout"
+                        layout="@layout/no_connection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
