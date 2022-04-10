@@ -1,6 +1,7 @@
 package com.example.smartcitytravel.AWSService.DataModel.PlaceModel;
 
 public class Place {
+    private Integer placeId;
     private String name;
     private String imageUrl;
     private Float rating;
@@ -8,10 +9,19 @@ public class Place {
     public Place() {
     }
 
-    public Place(String name, String imageUrl, Float rating) {
+    public Place(Integer placeId, String name, String imageUrl, Float rating) {
+        this.placeId = placeId;
         this.name = name;
         this.imageUrl = imageUrl;
         this.rating = rating;
+    }
+
+    public Integer getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(Integer placeId) {
+        this.placeId = placeId;
     }
 
     public String getName() {

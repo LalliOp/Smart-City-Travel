@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.ItemDecoration;
+package com.example.smartcitytravel.Activities.PlaceRecyclerView.ItemDecoration;
 
 import android.graphics.Rect;
 import android.view.View;

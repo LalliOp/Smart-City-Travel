@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.PlaceDetail.PlaceDetailActivity">
+
+    <include
+        android:id="@+id/toolbarLayout"
+        layout="@layout/toolbar" />
+
+    <com.smarteist.autoimageslider.SliderView
+        android:id="@+id/imageSliderView"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@id/toolbarLayout"
+        app:sliderAnimationDuration="600"
+        app:sliderAutoCycleDirection="right"
+        app:sliderIndicatorAnimationDuration="600"
+        app:sliderIndicatorEnabled="true"
+        app:sliderIndicatorGravity="center_horizontal|bottom"
+        app:sliderIndicatorOrientation="horizontal"
+        app:sliderIndicatorRadius="2dp"
+        app:sliderIndicatorSelectedColor="@color/default_black"
+        app:sliderIndicatorUnselectedColor="@color/white"
+        app:sliderScrollTimeInSec="1" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageSliderView" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/placeDetailViewPager2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tabLayout" />
+</RelativeLayout>

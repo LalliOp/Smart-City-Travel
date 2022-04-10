@@ -15,7 +15,6 @@ public class Connection {
     //check whether system is connected with internet source (WIFI and Network) regardless of internet is working or not
     //then call isInternetAvailable() to check whether internet connection is working or not
     public boolean isConnectionSourceAndInternetAvailable(Context context) {
-
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo == null || !networkInfo.isConnected()) {

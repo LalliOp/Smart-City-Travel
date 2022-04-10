@@ -1,6 +1,7 @@
-package com.example.smartcitytravel.RecyclerView;
+package com.example.smartcitytravel.Activities.PlaceRecyclerView.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.Place;
+import com.example.smartcitytravel.Activities.PlaceDetail.PlaceDetailActivity;
 import com.example.smartcitytravel.databinding.PlaceViewBinding;
 
 import java.util.ArrayList;
@@ -41,11 +43,26 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
                 .into(holder.binding.placeImg);
 
         holder.binding.placeLoadingBar.setVisibility(View.GONE);
+
+        moveToPlaceDetailActivity(holder, position);
+
     }
 
     @Override
     public int getItemCount() {
         return placeArrayList.size();
+    }
+
+    //move to place detail activity
+    public void moveToPlaceDetailActivity(PlaceRecyclerViewAdapter.PlaceViewHolder holder, int position) {
+        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PlaceDetailActivity.class);
+                intent.putExtra("placeId", placeArrayList.get(position).getPlaceId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     public class PlaceViewHolder extends RecyclerView.ViewHolder {

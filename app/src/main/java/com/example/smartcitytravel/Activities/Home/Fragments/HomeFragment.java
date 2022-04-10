@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Fragments;
+package com.example.smartcitytravel.Activities.Home.Fragments;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;

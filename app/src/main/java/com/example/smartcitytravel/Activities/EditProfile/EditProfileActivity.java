@@ -29,7 +29,7 @@ import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.Util.Validation;
-import com.example.smartcitytravel.WorkManager.ImageUpdateWorkManager;
+import com.example.smartcitytravel.Activities.EditProfile.WorkManager.ImageUpdateWorkManager;
 import com.example.smartcitytravel.databinding.ActivityEditProfileBinding;
 
 import java.util.concurrent.ExecutorService;

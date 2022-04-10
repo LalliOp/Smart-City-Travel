@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Broadcast;
+package com.example.smartcitytravel.Activities.EditProfile.Broadcast;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -1,9 +1,8 @@
-package com.example.smartcitytravel.WorkManager;
+package com.example.smartcitytravel.Activities.EditProfile.WorkManager;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,7 +13,6 @@ import androidx.work.WorkerParameters;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
-import com.example.smartcitytravel.Util.Util;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
