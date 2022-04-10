@@ -7,8 +7,7 @@
     <androidx.core.widget.NestedScrollView
         android:id="@+id/recyclerViewLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -274,8 +273,8 @@
                 android:textColor="@color/default_black"
                 android:textSize="16sp" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/retryConnectionImg"
+            <ImageView
+                android:id="@+id/retryConnection"
                 android:layout_width="27dp"
                 android:layout_height="27dp"
                 android:layout_below="@id/noConnectionTxt"
@@ -295,4 +294,6 @@
             android:layout_centerInParent="true"
             android:indeterminate="true" />
     </RelativeLayout>
+
+
 </RelativeLayout>

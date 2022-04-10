@@ -1,11 +1,9 @@
 package com.example.smartcitytravel.Activities.PlaceRecyclerView;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -32,6 +30,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
     private ActivityPlaceRecyclerViewBinding binding;
     private Util util;
     private Connection connection;
+    private Toast noConnectionToast;
     private boolean popularPlacesAvailable;
     private boolean restaurantPlacesAvailable;
     private boolean famousSpotsAvailable;
@@ -46,6 +45,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
         connection = new Connection();
         util = new Util();
+        noConnectionToast = new Toast(this);
 
         popularPlacesAvailable = false;
         restaurantPlacesAvailable = false;
@@ -55,7 +55,6 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         getParentActivityIntent();
         setToolbar();
         checkConnectionAndGetPlaces();
-        retryConnection();
     }
 
     //add toolbar in activity and customize status bar color
@@ -86,6 +85,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
                             getHotelPlaces();
                         } else {
                             binding.noConnectionLayout.setVisibility(View.VISIBLE);
+                            retryConnection();
                         }
                         binding.loadingBar.setVisibility(View.GONE);
 
@@ -98,7 +98,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
     //run when user click on retry icon
     public void retryConnection() {
-        binding.retryConnectionImg.setOnClickListener(new View.OnClickListener() {
+        binding.retryConnection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 binding.loadingBar.setVisibility(View.VISIBLE);
@@ -122,6 +122,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
                     popularPlacesAvailable = true;
                 } else {
+                    displayNoConnectionMessage();
                     retryPopularListener();
                     popularPlacesAvailable = false;
                 }
@@ -130,8 +131,9 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<PlaceResult> call, Throwable t) {
-                binding.popularLoadingBar.setVisibility(View.GONE);
+                displayNoConnectionMessage();
                 retryPopularListener();
+                binding.popularLoadingBar.setVisibility(View.GONE);
                 popularPlacesAvailable = false;
 
             }
@@ -181,6 +183,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
                     showRestaurantPlaces((ArrayList<Place>) restaurantPlaceList);
                     restaurantPlacesAvailable = true;
                 } else {
+                    displayNoConnectionMessage();
                     retryRestaurantListener();
                     restaurantPlacesAvailable = false;
 
@@ -193,6 +196,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
                 binding.restaurantLoadingBar.setVisibility(View.GONE);
                 restaurantPlacesAvailable = false;
                 retryRestaurantListener();
+                displayNoConnectionMessage();
             }
         });
     }
@@ -231,6 +235,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
                     showFamousSpots((ArrayList<Place>) famousSpotList);
                     famousSpotsAvailable = true;
                 } else {
+                    displayNoConnectionMessage();
                     retryFamousSpotListener();
                     famousSpotsAvailable = false;
                 }
@@ -242,6 +247,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
                 binding.famousSpotLoadingBar.setVisibility(View.GONE);
                 famousSpotsAvailable = false;
                 retryFamousSpotListener();
+                displayNoConnectionMessage();
             }
         });
     }
@@ -280,6 +286,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
                     showHotelPlaces((ArrayList<Place>) hotelPlaceList);
                     hotelPlacesAvailable = true;
                 } else {
+                    displayNoConnectionMessage();
                     retryHotelListener();
                     hotelPlacesAvailable = false;
                 }
@@ -289,6 +296,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<PlaceResult> call, Throwable t) {
+                displayNoConnectionMessage();
                 retryHotelListener();
                 binding.hotelLoadingBar.setVisibility(View.GONE);
                 hotelPlacesAvailable = false;
@@ -338,7 +346,19 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
             binding.hotelLoadingBar.setVisibility(View.VISIBLE);
             binding.hotelNoConnectionLayout.retryConnectionImg.setVisibility(View.GONE);
             getHotelPlaces();
+
         }
 
+    }
+
+    // show only one no connection msg when multiple connection failed at a same time to get places
+    public void displayNoConnectionMessage() {
+        try {
+            noConnectionToast.cancel();
+            noConnectionToast.getView().isShown();
+        } catch (Exception ignored) {
+            noConnectionToast = Toast.makeText(this, "No Connection", Toast.LENGTH_SHORT);
+            noConnectionToast.show();
+        }
     }
 }
