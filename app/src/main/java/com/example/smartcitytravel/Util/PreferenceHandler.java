@@ -72,4 +72,19 @@ public class PreferenceHandler {
         editor.putString("image_url", image_url);
         editor.apply();
     }
+
+    //get name of logged in account
+    public String getNameLoginAccountPreference(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
+                Context.MODE_PRIVATE);
+        return sharedPreferences.getString("name", "");
+    }
+
+    //get profile image of logged in account
+    public String getImageLoginAccountPreference(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
+                Context.MODE_PRIVATE);
+
+        return sharedPreferences.getString("image_url", "");
+    }
 }

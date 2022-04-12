@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.smartcitytravel.AWSService.DataModel.User;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
@@ -25,17 +24,18 @@ public class UpdateProfileNameBroadcast extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        User user = preferenceHandler.getLoginAccountPreference(context);
-        setNewProfileName(user);
+        setNewProfileName(context);
 
     }
 
     // set new profile name
-    public void setNewProfileName(User user) {
+    public void setNewProfileName(Context context) {
         View headerLayout = binding.navigationView.getHeaderView(0);
 
+        String name = preferenceHandler.getNameLoginAccountPreference(context);
+
         TextView nameTxt = headerLayout.findViewById(R.id.profileNameTxt);
-        nameTxt.setText(util.capitalizedName(user.getName()));
+        nameTxt.setText(util.capitalizedName(name));
 
     }
 }

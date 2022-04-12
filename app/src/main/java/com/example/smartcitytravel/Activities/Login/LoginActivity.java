@@ -172,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
 
         try {
             GoogleSignInAccount googleSignInAccount = googleSignInAccountTask.getResult(ApiException.class);
-            checkConnectionAndVerifyEmail(googleSignInAccount);
+            verifyEmail(googleSignInAccount);
 
         } catch (ApiException e) {
             Toast.makeText(LoginActivity.this, "Unable to Sign In with Google", Toast.LENGTH_SHORT).show();
@@ -196,8 +196,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<Result> call, Response<Result> response) {
                 if (response.body() != null) {
                     getAccountDetails(googleSignInAccount.getEmail().toLowerCase());
-                }
-                else{
+                } else {
                     Toast.makeText(LoginActivity.this, "Unable to save google account details", Toast.LENGTH_SHORT).show();
                     hideLoadingBar();
                 }
@@ -206,34 +205,10 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Unable to save google account details", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 hideLoadingBar();
             }
         });
-    }
-
-    //check internet connection and then verify email by database
-    public void checkConnectionAndVerifyEmail(GoogleSignInAccount googleSignInAccount) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                Boolean internetAvailable = connection.isConnectionSourceAndInternetAvailable(LoginActivity.this);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (internetAvailable) {
-                            verifyEmail(googleSignInAccount);
-                        } else {
-                            Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                            hideLoadingBar();
-                        }
-                    }
-                });
-            }
-        });
-        executor.shutdown();
     }
 
     //check whether google email already exist or not
@@ -260,7 +235,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<Result> call, @NonNull Throwable t) {
-                Toast.makeText(LoginActivity.this, "Unable to verify email", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "No internet Connection", Toast.LENGTH_SHORT).show();
                 hideLoadingBar();
             }
         });
@@ -288,7 +263,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Unable to get account details", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 hideLoadingBar();
             }
         });
@@ -305,7 +280,7 @@ public class LoginActivity extends AppCompatActivity {
                 validateEmail();
                 validatePassword();
                 if (validate_email && validate_password) {
-                    checkConnectionAndVerifyAccount();
+                    verifyLogin();
                 }
 
             }
@@ -382,6 +357,10 @@ public class LoginActivity extends AppCompatActivity {
 
     //check whether account exist or not
     public void verifyLogin() {
+        boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(LoginActivity.this);
+        if (isConnectionSourceAvailable) {
+            showLoadingBar();
+        }
 
         Call<Result> verifyAccountResultCallable = HttpClient.getInstance().verifyAccount(binding.emailEdit.getText().toString().toLowerCase(),
                 binding.passwordEdit.getText().toString());
@@ -413,40 +392,10 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Unable to sign in", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 hideLoadingBar();
             }
         });
-    }
-
-    //check internet connection and then verify account by database
-    public void checkConnectionAndVerifyAccount() {
-        boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(LoginActivity.this);
-        if (isConnectionSourceAvailable) {
-            showLoadingBar();
-        }
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                Boolean internetAvailable = connection.isInternetAvailable();
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (internetAvailable) {
-                            verifyLogin();
-                        } else {
-                            Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                            hideLoadingBar();
-
-                        }
-
-                    }
-                });
-            }
-        });
-        executor.shutdown();
     }
 
     //change default loading bar color

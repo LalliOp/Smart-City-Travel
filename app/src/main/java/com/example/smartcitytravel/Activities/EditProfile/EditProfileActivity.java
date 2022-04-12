@@ -163,6 +163,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     public void run() {
                         if (internetAvailable) {
                             startUpdateImageWorkManager(imageUri);
+                            Toast.makeText(EditProfileActivity.this, "Profile image updated", Toast.LENGTH_SHORT).show();
 
                             newProfileImageSelected = false;
                             setSaveButtonState();
@@ -284,7 +285,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     sendUpdateProfileNameBroadcast();
                     newProfileName = false;
 
-                    Toast.makeText(EditProfileActivity.this, "Name Changed Successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditProfileActivity.this, "Name updated successfully", Toast.LENGTH_SHORT).show();
                     setSaveButtonState();
                 }
                 hideLoadingBar();
