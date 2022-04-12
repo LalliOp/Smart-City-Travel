@@ -23,13 +23,13 @@ import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.DataModel.User;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
+import com.example.smartcitytravel.Activities.EditProfile.WorkManager.ImageUpdateWorkManager;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.Util.Validation;
-import com.example.smartcitytravel.Activities.EditProfile.WorkManager.ImageUpdateWorkManager;
 import com.example.smartcitytravel.databinding.ActivityEditProfileBinding;
 
 import java.util.concurrent.ExecutorService;
@@ -48,6 +48,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private Connection connection;
     private User user;
     private String changeName;
+    private Uri imageUri;
 
     //run when launch() function is called
     //get image from gallery and save new image
@@ -56,8 +57,9 @@ public class EditProfileActivity extends AppCompatActivity {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if (result != null && result.getData() != null) {
-                        Uri imageUri = result.getData().getData();
-                        checkConnectionAndUpdateProfileImage(imageUri);
+                        imageUri = result.getData().getData();
+                        setProfileImage(imageUri.toString());
+                        binding.saveBtn.setEnabled(true);
                     }
                 }
             }
@@ -141,7 +143,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     //check internet connection and then upload profile image and update in database
-    public void checkConnectionAndUpdateProfileImage(Uri imageUri) {
+    public void checkConnectionAndUpdateProfileImage() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
@@ -152,8 +154,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (internetAvailable) {
-                            setProfileImage(imageUri.toString());
-                            startUpdateImageWorkManager(imageUri);
+                            startUpdateImageWorkManager();
                         } else {
                             Toast.makeText(EditProfileActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                             hideLoadingBar();
@@ -166,7 +167,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     // start background service to update profile image
-    public void startUpdateImageWorkManager(Uri imageUri) {
+    public void startUpdateImageWorkManager() {
         Data data = new Data.Builder()
                 .putString("image_url", imageUri.toString())
                 .putString("email", user.getEmail())
@@ -188,9 +189,11 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 util.hideKeyboard(EditProfileActivity.this);
                 if (validateFullName()) {
-                    user.setName(changeName);
-                    preferenceHandler.updateNameLoginAccountPreference(user.getName(), EditProfileActivity.this);
-                    checkConnectionAndChangeName();
+                    updateProfileName();
+                }
+
+                if (imageUri != null) {
+                    checkConnectionAndUpdateProfileImage();
                 }
             }
         });
@@ -246,37 +249,13 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
-    //check internet connection and then change profile name in database
-    public void checkConnectionAndChangeName() {
+    // update account profile name in database and update in Ui too
+    public void updateProfileName() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(this);
         if (isConnectionSourceAvailable) {
             showLoadingBar();
         }
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                Boolean internetAvailable = connection.isInternetAvailable();
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (internetAvailable) {
-                            updateProfileName();
-                        } else {
-                            Toast.makeText(EditProfileActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                            hideLoadingBar();
-                        }
-                    }
-                });
-            }
-        });
-        executor.shutdown();
-    }
-
-    // update account profile name in database and update in Ui too
-    public void updateProfileName() {
         Call<Result> callableUpdateName = HttpClient.getInstance().updateProfileName(user.getEmail(), user.getName());
 
         callableUpdateName.enqueue(new Callback<Result>() {
@@ -284,7 +263,9 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onResponse(Call<Result> call, Response<Result> response) {
                 Result result = response.body();
                 if (result != null) {
+                    user.setName(changeName);
                     binding.fullNameEdit.setText(user.getName());
+                    preferenceHandler.updateNameLoginAccountPreference(user.getName(), EditProfileActivity.this);
                     sendUpdateProfileBroadcast();
                 }
                 hideLoadingBar();
@@ -292,7 +273,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
-                Toast.makeText(EditProfileActivity.this, "Unable to update profile name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditProfileActivity.this, "No Connection", Toast.LENGTH_SHORT).show();
+                binding.saveBtn.setEnabled(true);
                 hideLoadingBar();
             }
         });

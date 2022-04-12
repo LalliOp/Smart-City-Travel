@@ -15,6 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCityTravel">
         <activity
+            android:name=".Activities.SuccessfulAccountMessage.SuccessfulAccountMessageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.SignUp.SuccesfullAccountActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.PlaceDetail.PlaceDetailActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
@@ -42,7 +48,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.ResetPassword.PinCodeActivity"
+            android:name=".Activities.PinCode.PinCodeActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

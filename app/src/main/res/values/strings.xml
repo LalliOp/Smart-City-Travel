@@ -25,7 +25,7 @@
     <string name="forget_password">Forget password?</string>
     <string name="reset_your_password">Reset your password</string>
     <string name="continue_">Continue</string>
-    <string name="send_4_digits">We have send 4 digits pin code to your email</string>
+    <string name="send_4_digits">We have send 4 digits pin code to</string>
     <string name="pin_code">Pin Code</string>
     <string name="resend_code">Resend Code</string>
     <string name="create_new_password">Create New Password</string>
@@ -61,4 +61,8 @@
     <string name="recommendation">Recommendation</string>
     <string name="popular">Popular</string>
     <string name="hotel">Hotel</string>
+    <string name="account_created_successfully">Account created Successfully</string>
+    <string name="successful_message">Successful Message Here</string>
+    <string name="message_here">Message Here</string>
+    <string name="title_here">Title Here</string>
 </resources>

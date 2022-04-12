@@ -3,6 +3,7 @@ package com.example.smartcitytravel.Util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -29,7 +30,7 @@ public class Connection {
     public boolean isInternetAvailable() {
         try {
             InetAddress googleAddress = InetAddress.getByName("www.google.com");
-            return googleAddress.isReachable(2500);
+            return googleAddress.isReachable(2000);
         } catch (IOException | IllegalArgumentException e) {
             return false;
         }
@@ -39,7 +40,11 @@ public class Connection {
     public boolean isConnectionSourceAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
+        if (networkInfo == null || !networkInfo.isConnected()) {
+            return false;
+        } else {
+            return true;
+        }
 
     }
 

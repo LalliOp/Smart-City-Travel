@@ -6,20 +6,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
-import com.example.smartcitytravel.Activities.Login.LoginActivity;
+import com.example.smartcitytravel.Activities.PinCode.PinCodeActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.Util.Validation;
 import com.example.smartcitytravel.databinding.ActivitySignUpBinding;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,8 +43,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         initialize();
         util.setStatusBarColor(SignUpActivity.this, R.color.dark_grey);
-        setLoadingBarColor();
         initializeValidator();
+        setLoadingBarColor();
         registerAccount();
 
     }
@@ -79,7 +77,7 @@ public class SignUpActivity extends AppCompatActivity {
                 matchPasswordAndConfirmPassword();
 
                 if (validate_full_name && validate_email && validate_password && validate_confirm_password) {
-                    checkConnectionAndCreateAccount();
+                    verifyEmail();
                 }
             }
         });
@@ -196,97 +194,71 @@ public class SignUpActivity extends AppCompatActivity {
         validate_confirm_password = true;
     }
 
-    // check all fields are valid. If valid create account by passing user account info to database
-    // and move to Login Activity if account created successfully
-    public void createAccount() {
 
-
-        String normalizedFullName = binding.fullNameEdit.getText().toString().toLowerCase();
-        normalizedFullName = normalizedFullName.trim().replaceAll("\\s{2,}", " ");
-
-        Call<Result> createAccountCallable = HttpClient.getInstance().createAccount(normalizedFullName,
-                binding.emailEdit.getText().toString().toLowerCase(), binding.passwordEdit.getText().toString(), "0",
-                getString(R.string.default_profile_image_url));
-
-        createAccountCallable.enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                Result result = response.body();
-                if (result.getStatus() == 0) {
-                    Toast.makeText(SignUpActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
-                    moveToLoginActivity();
-                } else if (result.getStatus() == 1) {
-                    util.createErrorDialog(SignUpActivity.this, "Account", result.getMessage());
-
-                } else if (result.getStatus() == 3) {
-                    util.createErrorDialog(SignUpActivity.this, "Account", "Account already registered with this email. " + result.getMessage());
-                }
-                hideLoadingBar();
-            }
-
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                Toast.makeText(SignUpActivity.this, "Unable to create account", Toast.LENGTH_SHORT).show();
-                hideLoadingBar();
-            }
-        });
-    }
-
-    //Move from SignUp Activity to Login Activity
-    //pass new created account email to Login Activity
-    public void moveToLoginActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra("email", binding.emailEdit.getText().toString());
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    //Move from SignUp Activity to Pin code Activity
+    //pass email to Pin code Activity
+    public void moveToPinCodeActivity() {
+        Intent intent = new Intent(this, PinCodeActivity.class);
+        intent.putExtra("signup_name", binding.fullNameEdit.getText().toString());
+        intent.putExtra("signup_email", binding.emailEdit.getText().toString());
+        intent.putExtra("signup_password", binding.passwordEdit.getText().toString());
+        intent.putExtra("title","Verify Your Email");
         startActivity(intent);
 
     }
 
-    //change default loading bar color
-    public void setLoadingBarColor() {
-        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_white)));
-
-    }
-
-    // show progress bar when user click on register button
-    public void showLoadingBar() {
-        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
-        util.makeScreenNotTouchable(SignUpActivity.this);
-    }
-
-    //hide progressbar when signup is complete and move to Login Activity or error occurs
-    public void hideLoadingBar() {
-        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
-        util.makeScreenTouchable(SignUpActivity.this);
-    }
-
-    //check internet connection and then create account in database
-    public void checkConnectionAndCreateAccount() {
+    //check whether email exist or not
+    public void verifyEmail() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(SignUpActivity.this);
         if (isConnectionSourceAvailable) {
             showLoadingBar();
         }
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                Boolean internetAvailable = connection.isInternetAvailable();
+        Call<Result> verifyEmailCallable = HttpClient.getInstance().verifyEmail(binding.emailEdit.getText().toString().toLowerCase());
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (internetAvailable) {
-                            createAccount();
-                        } else {
-                            Toast.makeText(SignUpActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                            hideLoadingBar();
-                        }
+        verifyEmailCallable.enqueue(new Callback<Result>() {
+            @Override
+            public void onResponse(@NonNull Call<Result> call, @NonNull Response<Result> response) {
+                Result result = response.body();
+                if (result != null) {
+                    if (result.getStatus() == -1) {
+                        moveToPinCodeActivity();
+                    } else if (result.getStatus() == 0) {
+                        util.createErrorDialog(SignUpActivity.this, "Account",
+                                "Account exist with google. " + result.getMessage());
+                    } else if (result.getStatus() == 1) {
+                        util.createErrorDialog(SignUpActivity.this, "Account", result.getMessage());
                     }
-                });
+                } else {
+                    Toast.makeText(SignUpActivity.this, "Unable to verify email", Toast.LENGTH_SHORT).show();
+                }
+                hideLoadingBar();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Result> call, @NonNull Throwable t) {
+                Toast.makeText(SignUpActivity.this, "No Connection", Toast.LENGTH_SHORT).show();
+                hideLoadingBar();
             }
         });
-        executor.shutdown();
+
     }
 
+    // show progress bar when user click on continue button
+    public void showLoadingBar() {
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
+        util.makeScreenNotTouchable(SignUpActivity.this);
+    }
+
+    //hide progressbar when move to next activity or error occurs
+    public void hideLoadingBar() {
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
+        util.makeScreenTouchable(SignUpActivity.this);
+    }
+
+    //change default loading bar color
+    public void setLoadingBarColor() {
+        ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.light_white));
+        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(colorStateList);
+    }
 }

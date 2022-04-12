@@ -99,8 +99,8 @@ public class LoginActivity extends AppCompatActivity {
         preferenceHandler = new PreferenceHandler();
     }
 
-    // set email in email field in login activity when create account from signup activity and move to login activity
-    // get email which is passed by SignUp Activity
+    // set email in email field in login activity when create account from successful account creation activity and move to login activity
+    // get email which is passed by successful account creation Activity
     public void setEmail() {
         if (getIntent().getExtras() != null) {
             String email = getIntent().getExtras().getString("email");

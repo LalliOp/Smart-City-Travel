@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.ResetPassword.PinCodeActivity">
+    tools:context=".Activities.PinCode.PinCodeActivity">
 
     <include
         android:id="@+id/resetPasswordBackground"
@@ -17,24 +17,26 @@
         layout="@layout/logo" />
 
     <TextView
-        android:id="@+id/resetPasswordTxt"
+        android:id="@+id/titleTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/logoLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:fontFamily="@font/segoe_ui"
-        android:text="@string/reset_your_password"
+        android:text="@string/title_here"
         android:textSize="25sp" />
 
     <TextView
         android:id="@+id/pincodeTxt"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/resetPasswordTxt"
+        android:layout_below="@id/titleTxt"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:alpha="0.7"
+        android:alpha="0.9"
+        android:gravity="center"
+        android:paddingHorizontal="20dp"
         android:text="@string/send_4_digits"
         android:textSize="16sp" />
 
@@ -90,4 +92,8 @@
         android:text="@string/resend_code"
         android:textSize="13sp"
         android:theme="@style/WhiteRippleEffectTheme" />
+
+    <include
+        android:id="@+id/loading_progress_bar"
+        layout="@layout/loading_progress_bar" />
 </RelativeLayout>

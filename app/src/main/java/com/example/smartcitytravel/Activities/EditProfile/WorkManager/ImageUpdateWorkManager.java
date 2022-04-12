@@ -11,7 +11,6 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
-import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,7 +26,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ImageUpdateWorkManager extends Worker {
-    private Connection connection;
     private PreferenceHandler preferenceHandler;
     private Uri imageUri;
     private String email;
@@ -35,7 +33,6 @@ public class ImageUpdateWorkManager extends Worker {
     public ImageUpdateWorkManager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
 
-        connection = new Connection();
         preferenceHandler = new PreferenceHandler();
         imageUri = Uri.parse(getInputData().getString("image_url"));
         email = getInputData().getString("email");
@@ -55,7 +52,7 @@ public class ImageUpdateWorkManager extends Worker {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference().child("profile-images");
 
-        String imageName=getImageName();
+        String imageName = getImageName();
 
         StorageReference imageReference = storageReference.child(imageName);
         UploadTask uploadImage = imageReference.putFile(imageUri);
@@ -116,12 +113,12 @@ public class ImageUpdateWorkManager extends Worker {
     }
 
     //create name for image file
-    public String getImageName(){
-        int startIndex=imageUri.getLastPathSegment().lastIndexOf("/");
-        int endIndex=imageUri.getLastPathSegment().lastIndexOf(".");
+    public String getImageName() {
+        int startIndex = imageUri.getLastPathSegment().lastIndexOf("/");
+        int endIndex = imageUri.getLastPathSegment().lastIndexOf(".");
 
-        String rawImgName=imageUri.getLastPathSegment().substring(startIndex,endIndex);
-        rawImgName=rawImgName.replace("/","");
+        String rawImgName = imageUri.getLastPathSegment().substring(startIndex, endIndex);
+        rawImgName = rawImgName.replace("/", "");
 
         Random randomNumber1 = new Random();
         Random randomNumber2 = new Random();

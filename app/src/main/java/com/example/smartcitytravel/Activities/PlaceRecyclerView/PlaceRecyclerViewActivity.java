@@ -43,6 +43,15 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         binding = ActivityPlaceRecyclerViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
+        initialize();
+        getParentActivityIntent();
+        setToolbar();
+        checkConnectionAndGetPlaces();
+    }
+
+    //initialize variables
+    public void initialize() {
         connection = new Connection();
         util = new Util();
         noConnectionToast = new Toast(this);
@@ -51,10 +60,6 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         restaurantPlacesAvailable = false;
         famousSpotsAvailable = false;
         hotelPlacesAvailable = false;
-
-        getParentActivityIntent();
-        setToolbar();
-        checkConnectionAndGetPlaces();
     }
 
     //add toolbar in activity and customize status bar color

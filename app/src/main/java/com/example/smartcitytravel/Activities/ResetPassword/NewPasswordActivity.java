@@ -10,17 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
-import com.example.smartcitytravel.Activities.Login.LoginActivity;
+import com.example.smartcitytravel.Activities.SuccessfulAccountMessage.SuccessfulAccountMessageActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
-import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.Util.Validation;
 import com.example.smartcitytravel.databinding.ActivityNewPasswordBinding;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,8 +27,8 @@ public class NewPasswordActivity extends AppCompatActivity {
     private Color color;
     private Connection connection;
     private Util util;
-    private PreferenceHandler preferenceHandler;
     private Validation validation;
+    private String email;
     private boolean validate_password;
     private boolean validate_confirm_password;
 
@@ -44,6 +40,7 @@ public class NewPasswordActivity extends AppCompatActivity {
 
 
         initialize();
+        getEmail();
         util.setStatusBarColor(NewPasswordActivity.this, R.color.black);
         setLoadingBarColor();
         initializeValidator();
@@ -55,7 +52,6 @@ public class NewPasswordActivity extends AppCompatActivity {
         color = new Color();
         connection = new Connection();
         util = new Util();
-        preferenceHandler = new PreferenceHandler();
         validation = new Validation();
     }
 
@@ -63,6 +59,11 @@ public class NewPasswordActivity extends AppCompatActivity {
     public void initializeValidator() {
         validate_password = false;
         validate_confirm_password = false;
+    }
+
+    // get email which is passed by PinCode Activity
+    public void getEmail() {
+        email = getIntent().getExtras().getString("email");
     }
 
     public void resetPassword() {
@@ -73,7 +74,7 @@ public class NewPasswordActivity extends AppCompatActivity {
                 validatePassword();
                 validateMatchPasswordAndConfirmPassword();
                 if (validate_password && validate_confirm_password) {
-                    checkConnectionAndChangePassword();
+                    changePassword();
                 }
             }
         });
@@ -144,39 +145,14 @@ public class NewPasswordActivity extends AppCompatActivity {
         validate_confirm_password = true;
     }
 
-    //check internet connection and then change account password in database
-    public void checkConnectionAndChangePassword() {
+    //change account password in database
+    public void changePassword() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(NewPasswordActivity.this);
         if (isConnectionSourceAvailable) {
             showLoadingBar();
         }
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                Boolean internetAvailable = connection.isInternetAvailable();
-
-                NewPasswordActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (internetAvailable) {
-                            changePassword();
-                        } else {
-                            Toast.makeText(NewPasswordActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                            hideLoadingBar();
-                        }
-                    }
-                });
-            }
-        });
-        executor.shutdown();
-    }
-
-    //change account password in database
-    public void changePassword() {
-        Call<Result> changePasswordCallable = HttpClient.getInstance().changePassword(
-                preferenceHandler.getEmailOfResetPasswordProcess(NewPasswordActivity.this),
+        Call<Result> changePasswordCallable = HttpClient.getInstance().changePassword(email,
                 binding.passwordEdit.getText().toString());
 
         changePasswordCallable.enqueue(new Callback<Result>() {
@@ -184,8 +160,7 @@ public class NewPasswordActivity extends AppCompatActivity {
             public void onResponse(Call<Result> call, Response<Result> response) {
                 Result result = response.body();
                 if (result != null && result.getStatus() == 0) {
-                    Toast.makeText(NewPasswordActivity.this, result.getMessage(), Toast.LENGTH_SHORT).show();
-                    moveToLoginActivity();
+                    moveToSuccessfulAccountMessageActivity();
                 } else {
                     Toast.makeText(NewPasswordActivity.this, "Unable to change password", Toast.LENGTH_SHORT).show();
                 }
@@ -194,7 +169,7 @@ public class NewPasswordActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
-                Toast.makeText(NewPasswordActivity.this, "Unable to change password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NewPasswordActivity.this, "No Connection", Toast.LENGTH_SHORT).show();
                 hideLoadingBar();
             }
         });
@@ -213,16 +188,11 @@ public class NewPasswordActivity extends AppCompatActivity {
         util.makeScreenTouchable(NewPasswordActivity.this);
     }
 
-    //Move from NewPassword Activity to Login Activity
-    //pass email to Login Activity
-    public void moveToLoginActivity() {
-        String email = preferenceHandler.getEmailOfResetPasswordProcess(NewPasswordActivity.this);
-        preferenceHandler.saveEmailOfResetPasswordProcess(NewPasswordActivity.this, "");
-
-        Intent intent = new Intent(this, LoginActivity.class);
+    //move to successful account message activity
+    public void moveToSuccessfulAccountMessageActivity() {
+        Intent intent = new Intent(this, SuccessfulAccountMessageActivity.class);
         intent.putExtra("email", email);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("message", "Password Changed Successfully");
         startActivity(intent);
-
     }
 }

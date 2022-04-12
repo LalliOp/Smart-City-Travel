@@ -11,16 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
+import com.example.smartcitytravel.Activities.PinCode.PinCodeActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
-import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.Util.Validation;
 import com.example.smartcitytravel.databinding.ActivityEmailBinding;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,7 +28,6 @@ public class EmailActivity extends AppCompatActivity {
     private Util util;
     private Connection connection;
     private Color color;
-    private PreferenceHandler preferenceHandler;
     private Validation validation;
     private boolean validate_email;
 
@@ -53,7 +49,6 @@ public class EmailActivity extends AppCompatActivity {
         util = new Util();
         connection = new Connection();
         color = new Color();
-        preferenceHandler = new PreferenceHandler();
         validation = new Validation();
         validate_email = false;
     }
@@ -67,7 +62,7 @@ public class EmailActivity extends AppCompatActivity {
                 util.hideKeyboard(EmailActivity.this);
                 validateEmail();
                 if (validate_email) {
-                    checkConnectionAndVerifyEmail();
+                    verifyEmail();
                 }
 
 
@@ -100,37 +95,13 @@ public class EmailActivity extends AppCompatActivity {
         validate_email = true;
     }
 
-    //check internet connection and then verify email by database
-    public void checkConnectionAndVerifyEmail() {
+    //check whether email exist or not
+    public void verifyEmail() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(EmailActivity.this);
         if (isConnectionSourceAvailable) {
             showLoadingBar();
         }
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                Boolean internetAvailable = connection.isInternetAvailable();
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (internetAvailable) {
-                            verifyEmail();
-                        } else {
-                            Toast.makeText(EmailActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                            hideLoadingBar();
-                        }
-                    }
-                });
-            }
-        });
-        executor.shutdown();
-    }
-
-    //check whether email exist or not
-    public void verifyEmail() {
         Call<Result> verifyEmailCallable = HttpClient.getInstance().verifyEmail(binding.emailEdit.getText().toString().toLowerCase());
 
         verifyEmailCallable.enqueue(new Callback<Result>() {
@@ -143,7 +114,6 @@ public class EmailActivity extends AppCompatActivity {
                     util.createErrorDialog(EmailActivity.this, "Account",
                             "Account exist with google. " + result.getMessage());
                 } else if (result.getStatus() == 1) {
-                    preferenceHandler.saveEmailOfResetPasswordProcess(EmailActivity.this, binding.emailEdit.getText().toString().toLowerCase());
                     moveToPinCodeActivity();
                 }
                 hideLoadingBar();
@@ -151,7 +121,7 @@ public class EmailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<Result> call, @NonNull Throwable t) {
-                Toast.makeText(EmailActivity.this, "Unable to verify email", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EmailActivity.this, "No Connection", Toast.LENGTH_SHORT).show();
                 hideLoadingBar();
             }
         });
@@ -161,7 +131,8 @@ public class EmailActivity extends AppCompatActivity {
 
     //change default loading bar color
     public void setLoadingBarColor() {
-        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
+        ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2));
+        binding.loadingProgressBar.loadingBar.setIndeterminateTintList(colorStateList);
     }
 
     // show progress bar when user click on continue button
@@ -181,6 +152,8 @@ public class EmailActivity extends AppCompatActivity {
     //Move from Email Activity to Pin Code Activity
     public void moveToPinCodeActivity() {
         Intent intent = new Intent(this, PinCodeActivity.class);
+        intent.putExtra("email", binding.emailEdit.getText().toString());
+        intent.putExtra("title","Reset Your Password");
         startActivity(intent);
     }
 
