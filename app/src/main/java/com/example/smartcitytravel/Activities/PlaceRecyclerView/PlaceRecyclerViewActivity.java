@@ -1,6 +1,7 @@
 package com.example.smartcitytravel.Activities.PlaceRecyclerView;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -362,8 +363,20 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
             noConnectionToast.cancel();
             noConnectionToast.getView().isShown();
         } catch (Exception ignored) {
-            noConnectionToast = Toast.makeText(this, "No Connection", Toast.LENGTH_SHORT);
+            noConnectionToast = Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT);
             noConnectionToast.show();
         }
+    }
+
+    // return to previous activity when user click on up button (which is back button on top life side)
+    @Override
+    public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+
     }
 }

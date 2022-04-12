@@ -16,10 +16,8 @@
         android:theme="@style/Theme.SmartCityTravel">
         <activity
             android:name=".Activities.SuccessfulAccountMessage.SuccessfulAccountMessageActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activities.SignUp.SuccesfullAccountActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.PlaceDetail.PlaceDetailActivity"
             android:exported="false"
@@ -27,17 +25,14 @@
         <activity
             android:name=".Activities.PlaceRecyclerView.PlaceRecyclerViewActivity"
             android:exported="false"
-            android:parentActivityName=".Activities.Destination.DestinationActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.EditProfile.EditProfileActivity"
             android:exported="false"
-            android:parentActivityName=".Activities.Home.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.Destination.DestinationActivity"
             android:exported="false"
-            android:parentActivityName=".Activities.Home.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.LiveChat.LiveChatActivity"

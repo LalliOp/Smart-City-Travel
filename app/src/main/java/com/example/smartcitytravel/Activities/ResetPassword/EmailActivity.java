@@ -121,7 +121,7 @@ public class EmailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<Result> call, @NonNull Throwable t) {
-                Toast.makeText(EmailActivity.this, "No Connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EmailActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 hideLoadingBar();
             }
         });

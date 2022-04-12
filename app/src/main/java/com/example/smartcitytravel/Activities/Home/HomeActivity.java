@@ -20,12 +20,13 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.AWSService.DataModel.User;
+import com.example.smartcitytravel.Activities.EditProfile.Broadcast.UpdateProfileImageBroadcast;
+import com.example.smartcitytravel.Activities.EditProfile.Broadcast.UpdateProfileNameBroadcast;
 import com.example.smartcitytravel.Activities.EditProfile.EditProfileActivity;
-import com.example.smartcitytravel.Activities.Login.LoginActivity;
-import com.example.smartcitytravel.Activities.EditProfile.Broadcast.UpdateProfileBroadcast;
 import com.example.smartcitytravel.Activities.Home.Fragments.AboutUsFragment;
 import com.example.smartcitytravel.Activities.Home.Fragments.HomeFragment;
 import com.example.smartcitytravel.Activities.Home.Fragments.SettingsFragment;
+import com.example.smartcitytravel.Activities.Login.LoginActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
@@ -42,7 +43,8 @@ public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
     private Util util;
     private PreferenceHandler preferenceHandler;
-    private UpdateProfileBroadcast updateProfileBroadcast;
+    private UpdateProfileImageBroadcast updateProfileImageBroadcast;
+    private UpdateProfileNameBroadcast updateProfileNameBroadcast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,8 @@ public class HomeActivity extends AppCompatActivity {
 
         initialize();
         User user = preferenceHandler.getLoginAccountPreference(HomeActivity.this);
-        registerUpdateProfileBroadcastReceiver();
+        registerUpdateProfileImageBroadcastReceiver();
+        registerUpdateProfileNameBroadcastReceiver();
         setLoadingBarColor();
         setUserProfile(user);
         createHomeFragment(savedInstanceState);
@@ -69,12 +72,21 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     // register to listen for profile image broadcast
-    public void registerUpdateProfileBroadcastReceiver() {
-        updateProfileBroadcast = new UpdateProfileBroadcast(binding);
+    public void registerUpdateProfileImageBroadcastReceiver() {
+        updateProfileImageBroadcast = new UpdateProfileImageBroadcast(binding);
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.example.smartcitytravel.UPDATE_PROFILE");
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(updateProfileBroadcast, intentFilter);
+        intentFilter.addAction("com.example.smartcitytravel.UPDATE_PROFILE_IMAGE");
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(updateProfileImageBroadcast, intentFilter);
+    }
+
+    // register to listen for profile name broadcast
+    public void registerUpdateProfileNameBroadcastReceiver() {
+        updateProfileNameBroadcast = new UpdateProfileNameBroadcast(binding);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("com.example.smartcitytravel.UPDATE_PROFILE_NAME");
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(updateProfileNameBroadcast, intentFilter);
     }
 
     // set name , email and image of user profile
@@ -264,7 +276,7 @@ public class HomeActivity extends AppCompatActivity {
                         Intent intent = new Intent(HomeActivity.this, EditProfileActivity.class);
                         startActivity(intent);
                     }
-                },50);
+                }, 50);
 
             }
         });
@@ -274,7 +286,9 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(updateProfileBroadcast);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(updateProfileImageBroadcast);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(updateProfileNameBroadcast);
+
     }
 
 }

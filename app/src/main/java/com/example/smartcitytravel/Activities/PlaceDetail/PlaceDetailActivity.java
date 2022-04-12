@@ -2,7 +2,6 @@ package com.example.smartcitytravel.Activities.PlaceDetail;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -93,7 +92,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            Toast.makeText(this, "WORKING", Toast.LENGTH_SHORT).show();
             finish();
             return true;
         } else {

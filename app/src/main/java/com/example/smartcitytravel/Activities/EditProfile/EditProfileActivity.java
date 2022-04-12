@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -48,7 +49,10 @@ public class EditProfileActivity extends AppCompatActivity {
     private Connection connection;
     private User user;
     private String changeName;
+    private boolean newProfileImageSelected;
+    private boolean newProfileName;
     private Uri imageUri;
+    private Toast noConnectionToast;
 
     //run when launch() function is called
     //get image from gallery and save new image
@@ -59,6 +63,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     if (result != null && result.getData() != null) {
                         imageUri = result.getData().getData();
                         setProfileImage(imageUri.toString());
+                        newProfileImageSelected = true;
                         binding.saveBtn.setEnabled(true);
                     }
                 }
@@ -90,9 +95,12 @@ public class EditProfileActivity extends AppCompatActivity {
         validation = new Validation();
         preferenceHandler = new PreferenceHandler();
         connection = new Connection();
+        noConnectionToast = new Toast(this);
 
         changeName = "";
         user = preferenceHandler.getLoginAccountPreference(this);
+        newProfileImageSelected = false;
+        newProfileName = false;
     }
 
 
@@ -143,7 +151,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     //check internet connection and then upload profile image and update in database
-    public void checkConnectionAndUpdateProfileImage() {
+    public void checkConnectionAndUpdateProfileImage(Uri imageUri) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
@@ -154,10 +162,12 @@ public class EditProfileActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (internetAvailable) {
-                            startUpdateImageWorkManager();
+                            startUpdateImageWorkManager(imageUri);
+
+                            newProfileImageSelected = false;
+                            setSaveButtonState();
                         } else {
-                            Toast.makeText(EditProfileActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                            hideLoadingBar();
+                            displayNoConnectionMessage();
                         }
                     }
                 });
@@ -167,7 +177,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     // start background service to update profile image
-    public void startUpdateImageWorkManager() {
+    public void startUpdateImageWorkManager(Uri imageUri) {
         Data data = new Data.Builder()
                 .putString("image_url", imageUri.toString())
                 .putString("email", user.getEmail())
@@ -188,12 +198,11 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 util.hideKeyboard(EditProfileActivity.this);
-                if (validateFullName()) {
+                if (validateFullName() && newProfileName) {
                     updateProfileName();
                 }
-
-                if (imageUri != null) {
-                    checkConnectionAndUpdateProfileImage();
+                if (newProfileImageSelected) {
+                    checkConnectionAndUpdateProfileImage(imageUri);
                 }
             }
         });
@@ -236,9 +245,15 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 changeName = s.toString();
                 if (changeName.equalsIgnoreCase(user.getName())) {
-                    binding.saveBtn.setEnabled(false);
+                    newProfileName = false;
                 } else {
+                    newProfileName = true;
+                }
+
+                if (newProfileImageSelected || newProfileName) {
                     binding.saveBtn.setEnabled(true);
+                } else {
+                    binding.saveBtn.setEnabled(false);
                 }
             }
 
@@ -266,14 +281,18 @@ public class EditProfileActivity extends AppCompatActivity {
                     user.setName(changeName);
                     binding.fullNameEdit.setText(user.getName());
                     preferenceHandler.updateNameLoginAccountPreference(user.getName(), EditProfileActivity.this);
-                    sendUpdateProfileBroadcast();
+                    sendUpdateProfileNameBroadcast();
+                    newProfileName = false;
+
+                    Toast.makeText(EditProfileActivity.this, "Name Changed Successfully", Toast.LENGTH_SHORT).show();
+                    setSaveButtonState();
                 }
                 hideLoadingBar();
             }
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
-                Toast.makeText(EditProfileActivity.this, "No Connection", Toast.LENGTH_SHORT).show();
+                displayNoConnectionMessage();
                 binding.saveBtn.setEnabled(true);
                 hideLoadingBar();
             }
@@ -293,9 +312,43 @@ public class EditProfileActivity extends AppCompatActivity {
         util.makeScreenTouchable(this);
     }
 
-    // send broadcast to update profile
-    public void sendUpdateProfileBroadcast() {
-        Intent updateProfileIntent = new Intent("com.example.smartcitytravel.UPDATE_PROFILE");
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(updateProfileIntent);
+
+    // send broadcast to update profile name
+    public void sendUpdateProfileNameBroadcast() {
+        Intent updateProfileNameIntent = new Intent("com.example.smartcitytravel.UPDATE_PROFILE_NAME");
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(updateProfileNameIntent);
+    }
+
+    // show only one no connection msg when multiple connection failed
+    public void displayNoConnectionMessage() {
+        try {
+            noConnectionToast.cancel();
+            noConnectionToast.getView().isShown();
+        } catch (Exception ignored) {
+            noConnectionToast = Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT);
+            noConnectionToast.show();
+        }
+    }
+
+    // enable and disable save button
+    public void setSaveButtonState() {
+        if (!newProfileImageSelected && !newProfileName) {
+            binding.saveBtn.setEnabled(false);
+        } else {
+            binding.saveBtn.setEnabled(true);
+
+        }
+    }
+
+    // return to previous activity when user click on up button (which is back button on top life side)
+    @Override
+    public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+
     }
 }

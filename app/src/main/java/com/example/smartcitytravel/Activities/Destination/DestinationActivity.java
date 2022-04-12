@@ -2,6 +2,7 @@ package com.example.smartcitytravel.Activities.Destination;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,5 +58,16 @@ public class DestinationActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // return to previous activity when user click on up button (which is back button on top life side)
+    @Override
+    public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+
+    }
 
 }

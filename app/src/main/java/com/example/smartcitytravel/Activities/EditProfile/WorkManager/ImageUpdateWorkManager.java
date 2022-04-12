@@ -3,7 +3,6 @@ package com.example.smartcitytravel.Activities.EditProfile.WorkManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -11,6 +10,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
+import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +29,7 @@ public class ImageUpdateWorkManager extends Worker {
     private PreferenceHandler preferenceHandler;
     private Uri imageUri;
     private String email;
+    private Connection connection;
 
     public ImageUpdateWorkManager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -36,6 +37,7 @@ public class ImageUpdateWorkManager extends Worker {
         preferenceHandler = new PreferenceHandler();
         imageUri = Uri.parse(getInputData().getString("image_url"));
         email = getInputData().getString("email");
+        connection = new Connection();
 
     }
 
@@ -44,7 +46,6 @@ public class ImageUpdateWorkManager extends Worker {
     public Result doWork() {
         uploadProfileImage();
         return Result.success();
-
     }
 
     //upload image in firebase cloud and update image in database
@@ -61,7 +62,6 @@ public class ImageUpdateWorkManager extends Worker {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                 if (!task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "Unable to update image", Toast.LENGTH_SHORT).show();
                     throw task.getException();
 
                 } else {
@@ -76,7 +76,6 @@ public class ImageUpdateWorkManager extends Worker {
                     Uri downloadImageUri = task.getResult();
                     updateProfileImage(downloadImageUri);
                 } else {
-                    Toast.makeText(getApplicationContext(), "Unable to update image", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -92,24 +91,21 @@ public class ImageUpdateWorkManager extends Worker {
                 com.example.smartcitytravel.AWSService.DataModel.Result result = response.body();
                 if (result != null && result.getStatus() == 0) {
                     preferenceHandler.updateImageLoginAccountPreference(downloadImageUri.toString(), getApplicationContext());
-                    sendUpdateProfileBroadcast();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Unable to update profile image", Toast.LENGTH_SHORT).show();
+                    sendUpdateProfileImageBroadcast();
                 }
             }
 
             @Override
             public void onFailure(Call<com.example.smartcitytravel.AWSService.DataModel.Result> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Unable to update profile image", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-    // send broadcast to update profile
-    public void sendUpdateProfileBroadcast() {
-        Intent updateProfileIntent = new Intent("com.example.smartcitytravel.UPDATE_PROFILE");
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(updateProfileIntent);
+    // send broadcast to update profile image
+    public void sendUpdateProfileImageBroadcast() {
+        Intent updateProfileImageIntent = new Intent("com.example.smartcitytravel.UPDATE_PROFILE_IMAGE");
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(updateProfileImageIntent);
     }
 
     //create name for image file

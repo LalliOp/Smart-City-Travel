@@ -169,7 +169,7 @@ public class NewPasswordActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
-                Toast.makeText(NewPasswordActivity.this, "No Connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NewPasswordActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 hideLoadingBar();
             }
         });

@@ -237,7 +237,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<Result> call, @NonNull Throwable t) {
-                Toast.makeText(SignUpActivity.this, "No Connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUpActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 hideLoadingBar();
             }
         });

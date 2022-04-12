@@ -43,11 +43,11 @@ public class PinCodeActivity extends AppCompatActivity {
 
 
         initialize();
-        setLoadingBarColor();
-        setTitle();
-        getEmail();
-        boldEmail();
         util.setStatusBarColor(PinCodeActivity.this, R.color.black);
+        setLoadingBarColor();
+        getEmail();
+        setTitle();
+        boldEmail();
         sendPinCode();
         continueButtonClickListener();
         resendCode();
@@ -74,14 +74,16 @@ public class PinCodeActivity extends AppCompatActivity {
 
     }
 
-    // get email which is passed by Email Activity or SignUp Activity
+    // get email which is passed by Email Activity or SignUp Activity and change theme depend on activity
     public void getEmail() {
         if (getIntent().getExtras().getString("signup_email") != null) {
             email = getIntent().getExtras().getString("signup_email");
             fromSignUpActivity = true;
+
         } else {
             email = getIntent().getExtras().getString("email");
             fromSignUpActivity = false;
+
         }
     }
 
@@ -173,7 +175,7 @@ public class PinCodeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<PinCodeResult> call, @NonNull Throwable t) {
-                Toast.makeText(PinCodeActivity.this, "No Connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PinCodeActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -212,7 +214,7 @@ public class PinCodeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
-                Toast.makeText(PinCodeActivity.this, "No Connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PinCodeActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 hideLoadingBar();
             }
         });
