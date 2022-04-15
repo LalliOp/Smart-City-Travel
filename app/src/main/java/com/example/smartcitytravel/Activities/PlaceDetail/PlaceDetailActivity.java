@@ -2,9 +2,12 @@ package com.example.smartcitytravel.Activities.PlaceDetail;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.Place;
+import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Activities.PlaceDetail.SliderViewAdapter.ImageSliderViewAdapter;
 import com.example.smartcitytravel.Activities.PlaceDetail.ViewPager2Adapter.PlaceDetailPagerAdapter;
 import com.example.smartcitytravel.R;
@@ -16,6 +19,9 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 
 import io.reactivex.rxjava3.annotations.NonNull;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PlaceDetailActivity extends AppCompatActivity {
     private ActivityPlaceDetailBinding binding;
@@ -30,8 +36,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         util = new Util();
 
         setToolbar();
-        showImageSliderView();
-        showPlaceDetails();
+        getPlaceDetail();
 
     }
 
@@ -42,14 +47,41 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     }
 
+    // get detail of place from database
+    public void getPlaceDetail() {
+        int placeId = getIntent().getExtras().getInt("placeId");
+
+        Call<Place> callablePlaceDetail = HttpClient.getInstance().getPlaceDetail(String.valueOf(placeId));
+
+        callablePlaceDetail.enqueue(new Callback<Place>() {
+            @Override
+            public void onResponse(Call<Place> call, Response<Place> response) {
+                Place place = response.body();
+                if (place != null) {
+                    binding.placeName.setText(place.getName());
+
+                    showImageSliderView(place.getImageUrl());
+                    showPlaceDetailTabs(place);
+
+                } else {
+                    Toast.makeText(PlaceDetailActivity.this, "Unable to get place details", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Place> call, Throwable t) {
+                Toast.makeText(PlaceDetailActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
     //create and show place images slider
     //change images after few seconds
-    public void showImageSliderView() {
-        binding.placeName.setText("Place Name");
-        binding.placeRating.setRating(3.5F);
+    public void showImageSliderView(String imageUrl) {
 
         ArrayList<String> imageList = new ArrayList<>();
-        String url1 = "https://www.geeksforgeeks.org/wp-content/uploads/gfg_200X200-1.png";
+        String url1 = imageUrl;
         String url2 = "https://qphs.fs.quoracdn.net/main-qimg-8e203d34a6a56345f86f1a92570557ba.webp";
         String url3 = "https://bizzbucket.co/wp-content/uploads/2020/08/Life-in-The-Metro-Blog-Title-22.png";
         imageList.add(url1);
@@ -64,8 +96,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     //create viewpager2 and tab layout
     //show tabs which show place detail
-    public void showPlaceDetails() {
-        PlaceDetailPagerAdapter placeDetailPagerAdapter = new PlaceDetailPagerAdapter(this);
+    public void showPlaceDetailTabs(Place place) {
+        PlaceDetailPagerAdapter placeDetailPagerAdapter = new PlaceDetailPagerAdapter(this, place);
 
         binding.placeDetailViewPager2.setAdapter(placeDetailPagerAdapter);
 

@@ -1,6 +1,7 @@
 package com.example.smartcitytravel.AWSService.Http;
 
 import com.example.smartcitytravel.AWSService.DataModel.PinCodeResult;
+import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.Place;
 import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.PlaceResult;
 import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.DataModel.User;
@@ -42,5 +43,8 @@ public interface HttpRequest {
 
     @GET("get-place-list")
     Call<PlaceResult> getPlaceList(@Query("place_type") String placeType);
+
+    @GET("get-place-detail")
+    Call<Place> getPlaceDetail(@Query("placeId") String placeId);
 
 }

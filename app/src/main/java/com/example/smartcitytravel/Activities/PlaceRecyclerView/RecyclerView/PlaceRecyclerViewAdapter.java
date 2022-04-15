@@ -30,8 +30,7 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
     @Override
     public PlaceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new PlaceRecyclerViewAdapter.PlaceViewHolder(PlaceViewBinding.inflate(
-                LayoutInflater.from(parent.getContext()), parent, false)
-        );
+                LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override

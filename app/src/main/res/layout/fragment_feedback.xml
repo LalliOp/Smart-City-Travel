@@ -5,11 +5,48 @@
     android:layout_height="match_parent"
     tools:context=".Activities.PlaceDetail.Fragments.DescriptionFragment">
 
-    <TextView
+    <RelativeLayout
+        android:id="@+id/avgRatingTxtLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="FEEDBACK"
-        android:textColor="@color/black" />
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id="@+id/avgRatingTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3.5"
+            android:textColor="@color/black"
+            android:textSize="50sp" />
+
+        <TextView
+            android:id="@+id/totalRatingTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/avgRatingTxt"
+            android:layout_toEndOf="@id/avgRatingTxt"
+            android:text="/5"
+            android:textColor="@color/default_black"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <RatingBar
+        android:id="@+id/avgRatingBar"
+        style="?android:attr/ratingBarStyleIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/avgRatingTxtLayout"
+        android:layout_centerHorizontal="true"
+        android:numStars="5"
+        android:rating="3.5"
+        android:stepSize="0.1"
+        android:theme="@style/RatingBarColor" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/feedbackRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/avgRatingBar" />
+
 
 </RelativeLayout>
