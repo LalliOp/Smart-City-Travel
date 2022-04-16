@@ -1,22 +1,33 @@
 package com.example.smartcitytravel.AWSService.DataModel;
 
+import com.google.firebase.firestore.Exclude;
+
 public class User {
-    private Integer userId;
+    private String userId;
     private String name;
     private String email;
+    private String password;
     private String image_url;
-    private Integer google_account;
+    private Boolean google_account;
 
-    public User(){
+    public User() {
 
     }
 
-    public User(Integer userId, String name, String email, String image_url, Integer google_account) {
-        this.userId = userId;
+    public User(String name, String email, String password, String image_url, Boolean google_account) {
         this.name = name;
         this.email = email;
+        this.password = password;
         this.image_url = image_url;
         this.google_account = google_account;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {
@@ -27,11 +38,12 @@ public class User {
         this.email = email;
     }
 
-    public Integer getUserId() {
+    @Exclude
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -51,11 +63,11 @@ public class User {
         this.image_url = image_url;
     }
 
-    public Integer getGoogle_account() {
+    public Boolean getGoogle_account() {
         return google_account;
     }
 
-    public void setGoogle_account(Integer google_account) {
+    public void setGoogle_account(Boolean google_account) {
         this.google_account = google_account;
     }
 }

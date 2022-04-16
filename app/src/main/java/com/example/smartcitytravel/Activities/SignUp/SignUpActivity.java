@@ -6,11 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.AWSService.DataModel.Result;
-import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Activities.PinCode.PinCodeActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
@@ -18,10 +15,13 @@ import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.Util.Validation;
 import com.example.smartcitytravel.databinding.ActivitySignUpBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SignUpActivity extends AppCompatActivity {
     private ActivitySignUpBinding binding;
@@ -77,7 +77,7 @@ public class SignUpActivity extends AppCompatActivity {
                 matchPasswordAndConfirmPassword();
 
                 if (validate_full_name && validate_email && validate_password && validate_confirm_password) {
-                    verifyEmail();
+                    checkConnectionAndVerifyEmail();
                 }
             }
         });
@@ -202,45 +202,65 @@ public class SignUpActivity extends AppCompatActivity {
         intent.putExtra("signup_name", binding.fullNameEdit.getText().toString());
         intent.putExtra("signup_email", binding.emailEdit.getText().toString());
         intent.putExtra("signup_password", binding.passwordEdit.getText().toString());
-        intent.putExtra("title","Verify Your Email");
+        intent.putExtra("title", "Verify Your Email");
         startActivity(intent);
 
     }
 
-    //check whether email exist or not
-    public void verifyEmail() {
+    // check internet connection exist or not. If exist than verify email by database
+    public void checkConnectionAndVerifyEmail() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(SignUpActivity.this);
         if (isConnectionSourceAvailable) {
             showLoadingBar();
         }
 
-        Call<Result> verifyEmailCallable = HttpClient.getInstance().verifyEmail(binding.emailEdit.getText().toString().toLowerCase());
-
-        verifyEmailCallable.enqueue(new Callback<Result>() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
             @Override
-            public void onResponse(@NonNull Call<Result> call, @NonNull Response<Result> response) {
-                Result result = response.body();
-                if (result != null) {
-                    if (result.getStatus() == -1) {
-                        moveToPinCodeActivity();
-                    } else if (result.getStatus() == 0) {
-                        util.createErrorDialog(SignUpActivity.this, "Account",
-                                "Account exist with google. " + result.getMessage());
-                    } else if (result.getStatus() == 1) {
-                        util.createErrorDialog(SignUpActivity.this, "Account", result.getMessage());
+            public void run() {
+                boolean internetAvailable = connection.isInternetAvailable();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (internetAvailable) {
+                            verifyEmail();
+                        } else {
+                            Toast.makeText(SignUpActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                            hideLoadingBar();
+                        }
                     }
-                } else {
-                    Toast.makeText(SignUpActivity.this, "Unable to verify email", Toast.LENGTH_SHORT).show();
-                }
-                hideLoadingBar();
-            }
+                });
 
-            @Override
-            public void onFailure(@NonNull Call<Result> call, @NonNull Throwable t) {
-                Toast.makeText(SignUpActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                hideLoadingBar();
             }
         });
+    }
+
+    //check whether email exist or not
+    public void verifyEmail() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user").whereEqualTo("email", binding.emailEdit.getText().toString().toLowerCase())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                                boolean google_account = querySnapshot.getBoolean("google_account");
+                                if (google_account) {
+                                    util.createErrorDialog(SignUpActivity.this, "Account", "Account already exist with google. Try sign in with google");
+                                } else {
+                                    util.createErrorDialog(SignUpActivity.this, "Account", "Account already exist with this email");
+                                }
+                            }
+
+                        } else {
+                            moveToPinCodeActivity();
+                        }
+                        hideLoadingBar();
+                    }
+                });
 
     }
 

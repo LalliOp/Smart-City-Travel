@@ -10,22 +10,23 @@ import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.AWSService.DataModel.PinCodeResult;
-import com.example.smartcitytravel.AWSService.DataModel.Result;
-import com.example.smartcitytravel.AWSService.Http.HttpClient;
+import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
+import com.example.smartcitytravel.AWSService.DataModel.User;
 import com.example.smartcitytravel.Activities.ResetPassword.NewPasswordActivity;
 import com.example.smartcitytravel.Activities.SuccessfulAccountMessage.SuccessfulAccountMessageActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityPinCodeBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PinCodeActivity extends AppCompatActivity {
     private ActivityPinCodeBinding binding;
@@ -48,7 +49,7 @@ public class PinCodeActivity extends AppCompatActivity {
         getEmail();
         setTitle();
         boldEmail();
-        sendPinCode();
+        checkConnectionAndSendPinCode();
         continueButtonClickListener();
         resendCode();
     }
@@ -104,7 +105,7 @@ public class PinCodeActivity extends AppCompatActivity {
         } else if (Integer.parseInt(pinCode) == pin_code) {
             removePinCodeError();
             if (fromSignUpActivity) {
-                createAccount();
+                checkConnectionAndCreateAccount();
             } else {
                 moveToNewPasswordActivity();
             }
@@ -150,74 +151,118 @@ public class PinCodeActivity extends AppCompatActivity {
         binding.resendCodeTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendPinCode();
+                checkConnectionAndSendPinCode();
             }
         });
     }
 
-    //send pin code to email user enter
+    //check internet connection exist or not. If exist send pin code to user email
+    public void checkConnectionAndSendPinCode() {
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean internetAvailable = connection.isConnectionSourceAndInternetAvailable(PinCodeActivity.this);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (internetAvailable) {
+                            sendPinCode();
+                        } else {
+                            Toast.makeText(PinCodeActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                            hideLoadingBar();
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    //generate and send pin code to email user enter
     public void sendPinCode() {
-        Call<PinCodeResult> pinCodeCallable = HttpClient.getInstance().sendPinCode(email);
 
-        pinCodeCallable.enqueue(new Callback<PinCodeResult>() {
-            @Override
-            public void onResponse(@NonNull Call<PinCodeResult> call, @NonNull Response<PinCodeResult> response) {
-                PinCodeResult result = response.body();
-                if (result != null) {
-                    pin_code = result.getPin_code();
-                    Toast.makeText(PinCodeActivity.this, pin_code + "", Toast.LENGTH_LONG).show();
+        Random random = new Random();
+        pin_code = random.nextInt(10000 - 1000) + 1000;
 
-                } else {
-                    Toast.makeText(PinCodeActivity.this, "Unable to send pin code. Try resend code", Toast.LENGTH_SHORT).show();
-                }
+        Toast.makeText(this, pin_code + "", Toast.LENGTH_LONG).show();
 
-            }
+        String body = "";
+        if (fromSignUpActivity) {
+            body = pin_code + " is pin code to verify email";
+        } else {
+            body = pin_code + " is pin code to reset password";
+        }
 
-            @Override
-            public void onFailure(@NonNull Call<PinCodeResult> call, @NonNull Throwable t) {
-                Toast.makeText(PinCodeActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+        BackgroundMail.newBuilder(PinCodeActivity.this)
+                .withUsername("smartcitytravel011@gmail.com")
+                .withPassword("@zohaib1234")
+                .withMailto(email)
+                .withType(BackgroundMail.TYPE_PLAIN)
+                .withSubject("Pin code from smart city travel")
+                .withBody(body)
+                .withProcessVisibility(false)
+                .send();
 
-            }
-        });
+
     }
 
-    // check all fields are valid. If valid create account by passing user account info to database
-    // and move to Login Activity if account created successfully
-    public void createAccount() {
+    public void checkConnectionAndCreateAccount() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(PinCodeActivity.this);
         if (isConnectionSourceAvailable) {
             showLoadingBar();
         }
 
-        String name = getIntent().getExtras().getString("signup_name");
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean internetAvailable = connection.isInternetAvailable();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (internetAvailable) {
+                            createAccount();
+                        } else {
+                            Toast.makeText(PinCodeActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                            hideLoadingBar();
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    //create account by passing user account info to database
+    // and move to Successful Account Message Activity Activity if account created successfully
+    public void createAccount() {
         String password = getIntent().getExtras().getString("signup_password");
+        String name = getIntent().getExtras().getString("signup_name");
         String normalizedFullName = name.toLowerCase();
         normalizedFullName = normalizedFullName.trim().replaceAll("\\s{2,}", " ");
 
-        Call<Result> createAccountCallable = HttpClient.getInstance().createAccount(normalizedFullName,
-                email.toLowerCase(), password, "0",
-                getString(R.string.default_profile_image_url));
+        User user = new User(normalizedFullName, email, password,
+                getString(R.string.default_profile_image_url), false);
 
-        createAccountCallable.enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                Result result = response.body();
-                if (result != null) {
-                    if (result.getStatus() == 0) {
-                        moveToSuccessfulAccountCreationActivity();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user")
+                .add(user)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        if (!documentReference.getId().isEmpty()) {
+                            moveToSuccessfulAccountMessageActivity();
+                        }
+                        hideLoadingBar();
                     }
-                } else {
-                    Toast.makeText(PinCodeActivity.this, "Unable to create account", Toast.LENGTH_SHORT).show();
-                }
-                hideLoadingBar();
-            }
+                });
 
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                Toast.makeText(PinCodeActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                hideLoadingBar();
-            }
-        });
     }
 
     // show progress bar when user click on register button
@@ -233,7 +278,7 @@ public class PinCodeActivity extends AppCompatActivity {
     }
 
     //move to successful account creation activity
-    public void moveToSuccessfulAccountCreationActivity() {
+    public void moveToSuccessfulAccountMessageActivity() {
         Intent intent = new Intent(this, SuccessfulAccountMessageActivity.class);
         intent.putExtra("email", email);
         intent.putExtra("message", "Account Created Successfully");

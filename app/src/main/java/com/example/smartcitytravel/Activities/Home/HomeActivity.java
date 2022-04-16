@@ -290,12 +290,13 @@ public class HomeActivity extends AppCompatActivity {
 
     //logout user from system whether google account or non google account
     public void logout() {
-        Integer account_type = preferenceHandler.getLoginAccountTypePreference(HomeActivity.this);
-        if (account_type == 0) {
+        Boolean account_type = preferenceHandler.getLoginAccountTypePreference(HomeActivity.this);
+        if (!account_type) {
             preferenceHandler.clearLoginAccountPreference(HomeActivity.this);
 
             moveToLoginActivity();
-        } else if (account_type == 1) {
+
+        } else {
             GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .build();

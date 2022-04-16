@@ -8,8 +8,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.AWSService.DataModel.Result;
-import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Activities.SuccessfulAccountMessage.SuccessfulAccountMessageActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
@@ -17,10 +15,13 @@ import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.Util.Validation;
 import com.example.smartcitytravel.databinding.ActivityNewPasswordBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class NewPasswordActivity extends AppCompatActivity {
     private ActivityNewPasswordBinding binding;
@@ -74,7 +75,7 @@ public class NewPasswordActivity extends AppCompatActivity {
                 validatePassword();
                 validateMatchPasswordAndConfirmPassword();
                 if (validate_password && validate_confirm_password) {
-                    changePassword();
+                    checkConnectionAndChangePassword();
                 }
             }
         });
@@ -145,34 +146,61 @@ public class NewPasswordActivity extends AppCompatActivity {
         validate_confirm_password = true;
     }
 
-    //change account password in database
-    public void changePassword() {
+    // check internet connection exist or not. If exist change password in database
+    public void checkConnectionAndChangePassword() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(NewPasswordActivity.this);
         if (isConnectionSourceAvailable) {
             showLoadingBar();
         }
 
-        Call<Result> changePasswordCallable = HttpClient.getInstance().changePassword(email,
-                binding.passwordEdit.getText().toString());
-
-        changePasswordCallable.enqueue(new Callback<Result>() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
             @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                Result result = response.body();
-                if (result != null && result.getStatus() == 0) {
-                    moveToSuccessfulAccountMessageActivity();
-                } else {
-                    Toast.makeText(NewPasswordActivity.this, "Unable to change password", Toast.LENGTH_SHORT).show();
-                }
-                hideLoadingBar();
-            }
+            public void run() {
+                boolean internetAvailable = connection.isInternetAvailable();
 
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                Toast.makeText(NewPasswordActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                hideLoadingBar();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (internetAvailable) {
+                            changePassword();
+                        } else {
+                            Toast.makeText(NewPasswordActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                            hideLoadingBar();
+                        }
+                    }
+                });
+
             }
         });
+    }
+
+    //change account password in database
+    public void changePassword() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user").whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+
+                                db.collection("user")
+                                        .document(querySnapshot.getId())
+                                        .update("password", binding.passwordEdit.getText().toString())
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                moveToSuccessfulAccountMessageActivity();
+                                                hideLoadingBar();
+                                            }
+                                        });
+                            }
+                        }
+                    }
+                });
 
     }
 

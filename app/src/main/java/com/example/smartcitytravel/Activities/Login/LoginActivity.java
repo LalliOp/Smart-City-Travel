@@ -11,12 +11,9 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.DataModel.User;
-import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Activities.Home.HomeActivity;
 import com.example.smartcitytravel.Activities.ResetPassword.EmailActivity;
 import com.example.smartcitytravel.Activities.SignUp.SignUpActivity;
@@ -32,14 +29,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
@@ -50,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     private PreferenceHandler preferenceHandler;
     private boolean validate_email;
     private boolean validate_password;
+    private CollectionReference userCollection;
 
     //run when launch() function is called by GoogleSignUpActivityResult
     private ActivityResultLauncher<Intent> GoogleSignInActivityResult = registerForActivityResult(
@@ -97,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
         color = new Color();
         validation = new Validation();
         preferenceHandler = new PreferenceHandler();
+        userCollection = FirebaseFirestore.getInstance().collection("user");
     }
 
     // set email in email field in login activity when create account from successful account creation activity and move to login activity
@@ -183,90 +184,54 @@ public class LoginActivity extends AppCompatActivity {
     // save google account details in database when user login with google account
     public void saveGoogleAccount(GoogleSignInAccount googleSignInAccount) {
         String profile_image_url;
-        if (googleSignInAccount.getPhotoUrl() == null) {
-            profile_image_url = getString(R.string.default_profile_image_url);
-        } else {
+        if (googleSignInAccount.getPhotoUrl() != null) {
             profile_image_url = googleSignInAccount.getPhotoUrl().toString();
-        }
-        Call<Result> createAccountCallable = HttpClient.getInstance().createAccount(googleSignInAccount.getDisplayName().toLowerCase(),
-                googleSignInAccount.getEmail().toLowerCase(), "0", "1", profile_image_url);
+        } else {
+            profile_image_url = getString(R.string.default_profile_image_url);
 
-        createAccountCallable.enqueue(new Callback<Result>() {
+        }
+
+        User user = new User(googleSignInAccount.getDisplayName().toLowerCase(), googleSignInAccount.getEmail().toLowerCase(),
+                "0", profile_image_url, true);
+
+        userCollection.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                if (response.body() != null) {
-                    getAccountDetails(googleSignInAccount.getEmail().toLowerCase());
+            public void onSuccess(DocumentReference documentReference) {
+                if (!documentReference.getId().isEmpty()) {
+                    preferenceHandler.setLoginAccountPreference(user, LoginActivity.this);
+                    moveToHomeActivity();
+
                 } else {
                     Toast.makeText(LoginActivity.this, "Unable to save google account details", Toast.LENGTH_SHORT).show();
                     hideLoadingBar();
                 }
-
-            }
-
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                hideLoadingBar();
             }
         });
+
     }
 
     //check whether google email already exist or not
     //if account already exist get details otherwise create new account with google info
     public void verifyEmail(GoogleSignInAccount googleSignInAccount) {
-        Call<Result> verifyEmailCallable = HttpClient.getInstance().verifyEmail(googleSignInAccount.getEmail());
+        userCollection.whereEqualTo("email", googleSignInAccount.getEmail().toLowerCase())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                                User user = querySnapshot.toObject(User.class);
+                                user.setUserId(querySnapshot.getId());
 
-        verifyEmailCallable.enqueue(new Callback<Result>() {
-            @Override
-            public void onResponse(@NonNull Call<Result> call, @NonNull Response<Result> response) {
-                Result result = response.body();
-                if (result != null) {
-                    if (result.getStatus() == -1) {
-                        saveGoogleAccount(googleSignInAccount);
-                    } else if (result.getStatus() == 1 || result.getStatus() == 0) {
-                        getAccountDetails(googleSignInAccount.getEmail());
+                                preferenceHandler.setLoginAccountPreference(user, LoginActivity.this);
+                                moveToHomeActivity();
+                            }
+
+                        } else {
+                            saveGoogleAccount(googleSignInAccount);
+                        }
                     }
-                } else {
-                    Toast.makeText(LoginActivity.this, "Unable to setup Account", Toast.LENGTH_SHORT).show();
-                    hideLoadingBar();
-                }
-
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Result> call, @NonNull Throwable t) {
-                Toast.makeText(LoginActivity.this, "No internet Connection", Toast.LENGTH_SHORT).show();
-                hideLoadingBar();
-            }
-        });
-
-
-    }
-
-    // get account details from database and save in shared preference
-    public void getAccountDetails(String email) {
-        Call<User> CallableAccount = HttpClient.getInstance().getAccount(email);
-
-        CallableAccount.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                User user = response.body();
-                if (user != null) {
-                    preferenceHandler.setLoginAccountPreference(user, LoginActivity.this);
-                    moveToHomeActivity();
-                } else {
-                    Toast.makeText(LoginActivity.this, "Unable to get account details", Toast.LENGTH_SHORT).show();
-                }
-                hideLoadingBar();
-
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                hideLoadingBar();
-            }
-        });
+                });
     }
 
     //run by user click on login button
@@ -280,7 +245,7 @@ public class LoginActivity extends AppCompatActivity {
                 validateEmail();
                 validatePassword();
                 if (validate_email && validate_password) {
-                    verifyLogin();
+                    checkConnectionAndVerifyLogin();
                 }
 
             }
@@ -355,45 +320,66 @@ public class LoginActivity extends AppCompatActivity {
         binding.passwordLayout.setError(null);
     }
 
-    //check whether account exist or not
-    public void verifyLogin() {
+    //check connection exist or not and call verifyLogin() if connection exist
+    public void checkConnectionAndVerifyLogin() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(LoginActivity.this);
         if (isConnectionSourceAvailable) {
             showLoadingBar();
         }
 
-        Call<Result> verifyAccountResultCallable = HttpClient.getInstance().verifyAccount(binding.emailEdit.getText().toString().toLowerCase(),
-                binding.passwordEdit.getText().toString());
-
-        verifyAccountResultCallable.enqueue(new Callback<Result>() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
             @Override
-            public void onResponse(@NonNull Call<Result> call, @NonNull Response<Result> response) {
-                Result result = response.body();
-                if (result != null) {
-                    if (result.getStatus() == 1) {
-                        getAccountDetails(binding.emailEdit.getText().toString().toLowerCase());
-                    } else if (result.getStatus() == 0) {
-                        util.createErrorDialog(LoginActivity.this, "Password", result.getMessage());
-                        hideLoadingBar();
-                    } else if (result.getStatus() == -1) {
-                        util.createErrorDialog(LoginActivity.this, "Account", "No account exist with this email");
-                        hideLoadingBar();
-                    } else if (result.getStatus() == 2) {
-                        util.createErrorDialog(LoginActivity.this, "Account", "Google account exist with this email. " + result.getMessage());
-                        hideLoadingBar();
-                    }
+            public void run() {
+                boolean internetAvailable = connection.isInternetAvailable();
 
-                } else {
-                    Toast.makeText(LoginActivity.this, "Unable to sign in", Toast.LENGTH_SHORT).show();
-                    hideLoadingBar();
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (internetAvailable) {
+                            verifyLogin();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                            hideLoadingBar();
+                        }
+                    }
+                });
 
             }
+        });
+    }
 
+    //check whether account exist or not and save account info in preference
+    public void verifyLogin() {
+
+        userCollection.whereEqualTo("email", binding.emailEdit.getText().toString().toLowerCase())
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                        String userInputPassword = binding.passwordEdit.getText().toString();
+
+                        User user = querySnapshot.toObject(User.class);
+                        user.setUserId(querySnapshot.getId());
+                        if (user.getGoogle_account()) {
+                            util.createErrorDialog(LoginActivity.this, "Account", "Account already exist with google. Try sign in with google");
+                        } else {
+                            if (user.getPassword().equals(userInputPassword)) {
+                                preferenceHandler.setLoginAccountPreference(user, LoginActivity.this);
+                                moveToHomeActivity();
+                            } else {
+                                util.createErrorDialog(LoginActivity.this, "Password", "Incorrect Password");
+                            }
+                        }
+
+                    }
+                } else {
+                    util.createErrorDialog(LoginActivity.this, "Account", "No account exist with this email");
+                }
                 hideLoadingBar();
+
             }
         });
     }

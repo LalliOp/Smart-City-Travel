@@ -29,12 +29,12 @@ public class MainActivity extends AppCompatActivity {
 
     //Check whether user is already sign in
     public void checkUserAlreadySignIn() {
-        Integer google_account = preferenceHandler.getLoginAccountTypePreference(MainActivity.this);
+        Boolean checkPreferenceExist = preferenceHandler.checkLoginAccountPreferenceExist(MainActivity.this);
 
-        if (google_account == -1) {
-            moveToLoginActivity();
-        } else if (google_account == 0 || google_account == 1) {
+        if (checkPreferenceExist) {
             moveToHomeActivity();
+        } else {
+            moveToLoginActivity();
         }
     }
 
