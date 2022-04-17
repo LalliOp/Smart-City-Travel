@@ -9,27 +9,25 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.Random;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class ImageUpdateWorkManager extends Worker {
     private PreferenceHandler preferenceHandler;
     private Uri imageUri;
     private String email;
     private Connection connection;
+    private String userId;
 
     public ImageUpdateWorkManager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -37,6 +35,7 @@ public class ImageUpdateWorkManager extends Worker {
         preferenceHandler = new PreferenceHandler();
         imageUri = Uri.parse(getInputData().getString("image_url"));
         email = getInputData().getString("email");
+        userId = getInputData().getString("userId");
         connection = new Connection();
 
     }
@@ -75,7 +74,6 @@ public class ImageUpdateWorkManager extends Worker {
                 if (task.isSuccessful()) {
                     Uri downloadImageUri = task.getResult();
                     updateProfileImage(downloadImageUri);
-                } else {
                 }
             }
         });
@@ -83,23 +81,16 @@ public class ImageUpdateWorkManager extends Worker {
 
     //update profile image in database
     public void updateProfileImage(Uri downloadImageUri) {
-        Call<com.example.smartcitytravel.AWSService.DataModel.Result> callableProfileImage = HttpClient.getInstance().updateProfileImage(email,
-                downloadImageUri.toString());
-        callableProfileImage.enqueue(new Callback<com.example.smartcitytravel.AWSService.DataModel.Result>() {
-            @Override
-            public void onResponse(Call<com.example.smartcitytravel.AWSService.DataModel.Result> call, Response<com.example.smartcitytravel.AWSService.DataModel.Result> response) {
-                com.example.smartcitytravel.AWSService.DataModel.Result result = response.body();
-                if (result != null && result.getStatus() == 0) {
-                    preferenceHandler.updateImageLoginAccountPreference(downloadImageUri.toString(), getApplicationContext());
-                    sendUpdateProfileImageBroadcast();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<com.example.smartcitytravel.AWSService.DataModel.Result> call, Throwable t) {
-            }
-        });
-
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user").document(userId)
+                .update("image_url", downloadImageUri.toString())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        preferenceHandler.updateImageLoginAccountPreference(downloadImageUri.toString(), getApplicationContext());
+                        sendUpdateProfileImageBroadcast();
+                    }
+                });
     }
 
     // send broadcast to update profile image

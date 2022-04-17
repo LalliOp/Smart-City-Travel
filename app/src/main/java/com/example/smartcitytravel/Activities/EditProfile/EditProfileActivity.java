@@ -21,9 +21,7 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
 import com.bumptech.glide.Glide;
-import com.example.smartcitytravel.AWSService.DataModel.Result;
 import com.example.smartcitytravel.AWSService.DataModel.User;
-import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Activities.EditProfile.WorkManager.ImageUpdateWorkManager;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
@@ -32,13 +30,11 @@ import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.Util.Validation;
 import com.example.smartcitytravel.databinding.ActivityEditProfileBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class EditProfileActivity extends AppCompatActivity {
     private ActivityEditProfileBinding binding;
@@ -181,6 +177,7 @@ public class EditProfileActivity extends AppCompatActivity {
     public void startUpdateImageWorkManager(Uri imageUri) {
         Data data = new Data.Builder()
                 .putString("image_url", imageUri.toString())
+                .putString("userId", user.getUserId())
                 .putString("email", user.getEmail())
                 .build();
 
@@ -200,7 +197,7 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 util.hideKeyboard(EditProfileActivity.this);
                 if (validateFullName() && newProfileName) {
-                    updateProfileName();
+                    checkConnectionAndUpdateProfileName();
                 }
                 if (newProfileImageSelected) {
                     checkConnectionAndUpdateProfileImage(imageUri);
@@ -265,39 +262,58 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
-    // update account profile name in database and update in Ui too
-    public void updateProfileName() {
-        boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(this);
+    //check internet connection exist or not. If exist update profile name
+    public void checkConnectionAndUpdateProfileName() {
+        boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(EditProfileActivity.this);
         if (isConnectionSourceAvailable) {
             showLoadingBar();
         }
 
-        Call<Result> callableUpdateName = HttpClient.getInstance().updateProfileName(user.getEmail(), user.getName());
-
-        callableUpdateName.enqueue(new Callback<Result>() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
             @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
-                Result result = response.body();
-                if (result != null) {
-                    user.setName(changeName);
-                    binding.fullNameEdit.setText(user.getName());
-                    preferenceHandler.updateNameLoginAccountPreference(user.getName(), EditProfileActivity.this);
-                    sendUpdateProfileNameBroadcast();
-                    newProfileName = false;
+            public void run() {
+                boolean internetAvailable = connection.isInternetAvailable();
 
-                    Toast.makeText(EditProfileActivity.this, "Name updated successfully", Toast.LENGTH_SHORT).show();
-                    setSaveButtonState();
-                }
-                hideLoadingBar();
-            }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
 
-            @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-                displayNoConnectionMessage();
-                binding.saveBtn.setEnabled(true);
-                hideLoadingBar();
+                        if (internetAvailable) {
+                            updateProfileName();
+                        } else {
+                            displayNoConnectionMessage();
+                            binding.saveBtn.setEnabled(true);
+                            hideLoadingBar();
+                        }
+                    }
+                });
+
             }
         });
+    }
+
+    // update account profile name in database and update in Ui too
+    public void updateProfileName() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("user").document(user.getUserId())
+                .update("name", changeName.toLowerCase())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        user.setName(changeName);
+                        binding.fullNameEdit.setText(user.getName());
+                        preferenceHandler.updateNameLoginAccountPreference(user.getName(), EditProfileActivity.this);
+                        sendUpdateProfileNameBroadcast();
+                        newProfileName = false;
+
+                        Toast.makeText(EditProfileActivity.this, "Name updated successfully", Toast.LENGTH_SHORT).show();
+                        setSaveButtonState();
+
+                        hideLoadingBar();
+                    }
+                });
 
     }
 
