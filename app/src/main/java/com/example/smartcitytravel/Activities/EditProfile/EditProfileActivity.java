@@ -178,7 +178,6 @@ public class EditProfileActivity extends AppCompatActivity {
         Data data = new Data.Builder()
                 .putString("image_url", imageUri.toString())
                 .putString("userId", user.getUserId())
-                .putString("email", user.getEmail())
                 .build();
 
         WorkRequest imageUpdateWorkRequest = new OneTimeWorkRequest.

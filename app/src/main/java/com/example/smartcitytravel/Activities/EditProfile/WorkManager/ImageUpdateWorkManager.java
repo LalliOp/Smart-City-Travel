@@ -9,7 +9,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,8 +24,6 @@ import java.util.Random;
 public class ImageUpdateWorkManager extends Worker {
     private PreferenceHandler preferenceHandler;
     private Uri imageUri;
-    private String email;
-    private Connection connection;
     private String userId;
 
     public ImageUpdateWorkManager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
@@ -34,9 +31,7 @@ public class ImageUpdateWorkManager extends Worker {
 
         preferenceHandler = new PreferenceHandler();
         imageUri = Uri.parse(getInputData().getString("image_url"));
-        email = getInputData().getString("email");
         userId = getInputData().getString("userId");
-        connection = new Connection();
 
     }
 
