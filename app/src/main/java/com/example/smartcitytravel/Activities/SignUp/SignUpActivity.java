@@ -42,7 +42,7 @@ public class SignUpActivity extends AppCompatActivity {
 
 
         initialize();
-        util.setStatusBarColor(SignUpActivity.this, R.color.dark_grey);
+        util.setStatusBarColor(SignUpActivity.this, R.color.grey);
         initializeValidator();
         setLoadingBarColor();
         registerAccount();

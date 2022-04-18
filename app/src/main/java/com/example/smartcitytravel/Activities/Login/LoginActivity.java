@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         initialize();
-        util.setStatusBarColor(LoginActivity.this, R.color.brown);
+        util.setStatusBarColorDrawable(LoginActivity.this, R.drawable.login_statusbar_gardient);
         setLoadingBarColor();
         initializeValidator();
         setEmail();

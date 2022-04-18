@@ -42,7 +42,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     //add toolbar in activity and customize status bar color
     public void setToolbar() {
-        util.setStatusBarColor(PlaceDetailActivity.this, R.color.theme_dark);
+        util.setStatusBarColor(PlaceDetailActivity.this, R.color.theme_light);
         util.addToolbar(PlaceDetailActivity.this, binding.toolbarLayout.toolbar, "Detail");
 
     }

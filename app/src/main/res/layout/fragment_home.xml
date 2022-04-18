@@ -19,7 +19,6 @@
             android:scaleType="centerCrop"
             android:src="@drawable/home_background" />
 
-
     </RelativeLayout>
 
     <include layout="@layout/logo_title" />

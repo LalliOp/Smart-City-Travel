@@ -24,7 +24,7 @@ public class DestinationActivity extends AppCompatActivity {
 
         util = new Util();
 
-        util.setStatusBarColor(this, R.color.theme_dark);
+        util.setStatusBarColor(this, R.color.theme_light);
         util.addToolbar(this, binding.toolbarLayout.toolbar, "Destination");
 
         showLahoreDestination();

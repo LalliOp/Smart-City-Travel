@@ -1,6 +1,5 @@
 package com.example.smartcitytravel.Activities.Home;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,11 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -50,21 +46,12 @@ public class HomeActivity extends AppCompatActivity {
     private UpdateProfileImageBroadcast updateProfileImageBroadcast;
     private UpdateProfileNameBroadcast updateProfileNameBroadcast;
 
-    //called in getLocationPermission() function
-    //get result of asking location permission
-    private ActivityResultLauncher<String[]> locationPermissionRequest = registerForActivityResult(
-            new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-
-            }
-    );
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        getLocationPermission();
         initialize();
         User user = preferenceHandler.getLoginAccountPreference(HomeActivity.this);
         registerUpdateProfileImageBroadcastReceiver();
@@ -78,54 +65,6 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    //asked location permission
-    public void getLocationPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-
-            permissionDialog();
-
-        } else {
-            locationPermissionRequest.launch(new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION});
-        }
-    }
-
-    //show message why permission is needed
-    public void permissionDialog() {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog, null);
-
-        TextView titleTxt = dialogView.findViewById(R.id.titleTxt);
-        titleTxt.setText("Location Permission");
-
-        TextView messageTxt = dialogView.findViewById(R.id.messageTxt);
-        messageTxt.setText("Location Permission is needed for major functionality of app");
-
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(dialogView)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        ActivityCompat.requestPermissions(HomeActivity.this, new String[]{
-                                Manifest.permission.ACCESS_FINE_LOCATION,
-                                Manifest.permission.ACCESS_COARSE_LOCATION,
-                        }, 100);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        finishAndRemoveTask();
-                    }
-                });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-        alertDialog.setCancelable(false);
-    }
 
     //initialize variables
     public void initialize() {
@@ -341,17 +280,24 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 }, 50);
 
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.drawerLayout.closeDrawer(GravityCompat.START);
+                    }
+                }, 1000);
+
             }
         });
 
     }
 
+    //remove broadcast receiver when activity is destroyed
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(updateProfileImageBroadcast);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(updateProfileNameBroadcast);
-
+        super.onDestroy();
     }
 
 }

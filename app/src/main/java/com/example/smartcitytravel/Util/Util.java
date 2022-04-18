@@ -2,6 +2,7 @@ package com.example.smartcitytravel.Util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -10,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.smartcitytravel.Dialogs.ErrorDialog;
@@ -68,6 +70,18 @@ public class Util {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(activity, colorResId));
+    }
+
+    //change color of status bar using drawable
+    public void setStatusBarColorDrawable(Activity activity, int drawableResId) {
+        Drawable drawableBackground = ResourcesCompat.getDrawable(activity.getResources(), drawableResId, null);
+
+        Window window = activity.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(activity.getResources().getColor(android.R.color.transparent));
+        window.setNavigationBarColor(activity.getResources().getColor(android.R.color.transparent));
+        window.setBackgroundDrawable(drawableBackground);
+
     }
 
     //customize and add toolbar

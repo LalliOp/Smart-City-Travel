@@ -1,5 +1,7 @@
 package com.example.smartcitytravel.Activities.EditProfile;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -49,6 +52,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private boolean newProfileName;
     private Uri imageUri;
     private Toast noConnectionToast;
+    private boolean backPressed;
 
     //run when launch() function is called
     //get image from gallery and save new image
@@ -97,12 +101,13 @@ public class EditProfileActivity extends AppCompatActivity {
         user = preferenceHandler.getLoginAccountPreference(this);
         newProfileImageSelected = false;
         newProfileName = false;
+        backPressed = false;
     }
 
 
     // style and customize toolbar and theme
     public void setToolBarTheme() {
-        util.setStatusBarColor(this, R.color.theme_dark);
+        util.setStatusBarColor(this, R.color.theme_light);
         util.addToolbar(this, binding.toolbarLayout.toolbar, "Edit Profile");
     }
 
@@ -166,6 +171,8 @@ public class EditProfileActivity extends AppCompatActivity {
                         } else {
                             displayNoConnectionMessage();
                         }
+
+                        finishActivity();
                     }
                 });
             }
@@ -195,14 +202,19 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 util.hideKeyboard(EditProfileActivity.this);
-                if (validateFullName() && newProfileName) {
-                    checkConnectionAndUpdateProfileName();
-                }
-                if (newProfileImageSelected) {
-                    checkConnectionAndUpdateProfileImage(imageUri);
-                }
+                applyChanges();
             }
         });
+    }
+
+    //apply changes
+    public void applyChanges() {
+        if (validateFullName() && newProfileName) {
+            checkConnectionAndUpdateProfileName();
+        }
+        if (newProfileImageSelected) {
+            checkConnectionAndUpdateProfileImage(imageUri);
+        }
     }
 
     //check full name field contain valid and allowed characters
@@ -284,6 +296,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             displayNoConnectionMessage();
                             binding.saveBtn.setEnabled(true);
                             hideLoadingBar();
+                            finishActivity();
                         }
                     }
                 });
@@ -309,8 +322,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
                         Toast.makeText(EditProfileActivity.this, "Name updated successfully", Toast.LENGTH_SHORT).show();
                         setSaveButtonState();
-
                         hideLoadingBar();
+
+                        finishActivity();
                     }
                 });
 
@@ -356,15 +370,66 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    // return to previous activity when user click on up button (which is back button on top life side)
+    // show apply changes confirmation dialog when user click on up button (which is back button on top life side)
     @Override
     public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            backPressed = true;
+            util.hideKeyboard(EditProfileActivity.this);
+            showApplyChangesConfirmationDialog();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    //show apply changes confirmation dialog if changes are left to apply otherwise just exit activity
+    @Override
+    public void onBackPressed() {
+        if (binding.saveBtn.isEnabled()) {
+            backPressed = true;
+            util.hideKeyboard(EditProfileActivity.this);
+            showApplyChangesConfirmationDialog();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    //create and show apply changes confirmation dialog
+    public void showApplyChangesConfirmationDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog, null);
+
+        TextView titleTxt = dialogView.findViewById(R.id.titleTxt);
+        titleTxt.setText("Confirm");
+
+        TextView messageTxt = dialogView.findViewById(R.id.messageTxt);
+        messageTxt.setText("Do you want to apply changes?");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView)
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                })
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        applyChanges();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        alertDialog.setCancelable(false);
+    }
+
+    // finish activity if user click back or up button
+    public void finishActivity() {
+        if (backPressed) {
+            finish();
+        }
     }
 }

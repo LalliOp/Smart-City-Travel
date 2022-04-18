@@ -65,7 +65,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
     //add toolbar in activity and customize status bar color
     public void setToolbar() {
-        util.setStatusBarColor(PlaceRecyclerViewActivity.this, R.color.theme_dark);
+        util.setStatusBarColor(PlaceRecyclerViewActivity.this, R.color.theme_light);
         util.addToolbar(PlaceRecyclerViewActivity.this, binding.toolbarLayout.toolbar, getIntent().getExtras().getString("destination_name"));
     }
 
