@@ -8,24 +8,24 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.Place;
-import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.PlaceResult;
-import com.example.smartcitytravel.AWSService.Http.HttpClient;
+import com.example.smartcitytravel.AWSService.DataModel.Place;
 import com.example.smartcitytravel.Activities.PlaceRecyclerView.ItemDecoration.GridSpaceItemDecoration;
 import com.example.smartcitytravel.Activities.PlaceRecyclerView.RecyclerView.PlaceRecyclerViewAdapter;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityPlaceRecyclerViewBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class PlaceRecyclerViewActivity extends AppCompatActivity {
     private ActivityPlaceRecyclerViewBinding binding;
@@ -36,6 +36,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
     private boolean restaurantPlacesAvailable;
     private boolean famousSpotsAvailable;
     private boolean hotelPlacesAvailable;
+    private CollectionReference placeCollection;
 
 
     @Override
@@ -56,6 +57,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         connection = new Connection();
         util = new Util();
         noConnectionToast = new Toast(this);
+        placeCollection = FirebaseFirestore.getInstance().collection("place");
 
         popularPlacesAvailable = false;
         restaurantPlacesAvailable = false;
@@ -69,6 +71,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         util.addToolbar(PlaceRecyclerViewActivity.this, binding.toolbarLayout.toolbar, getIntent().getExtras().getString("destination_name"));
     }
 
+    //check internet connection exist or not. If exist load places
     public void checkConnectionAndGetPlaces() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -116,34 +119,41 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
     }
 
-    //get popular places from database
+    //get popular places from database and pass to recycler view
     public void getPopularPlaces() {
-        Call<PlaceResult> callablePopularPlaceResult = HttpClient.getInstance().getPopularPlaceList();
-        callablePopularPlaceResult.enqueue(new Callback<PlaceResult>() {
-            @Override
-            public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
-                if (response.body() != null) {
-                    List<Place> popularPlaceList = response.body().getPlaceList();
-                    showPopularPlaces((ArrayList<Place>) popularPlaceList);
+        placeCollection.orderBy("Rating", Query.Direction.DESCENDING)
+                .limit(100)
+                .get()
+                .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            ArrayList<Place> popularPlaceList = new ArrayList<>();
 
-                    popularPlacesAvailable = true;
-                } else {
-                    displayNoConnectionMessage();
-                    retryPopularListener();
-                    popularPlacesAvailable = false;
-                }
-                binding.popularLoadingBar.setVisibility(View.GONE);
-            }
+                            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                                Place place = querySnapshot.toObject(Place.class);
+                                place.setPlaceId(querySnapshot.getId());
 
-            @Override
-            public void onFailure(Call<PlaceResult> call, Throwable t) {
-                displayNoConnectionMessage();
-                retryPopularListener();
-                binding.popularLoadingBar.setVisibility(View.GONE);
-                popularPlacesAvailable = false;
+                                popularPlaceList.add(place);
 
-            }
-        });
+                            }
+
+                            Collections.shuffle(popularPlaceList);
+
+                            ArrayList<Place> placeList = new ArrayList<>(popularPlaceList.subList(0, 30));
+
+                            showPopularPlaces(placeList);
+
+                            popularPlacesAvailable = true;
+
+                        } else {
+                            displayNoConnectionMessage();
+                            retryPopularListener();
+                            popularPlacesAvailable = false;
+                        }
+                        binding.popularLoadingBar.setVisibility(View.GONE);
+                    }
+                });
 
     }
 
@@ -177,34 +187,41 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         binding.recommendationRecyclerView.addItemDecoration(gridSpaceItemDecoration);
     }
 
-    //get restaurant places from database
+    //get restaurant places from database and pass to recycler view
     public void getRestaurantPlaces() {
-        Call<PlaceResult> callableRestaurantPlaceResult = HttpClient.getInstance().getPlaceList("Restaurant");
+        placeCollection.whereEqualTo("Place_type", "Restaurant")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            ArrayList<Place> restaurantPlaceList = new ArrayList<>();
 
-        callableRestaurantPlaceResult.enqueue(new Callback<PlaceResult>() {
-            @Override
-            public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
-                if (response.body() != null) {
-                    List<Place> restaurantPlaceList = response.body().getPlaceList();
-                    showRestaurantPlaces((ArrayList<Place>) restaurantPlaceList);
-                    restaurantPlacesAvailable = true;
-                } else {
-                    displayNoConnectionMessage();
-                    retryRestaurantListener();
-                    restaurantPlacesAvailable = false;
+                            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                                Place place = querySnapshot.toObject(Place.class);
+                                place.setPlaceId(querySnapshot.getId());
 
-                }
-                binding.restaurantLoadingBar.setVisibility(View.GONE);
-            }
+                                restaurantPlaceList.add(place);
 
-            @Override
-            public void onFailure(Call<PlaceResult> call, Throwable t) {
-                binding.restaurantLoadingBar.setVisibility(View.GONE);
-                restaurantPlacesAvailable = false;
-                retryRestaurantListener();
-                displayNoConnectionMessage();
-            }
-        });
+                            }
+
+                            Collections.shuffle(restaurantPlaceList);
+
+                            ArrayList<Place> placeList = new ArrayList<>(restaurantPlaceList.subList(0, restaurantPlaceList.size() - 1));
+
+                            showRestaurantPlaces(placeList);
+
+                            restaurantPlacesAvailable = true;
+
+                        } else {
+                            displayNoConnectionMessage();
+                            retryRestaurantListener();
+                            restaurantPlacesAvailable = false;
+                        }
+                        binding.restaurantLoadingBar.setVisibility(View.GONE);
+                    }
+                });
+
     }
 
     //create recyclerview and show restaurant places
@@ -231,31 +248,37 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
     //get famous spots from database
     public void getFamousSpots() {
-        Call<PlaceResult> callableFamousSpotResult = HttpClient.getInstance().getPlaceList("Tourism_spot");
+        placeCollection.whereEqualTo("Place_type", "Tourism_spot")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            ArrayList<Place> famousSpotList = new ArrayList<>();
 
-        callableFamousSpotResult.enqueue(new Callback<PlaceResult>() {
-            @Override
-            public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
-                if (response.body() != null) {
-                    List<Place> famousSpotList = response.body().getPlaceList();
-                    showFamousSpots((ArrayList<Place>) famousSpotList);
-                    famousSpotsAvailable = true;
-                } else {
-                    displayNoConnectionMessage();
-                    retryFamousSpotListener();
-                    famousSpotsAvailable = false;
-                }
-                binding.famousSpotLoadingBar.setVisibility(View.GONE);
-            }
+                            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                                Place place = querySnapshot.toObject(Place.class);
+                                place.setPlaceId(querySnapshot.getId());
 
-            @Override
-            public void onFailure(Call<PlaceResult> call, Throwable t) {
-                binding.famousSpotLoadingBar.setVisibility(View.GONE);
-                famousSpotsAvailable = false;
-                retryFamousSpotListener();
-                displayNoConnectionMessage();
-            }
-        });
+                                famousSpotList.add(place);
+                            }
+
+                            Collections.shuffle(famousSpotList);
+
+                            ArrayList<Place> placeList = new ArrayList<>(famousSpotList.subList(0, famousSpotList.size() - 1));
+
+                            showFamousSpots(placeList);
+
+                            famousSpotsAvailable = true;
+
+                        } else {
+                            displayNoConnectionMessage();
+                            retryFamousSpotListener();
+                            famousSpotsAvailable = false;
+                        }
+                        binding.famousSpotLoadingBar.setVisibility(View.GONE);
+                    }
+                });
     }
 
     //create recyclerview and show famous spots
@@ -280,34 +303,40 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         });
     }
 
-    //get hotel places from database
+    //get hotel places from database and pass to recycler view
     public void getHotelPlaces() {
-        Call<PlaceResult> callableHotelPlaceResult = HttpClient.getInstance().getPlaceList("Hotel");
+        placeCollection.whereEqualTo("Place_type", "Hotel")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            ArrayList<Place> hotelPlaceList = new ArrayList<>();
 
-        callableHotelPlaceResult.enqueue(new Callback<PlaceResult>() {
-            @Override
-            public void onResponse(Call<PlaceResult> call, Response<PlaceResult> response) {
-                if (response.body() != null) {
-                    List<Place> hotelPlaceList = response.body().getPlaceList();
-                    showHotelPlaces((ArrayList<Place>) hotelPlaceList);
-                    hotelPlacesAvailable = true;
-                } else {
-                    displayNoConnectionMessage();
-                    retryHotelListener();
-                    hotelPlacesAvailable = false;
-                }
-                binding.hotelLoadingBar.setVisibility(View.GONE);
+                            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                                Place place = querySnapshot.toObject(Place.class);
+                                place.setPlaceId(querySnapshot.getId());
 
-            }
+                                hotelPlaceList.add(place);
 
-            @Override
-            public void onFailure(Call<PlaceResult> call, Throwable t) {
-                displayNoConnectionMessage();
-                retryHotelListener();
-                binding.hotelLoadingBar.setVisibility(View.GONE);
-                hotelPlacesAvailable = false;
-            }
-        });
+                            }
+
+                            Collections.shuffle(hotelPlaceList);
+
+                            ArrayList<Place> placeList = new ArrayList<>(hotelPlaceList.subList(0, hotelPlaceList.size() - 1));
+
+                            showHotelPlaces(placeList);
+
+                            hotelPlacesAvailable = true;
+
+                        } else {
+                            displayNoConnectionMessage();
+                            retryHotelListener();
+                            hotelPlacesAvailable = false;
+                        }
+                        binding.hotelLoadingBar.setVisibility(View.GONE);
+                    }
+                });
     }
 
     //create recyclerview and show hotel places

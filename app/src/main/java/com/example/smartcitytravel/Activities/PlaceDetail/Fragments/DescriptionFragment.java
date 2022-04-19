@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.Place;
+import com.example.smartcitytravel.AWSService.DataModel.Place;
 import com.example.smartcitytravel.databinding.FragmentDescriptionBinding;
 
 public class DescriptionFragment extends Fragment {

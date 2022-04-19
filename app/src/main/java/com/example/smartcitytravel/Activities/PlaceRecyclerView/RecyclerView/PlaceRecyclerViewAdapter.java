@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.Place;
+import com.example.smartcitytravel.AWSService.DataModel.Place;
 import com.example.smartcitytravel.Activities.PlaceDetail.PlaceDetailActivity;
 import com.example.smartcitytravel.databinding.PlaceViewBinding;
 
@@ -38,7 +38,8 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
         holder.binding.placeName.setText(placeArrayList.get(position).getName());
         holder.binding.placeRatingTxt.setText(placeArrayList.get(position).getRating().toString());
         Glide.with(context)
-                .load(placeArrayList.get(position).getImageUrl())
+                .load(placeArrayList.get(position).getImage1())
+                .timeout(60000)
                 .into(holder.binding.placeImg);
 
         holder.binding.placeLoadingBar.setVisibility(View.GONE);

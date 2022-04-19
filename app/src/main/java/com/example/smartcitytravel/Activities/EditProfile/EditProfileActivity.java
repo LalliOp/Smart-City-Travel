@@ -311,7 +311,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         db.collection("user").document(user.getUserId())
                 .update("name", changeName.toLowerCase())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                .addOnSuccessListener(this,new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         user.setName(changeName);

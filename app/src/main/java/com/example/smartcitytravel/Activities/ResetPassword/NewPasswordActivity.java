@@ -181,7 +181,7 @@ public class NewPasswordActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user").whereEqualTo("email", email)
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if (!queryDocumentSnapshots.isEmpty()) {
@@ -190,7 +190,7 @@ public class NewPasswordActivity extends AppCompatActivity {
                                 db.collection("user")
                                         .document(querySnapshot.getId())
                                         .update("password", binding.passwordEdit.getText().toString())
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        .addOnSuccessListener(NewPasswordActivity.this, new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void unused) {
                                                 moveToSuccessfulAccountMessageActivity();

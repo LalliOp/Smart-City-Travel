@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.Place;
-import com.example.smartcitytravel.Activities.PlaceDetail.Fragments.RecyclerView.FeedbackRecyclerViewAdapter;
+import com.example.smartcitytravel.AWSService.DataModel.Place;
 import com.example.smartcitytravel.databinding.FragmentFeedbackBinding;
 
 public class FeedbackFragment extends Fragment {

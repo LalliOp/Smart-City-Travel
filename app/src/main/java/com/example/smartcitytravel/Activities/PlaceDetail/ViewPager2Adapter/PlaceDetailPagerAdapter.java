@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.Place;
+import com.example.smartcitytravel.AWSService.DataModel.Place;
 import com.example.smartcitytravel.Activities.PlaceDetail.Fragments.DescriptionFragment;
 import com.example.smartcitytravel.Activities.PlaceDetail.Fragments.FeedbackFragment;
 import com.example.smartcitytravel.Activities.PlaceDetail.Fragments.NavigationFragment;

@@ -194,7 +194,7 @@ public class LoginActivity extends AppCompatActivity {
         User user = new User(googleSignInAccount.getDisplayName().toLowerCase(), googleSignInAccount.getEmail().toLowerCase(),
                 "0", profile_image_url, true);
 
-        userCollection.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        userCollection.add(user).addOnSuccessListener(this,new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 if (!documentReference.getId().isEmpty()) {
@@ -215,7 +215,7 @@ public class LoginActivity extends AppCompatActivity {
     public void verifyEmail(GoogleSignInAccount googleSignInAccount) {
         userCollection.whereEqualTo("email", googleSignInAccount.getEmail().toLowerCase())
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .addOnSuccessListener(this,new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if (!queryDocumentSnapshots.isEmpty()) {
@@ -354,7 +354,7 @@ public class LoginActivity extends AppCompatActivity {
     public void verifyLogin() {
 
         userCollection.whereEqualTo("email", binding.emailEdit.getText().toString().toLowerCase())
-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .get().addOnSuccessListener(this,new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 if (!queryDocumentSnapshots.isEmpty()) {

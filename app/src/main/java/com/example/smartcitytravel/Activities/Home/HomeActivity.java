@@ -242,7 +242,7 @@ public class HomeActivity extends AppCompatActivity {
 
             GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
-            googleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+            googleSignInClient.signOut().addOnCompleteListener(this,new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {

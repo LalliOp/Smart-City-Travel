@@ -1,5 +1,6 @@
 package com.example.smartcitytravel.AWSService.DataModel.PlaceModel;
 
+import com.example.smartcitytravel.AWSService.DataModel.Place;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

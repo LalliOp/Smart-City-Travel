@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.AWSService.DataModel.PlaceModel.Place;
+import com.example.smartcitytravel.AWSService.DataModel.Place;
 import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Activities.PlaceDetail.SliderViewAdapter.ImageSliderViewAdapter;
 import com.example.smartcitytravel.Activities.PlaceDetail.ViewPager2Adapter.PlaceDetailPagerAdapter;
@@ -36,7 +36,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         util = new Util();
 
         setToolbar();
-        getPlaceDetail();
+//        getPlaceDetail();
 
     }
 
@@ -60,7 +60,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 if (place != null) {
                     binding.placeName.setText(place.getName());
 
-                    showImageSliderView(place.getImageUrl());
+//                    showImageSliderView(place.getImageUrl());
                     showPlaceDetailTabs(place);
 
                 } else {
