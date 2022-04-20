@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
-import com.example.smartcitytravel.AWSService.DataModel.User;
+import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.Activities.ResetPassword.NewPasswordActivity;
 import com.example.smartcitytravel.Activities.SuccessfulAccountMessage.SuccessfulAccountMessageActivity;
 import com.example.smartcitytravel.R;

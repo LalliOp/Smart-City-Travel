@@ -3,7 +3,7 @@ package com.example.smartcitytravel.Util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.smartcitytravel.AWSService.DataModel.User;
+import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.R;
 
 public class PreferenceHandler {

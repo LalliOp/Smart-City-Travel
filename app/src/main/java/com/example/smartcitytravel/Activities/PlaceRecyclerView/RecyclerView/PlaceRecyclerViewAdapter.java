@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.smartcitytravel.AWSService.DataModel.Place;
+import com.example.smartcitytravel.DataModel.Place;
 import com.example.smartcitytravel.Activities.PlaceDetail.PlaceDetailActivity;
 import com.example.smartcitytravel.databinding.PlaceViewBinding;
 

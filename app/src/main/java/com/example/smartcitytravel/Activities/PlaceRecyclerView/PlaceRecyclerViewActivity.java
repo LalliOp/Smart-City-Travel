@@ -8,9 +8,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.smartcitytravel.AWSService.DataModel.Place;
 import com.example.smartcitytravel.Activities.PlaceRecyclerView.ItemDecoration.GridSpaceItemDecoration;
 import com.example.smartcitytravel.Activities.PlaceRecyclerView.RecyclerView.PlaceRecyclerViewAdapter;
+import com.example.smartcitytravel.DataModel.Place;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
@@ -93,10 +93,10 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
                             getFamousSpots();
                             getHotelPlaces();
                         } else {
-                            binding.noConnectionLayout.setVisibility(View.VISIBLE);
+                            binding.checkConnectionLayout.noConnectionLayout.setVisibility(View.VISIBLE);
                             retryConnection();
                         }
-                        binding.loadingBar.setVisibility(View.GONE);
+                        binding.checkConnectionLayout.loadingBar.setVisibility(View.GONE);
 
                     }
                 });
@@ -107,11 +107,11 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
     //run when user click on retry icon
     public void retryConnection() {
-        binding.retryConnection.setOnClickListener(new View.OnClickListener() {
+        binding.checkConnectionLayout.retryConnection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                binding.loadingBar.setVisibility(View.VISIBLE);
-                binding.noConnectionLayout.setVisibility(View.GONE);
+                binding.checkConnectionLayout.loadingBar.setVisibility(View.VISIBLE);
+                binding.checkConnectionLayout.noConnectionLayout.setVisibility(View.GONE);
 
                 checkConnectionAndGetPlaces();
             }

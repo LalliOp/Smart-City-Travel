@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.AWSService.DataModel;
+package com.example.smartcitytravel.DataModel;
 
 public class Place {
     private String placeId;

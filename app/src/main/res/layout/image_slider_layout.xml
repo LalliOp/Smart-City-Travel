@@ -7,7 +7,7 @@
         android:id="@+id/placeImg"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:background="@mipmap/ic_launcher"
+        android:background="@color/light_white"
         android:scaleType="centerCrop" />
 
 </RelativeLayout>

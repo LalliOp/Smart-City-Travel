@@ -19,7 +19,7 @@ import androidx.core.view.GravityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
-import com.example.smartcitytravel.AWSService.DataModel.User;
+import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.Activities.EditProfile.Broadcast.UpdateProfileImageBroadcast;
 import com.example.smartcitytravel.Activities.EditProfile.Broadcast.UpdateProfileNameBroadcast;
 import com.example.smartcitytravel.Activities.EditProfile.EditProfileActivity;

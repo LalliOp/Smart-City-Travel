@@ -7,15 +7,15 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.smartcitytravel.AWSService.DataModel.Place;
+import com.example.smartcitytravel.DataModel.PlaceDetail;
 import com.example.smartcitytravel.databinding.FragmentNavigationBinding;
 
 public class NavigationFragment extends Fragment {
     private FragmentNavigationBinding binding;
-    private Place place;
+    private PlaceDetail placeDetail;
 
-    public NavigationFragment(Place place) {
-        this.place = place;
+    public NavigationFragment(PlaceDetail placeDetail) {
+        this.placeDetail = placeDetail;
     }
 
     @Override

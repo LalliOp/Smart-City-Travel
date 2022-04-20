@@ -65,4 +65,6 @@
     <string name="successful_message">Successful Message Here</string>
     <string name="message_here">Message Here</string>
     <string name="title_here">Title Here</string>
+    <string name="_5">/5</string>
+    <string name="_0_0">0.0</string>
 </resources>

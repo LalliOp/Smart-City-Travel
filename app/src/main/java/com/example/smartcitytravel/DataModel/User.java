@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.AWSService.DataModel;
+package com.example.smartcitytravel.DataModel;
 
 import com.google.firebase.firestore.Exclude;
 

@@ -11,15 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.smartcitytravel.AWSService.DataModel.Place;
+import com.example.smartcitytravel.DataModel.PlaceDetail;
 import com.example.smartcitytravel.databinding.FragmentDescriptionBinding;
 
 public class DescriptionFragment extends Fragment {
     private FragmentDescriptionBinding binding;
-    private Place place;
+    private PlaceDetail placeDetail;
 
-    public DescriptionFragment(Place place) {
-        this.place = place;
+    public DescriptionFragment(PlaceDetail placeDetail) {
+        this.placeDetail = placeDetail;
     }
 
     @Override
@@ -36,6 +36,7 @@ public class DescriptionFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             binding.descriptionTxt.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
         }
+        binding.descriptionTxt.setText(placeDetail.getDescription());
 
     }
 

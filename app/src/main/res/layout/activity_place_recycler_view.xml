@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -55,7 +54,7 @@
 
                     <include
                         android:id="@+id/popularNoConnectionLayout"
-                        layout="@layout/no_connection"
+                        layout="@layout/retry_connection"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true" />
@@ -100,7 +99,7 @@
 
                     <include
                         android:id="@+id/recommendation_no_connection_layout"
-                        layout="@layout/no_connection"
+                        layout="@layout/retry_connection"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true" />
@@ -146,7 +145,7 @@
 
                     <include
                         android:id="@+id/restaurant_no_connection_layout"
-                        layout="@layout/no_connection"
+                        layout="@layout/retry_connection"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true" />
@@ -194,7 +193,7 @@
 
                     <include
                         android:id="@+id/famous_spot_no_connection_layout"
-                        layout="@layout/no_connection"
+                        layout="@layout/retry_connection"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true" />
@@ -242,7 +241,7 @@
 
                     <include
                         android:id="@+id/hotel_no_connection_layout"
-                        layout="@layout/no_connection"
+                        layout="@layout/retry_connection"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true" />
@@ -251,49 +250,8 @@
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <RelativeLayout
+    <include
         android:id="@+id/checkConnectionLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
-
-        <RelativeLayout
-            android:id="@+id/noConnectionLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/noConnectionTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="@string/no_internet_connection"
-                android:textColor="@color/default_black"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:id="@+id/retryConnection"
-                android:layout_width="27dp"
-                android:layout_height="27dp"
-                android:layout_below="@id/noConnectionTxt"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/ic_retry"
-                app:shapeAppearanceOverlay="@style/CircularImage" />
-        </RelativeLayout>
-
-        <ProgressBar
-            android:id="@+id/loadingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:indeterminate="true" />
-    </RelativeLayout>
-
+        layout="@layout/no_connection" />
 
 </RelativeLayout>

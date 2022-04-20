@@ -38,7 +38,7 @@ public class LiveChatActivity extends AppCompatActivity {
         binding = ActivityLiveChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         PreferenceHandler preferenceHandler = new PreferenceHandler();
-        com.example.smartcitytravel.AWSService.DataModel.User user = preferenceHandler.getLoginAccountPreference(LiveChatActivity.this);
+        com.example.smartcitytravel.DataModel.User user = preferenceHandler.getLoginAccountPreference(LiveChatActivity.this);
         Util util = new Util();
 
         checkConnectionAndCreateLiveChat(util, user);
@@ -46,7 +46,7 @@ public class LiveChatActivity extends AppCompatActivity {
     }
 
     //check internet connection and create live chat
-    public void checkConnectionAndCreateLiveChat(Util util, com.example.smartcitytravel.AWSService.DataModel.User user) {
+    public void checkConnectionAndCreateLiveChat(Util util, com.example.smartcitytravel.DataModel.User user) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
@@ -72,7 +72,7 @@ public class LiveChatActivity extends AppCompatActivity {
     }
 
     // initialize live chat
-    public void initLiveChat(Util util, com.example.smartcitytravel.AWSService.DataModel.User user) {
+    public void initLiveChat(Util util, com.example.smartcitytravel.DataModel.User user) {
 
         SendBirdUIKit.init(new SendBirdUIKitAdapter() {
             @Override

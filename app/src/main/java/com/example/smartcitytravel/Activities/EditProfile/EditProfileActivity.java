@@ -24,7 +24,7 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
 import com.bumptech.glide.Glide;
-import com.example.smartcitytravel.AWSService.DataModel.User;
+import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.Activities.EditProfile.WorkManager.ImageUpdateWorkManager;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;

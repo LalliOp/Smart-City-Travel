@@ -9,15 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.smartcitytravel.AWSService.DataModel.Place;
+import com.example.smartcitytravel.DataModel.PlaceDetail;
 import com.example.smartcitytravel.databinding.FragmentFeedbackBinding;
 
 public class FeedbackFragment extends Fragment {
     private FragmentFeedbackBinding binding;
-    private Place place;
+    private PlaceDetail placeDetail;
 
-    public FeedbackFragment(Place place) {
-        this.place = place;
+    public FeedbackFragment(PlaceDetail placeDetail) {
+        this.placeDetail = placeDetail;
     }
 
     @Override
@@ -30,8 +30,8 @@ public class FeedbackFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.avgRatingTxt.setText(place.getRating().toString());
-        binding.avgRatingBar.setRating(place.getRating());
+        binding.avgRatingTxt.setText(placeDetail.getRating().toString());
+        binding.avgRatingBar.setRating(placeDetail.getRating());
 
 //        FeedbackRecyclerViewAdapter placeRecyclerViewAdapter = new FeedbackRecyclerViewAdapter(this, hotelPlaceList);
 //

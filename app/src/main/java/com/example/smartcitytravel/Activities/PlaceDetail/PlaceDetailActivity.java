@@ -2,30 +2,32 @@ package com.example.smartcitytravel.Activities.PlaceDetail;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.AWSService.DataModel.Place;
-import com.example.smartcitytravel.AWSService.Http.HttpClient;
 import com.example.smartcitytravel.Activities.PlaceDetail.SliderViewAdapter.ImageSliderViewAdapter;
 import com.example.smartcitytravel.Activities.PlaceDetail.ViewPager2Adapter.PlaceDetailPagerAdapter;
+import com.example.smartcitytravel.DataModel.PlaceDetail;
 import com.example.smartcitytravel.R;
+import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityPlaceDetailBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-
-import io.reactivex.rxjava3.annotations.NonNull;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PlaceDetailActivity extends AppCompatActivity {
     private ActivityPlaceDetailBinding binding;
     private Util util;
+    private Connection connection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +36,10 @@ public class PlaceDetailActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         util = new Util();
+        connection = new Connection();
 
         setToolbar();
-//        getPlaceDetail();
+        checkConnectionAndGetPlaceDetail();
 
     }
 
@@ -47,46 +50,80 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     }
 
-    // get detail of place from database
-    public void getPlaceDetail() {
-        int placeId = getIntent().getExtras().getInt("placeId");
-
-        Call<Place> callablePlaceDetail = HttpClient.getInstance().getPlaceDetail(String.valueOf(placeId));
-
-        callablePlaceDetail.enqueue(new Callback<Place>() {
+    //check internet connection exist or not. If exist get place details
+    public void checkConnectionAndGetPlaceDetail() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
             @Override
-            public void onResponse(Call<Place> call, Response<Place> response) {
-                Place place = response.body();
-                if (place != null) {
-                    binding.placeName.setText(place.getName());
+            public void run() {
+                boolean internetAvailable = connection.isConnectionSourceAndInternetAvailable(PlaceDetailActivity.this);
 
-//                    showImageSliderView(place.getImageUrl());
-                    showPlaceDetailTabs(place);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
 
-                } else {
-                    Toast.makeText(PlaceDetailActivity.this, "Unable to get place details", Toast.LENGTH_SHORT).show();
-                }
+                        if (internetAvailable) {
+                            getPlaceDetail();
+                        } else {
+                            binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
+                            binding.CheckConnectionLayout.noConnectionLayout.setVisibility(View.VISIBLE);
+                            retryConnection();
+                        }
+                    }
+                });
+
             }
+        });
+    }
 
+    //run when user click on retry icon
+    public void retryConnection() {
+        binding.CheckConnectionLayout.retryConnection.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFailure(Call<Place> call, Throwable t) {
-                Toast.makeText(PlaceDetailActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                binding.CheckConnectionLayout.loadingBar.setVisibility(View.VISIBLE);
+                binding.CheckConnectionLayout.noConnectionLayout.setVisibility(View.GONE);
+
+                checkConnectionAndGetPlaceDetail();
             }
         });
 
     }
 
+    // get detail of place from database
+    public void getPlaceDetail() {
+        String placeId = getIntent().getExtras().getString("placeId");
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("place")
+                .document(placeId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            PlaceDetail placeDetail = documentSnapshot.toObject(PlaceDetail.class);
+                            binding.placeName.setText(placeDetail.getName());
+
+                            showImageSliderView(placeDetail);
+                            showPlaceDetailTabs(placeDetail);
+                            binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
+                            binding.UILayout.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+
+
+    }
+
     //create and show place images slider
     //change images after few seconds
-    public void showImageSliderView(String imageUrl) {
+    public void showImageSliderView(PlaceDetail placeDetail) {
 
         ArrayList<String> imageList = new ArrayList<>();
-        String url1 = imageUrl;
-        String url2 = "https://qphs.fs.quoracdn.net/main-qimg-8e203d34a6a56345f86f1a92570557ba.webp";
-        String url3 = "https://bizzbucket.co/wp-content/uploads/2020/08/Life-in-The-Metro-Blog-Title-22.png";
-        imageList.add(url1);
-        imageList.add(url2);
-        imageList.add(url3);
+        imageList.add(placeDetail.getImage1());
+        imageList.add(placeDetail.getImage2());
+        imageList.add(placeDetail.getImage3());
 
         ImageSliderViewAdapter imageSliderViewAdapter = new ImageSliderViewAdapter(this, imageList);
         binding.imageSliderView.setSliderAdapter(imageSliderViewAdapter);
@@ -96,8 +133,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     //create viewpager2 and tab layout
     //show tabs which show place detail
-    public void showPlaceDetailTabs(Place place) {
-        PlaceDetailPagerAdapter placeDetailPagerAdapter = new PlaceDetailPagerAdapter(this, place);
+    public void showPlaceDetailTabs(PlaceDetail placeDetail) {
+        PlaceDetailPagerAdapter placeDetailPagerAdapter = new PlaceDetailPagerAdapter(this, placeDetail);
 
         binding.placeDetailViewPager2.setAdapter(placeDetailPagerAdapter);
 
