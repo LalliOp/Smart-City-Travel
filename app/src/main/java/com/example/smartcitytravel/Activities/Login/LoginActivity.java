@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     private CollectionReference userCollection;
 
     //run when launch() function is called by GoogleSignUpActivityResult
-    private ActivityResultLauncher<Intent> GoogleSignInActivityResult = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> GoogleSignInActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override

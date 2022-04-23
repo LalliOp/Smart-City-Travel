@@ -6,19 +6,20 @@ public class PlaceDetail extends Place {
     String Image3;
     String Latitude;
     String Longitude;
-    Integer Vote;
+    String Timing;
 
     public PlaceDetail() {
+        super();
     }
 
-    public PlaceDetail(String name, String description, String image1, String image2, String image3, String latitude, String longitude, Float rating, Integer vote) {
+    public PlaceDetail(String name, String description, String image1, String image2, String image3, Float rating, String latitude, String longitude, String timing) {
         super(name, image1, rating);
         Description = description;
         Image2 = image2;
         Image3 = image3;
         Latitude = latitude;
         Longitude = longitude;
-        Vote = vote;
+        Timing = timing;
     }
 
     public String getDescription() {
@@ -61,11 +62,11 @@ public class PlaceDetail extends Place {
         Longitude = longitude;
     }
 
-    public Integer getVote() {
-        return Vote;
+    public String getTiming() {
+        return Timing;
     }
 
-    public void setVote(Integer vote) {
-        Vote = vote;
+    public void setTiming(String timing) {
+        Timing = timing;
     }
 }

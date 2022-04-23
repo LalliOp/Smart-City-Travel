@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 app:sliderAnimationDuration="600"
-                app:sliderAutoCycleDirection="right"
+                app:sliderAutoCycleDirection="back_and_forth"
                 app:sliderIndicatorAnimationDuration="600"
                 app:sliderIndicatorEnabled="true"
                 app:sliderIndicatorGravity="center_horizontal|bottom"
@@ -51,8 +51,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="24dp"
-                    android:text="PLACE"
-                    android:textSize="25sp" />
+                    android:textSize="22sp" />
 
             </RelativeLayout>
 

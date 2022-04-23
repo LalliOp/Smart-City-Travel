@@ -39,11 +39,7 @@ public class Connection {
     public boolean isConnectionSourceAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo == null || !networkInfo.isConnected()) {
-            return false;
-        } else {
-            return true;
-        }
+        return networkInfo != null && networkInfo.isConnected();
 
     }
 

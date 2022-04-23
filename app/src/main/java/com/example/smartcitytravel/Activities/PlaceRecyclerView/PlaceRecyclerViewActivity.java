@@ -1,6 +1,7 @@
 package com.example.smartcitytravel.Activities.PlaceRecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -8,8 +9,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.smartcitytravel.Activities.PlaceRecyclerView.ItemDecoration.GridSpaceItemDecoration;
-import com.example.smartcitytravel.Activities.PlaceRecyclerView.RecyclerView.PlaceRecyclerViewAdapter;
+import com.example.smartcitytravel.Activities.ItemDecoration.GridSpaceItemDecoration;
+import com.example.smartcitytravel.RecyclerView.PlaceRecyclerViewAdapter;
 import com.example.smartcitytravel.DataModel.Place;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Connection;
@@ -23,7 +24,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,6 +37,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
     private boolean famousSpotsAvailable;
     private boolean hotelPlacesAvailable;
     private CollectionReference placeCollection;
+    private String city;
 
 
     @Override
@@ -58,6 +59,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         util = new Util();
         noConnectionToast = new Toast(this);
         placeCollection = FirebaseFirestore.getInstance().collection("place");
+        city = getIntent().getExtras().getString("destination_name");
 
         popularPlacesAvailable = false;
         restaurantPlacesAvailable = false;
@@ -68,7 +70,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
     //add toolbar in activity and customize status bar color
     public void setToolbar() {
         util.setStatusBarColor(PlaceRecyclerViewActivity.this, R.color.theme_light);
-        util.addToolbar(PlaceRecyclerViewActivity.this, binding.toolbarLayout.toolbar, getIntent().getExtras().getString("destination_name"));
+        util.addToolbar(PlaceRecyclerViewActivity.this, binding.toolbarLayout.toolbar, city);
     }
 
     //check internet connection exist or not. If exist load places
@@ -121,7 +123,8 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
     //get popular places from database and pass to recycler view
     public void getPopularPlaces() {
-        placeCollection.orderBy("Rating", Query.Direction.DESCENDING)
+        placeCollection.whereEqualTo("City", city)
+                .orderBy("Rating", Query.Direction.DESCENDING)
                 .limit(100)
                 .get()
                 .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
@@ -138,14 +141,15 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
                             }
 
-                            Collections.shuffle(popularPlaceList);
+//                            Collections.shuffle(popularPlaceList);
+//
+//                            ArrayList<Place> placeList = new ArrayList<>(popularPlaceList.subList(0, popularPlaceList.size() - 1));
 
-                            ArrayList<Place> placeList = new ArrayList<>(popularPlaceList.subList(0, 30));
-
-                            showPopularPlaces(placeList);
+                            showPopularPlaces(popularPlaceList);
 
                             popularPlacesAvailable = true;
 
+                            Log.e("Popular", popularPlaceList.size() + "");
                         } else {
                             displayNoConnectionMessage();
                             retryPopularListener();
@@ -189,7 +193,8 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
     //get restaurant places from database and pass to recycler view
     public void getRestaurantPlaces() {
-        placeCollection.whereEqualTo("Place_type", "Restaurant")
+        placeCollection.whereEqualTo("City", city)
+                .whereEqualTo("Place_type", "Restaurant")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -205,13 +210,15 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
                             }
 
-                            Collections.shuffle(restaurantPlaceList);
+//                            Collections.shuffle(restaurantPlaceList);
+//
+//                            ArrayList<Place> placeList = new ArrayList<>(restaurantPlaceList.subList(0, restaurantPlaceList.size() - 1));
 
-                            ArrayList<Place> placeList = new ArrayList<>(restaurantPlaceList.subList(0, restaurantPlaceList.size() - 1));
-
-                            showRestaurantPlaces(placeList);
+                            showRestaurantPlaces(restaurantPlaceList);
 
                             restaurantPlacesAvailable = true;
+
+                            Log.e("Restaurant", restaurantPlaceList.size() + "");
 
                         } else {
                             displayNoConnectionMessage();
@@ -248,7 +255,8 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
     //get famous spots from database
     public void getFamousSpots() {
-        placeCollection.whereEqualTo("Place_type", "Tourism_spot")
+        placeCollection.whereEqualTo("City", city)
+                .whereEqualTo("Place_type", "Tourism_spot")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -263,13 +271,15 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
                                 famousSpotList.add(place);
                             }
 
-                            Collections.shuffle(famousSpotList);
+//                            Collections.shuffle(famousSpotList);
+//
+//                            ArrayList<Place> placeList = new ArrayList<>(famousSpotList.subList(0, famousSpotList.size() - 1));
 
-                            ArrayList<Place> placeList = new ArrayList<>(famousSpotList.subList(0, famousSpotList.size() - 1));
-
-                            showFamousSpots(placeList);
+                            showFamousSpots(famousSpotList);
 
                             famousSpotsAvailable = true;
+
+                            Log.e("Famous Spot", famousSpotList.size() + "");
 
                         } else {
                             displayNoConnectionMessage();
@@ -305,7 +315,8 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
     //get hotel places from database and pass to recycler view
     public void getHotelPlaces() {
-        placeCollection.whereEqualTo("Place_type", "Hotel")
+        placeCollection.whereEqualTo("City", city)
+                .whereEqualTo("Place_type", "Hotel")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -321,13 +332,16 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
                             }
 
-                            Collections.shuffle(hotelPlaceList);
+//                            Collections.shuffle(hotelPlaceList);
+//
+//                            ArrayList<Place> placeList = new ArrayList<>(hotelPlaceList.subList(0, hotelPlaceList.size() - 1));
 
-                            ArrayList<Place> placeList = new ArrayList<>(hotelPlaceList.subList(0, hotelPlaceList.size() - 1));
-
-                            showHotelPlaces(placeList);
+                            showHotelPlaces(hotelPlaceList);
 
                             hotelPlacesAvailable = true;
+
+                            Log.e("Hotel", hotelPlaceList.size() + "");
+
 
                         } else {
                             displayNoConnectionMessage();

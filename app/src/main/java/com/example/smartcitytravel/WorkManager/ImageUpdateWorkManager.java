@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.EditProfile.WorkManager;
+package com.example.smartcitytravel.WorkManager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,9 +22,9 @@ import com.google.firebase.storage.UploadTask;
 import java.util.Random;
 
 public class ImageUpdateWorkManager extends Worker {
-    private PreferenceHandler preferenceHandler;
-    private Uri imageUri;
-    private String userId;
+    private final PreferenceHandler preferenceHandler;
+    private final Uri imageUri;
+    private final String userId;
 
     public ImageUpdateWorkManager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -82,7 +82,7 @@ public class ImageUpdateWorkManager extends Worker {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        preferenceHandler.updateImageLoginAccountPreference(downloadImageUri.toString(), getApplicationContext());
+                        preferenceHandler.updateImagePreference(downloadImageUri.toString(), getApplicationContext());
                         sendUpdateProfileImageBroadcast();
                     }
                 });

@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.PlaceRecyclerView.RecyclerView;
+package com.example.smartcitytravel.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,8 +18,8 @@ import java.util.ArrayList;
 
 public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecyclerViewAdapter.PlaceViewHolder> {
 
-    private ArrayList<Place> placeArrayList;
-    private Context context;
+    private final ArrayList<Place> placeArrayList;
+    private final Context context;
 
     public PlaceRecyclerViewAdapter(Context context, ArrayList<Place> placeArrayList) {
         this.context = context;
@@ -66,7 +66,7 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<PlaceRecycler
     }
 
     public class PlaceViewHolder extends RecyclerView.ViewHolder {
-        private PlaceViewBinding binding;
+        private final PlaceViewBinding binding;
 
         public PlaceViewHolder(@NonNull PlaceViewBinding placeViewBinding) {
             super(placeViewBinding.getRoot());

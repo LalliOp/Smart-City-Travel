@@ -20,12 +20,12 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.DataModel.User;
-import com.example.smartcitytravel.Activities.EditProfile.Broadcast.UpdateProfileImageBroadcast;
-import com.example.smartcitytravel.Activities.EditProfile.Broadcast.UpdateProfileNameBroadcast;
+import com.example.smartcitytravel.Broadcast.UpdateProfileImageBroadcast;
+import com.example.smartcitytravel.Broadcast.UpdateProfileNameBroadcast;
 import com.example.smartcitytravel.Activities.EditProfile.EditProfileActivity;
-import com.example.smartcitytravel.Activities.Home.Fragments.AboutUsFragment;
-import com.example.smartcitytravel.Activities.Home.Fragments.HomeFragment;
-import com.example.smartcitytravel.Activities.Home.Fragments.SettingsFragment;
+import com.example.smartcitytravel.Fragments.AboutUsFragment;
+import com.example.smartcitytravel.Fragments.HomeFragment;
+import com.example.smartcitytravel.Fragments.SettingsFragment;
 import com.example.smartcitytravel.Activities.Login.LoginActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.PreferenceHandler;
@@ -53,7 +53,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         initialize();
-        User user = preferenceHandler.getLoginAccountPreference(HomeActivity.this);
+        User user = preferenceHandler.getLoggedInAccountPreference(HomeActivity.this);
         registerUpdateProfileImageBroadcastReceiver();
         registerUpdateProfileNameBroadcastReceiver();
         setLoadingBarColor();
@@ -229,9 +229,9 @@ public class HomeActivity extends AppCompatActivity {
 
     //logout user from system whether google account or non google account
     public void logout() {
-        Boolean account_type = preferenceHandler.getLoginAccountTypePreference(HomeActivity.this);
+        Boolean account_type = preferenceHandler.getAccountTypePreference(HomeActivity.this);
         if (!account_type) {
-            preferenceHandler.clearLoginAccountPreference(HomeActivity.this);
+            preferenceHandler.clearLoggedInAccountPreference(HomeActivity.this);
 
             moveToLoginActivity();
 
@@ -253,7 +253,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 }
             });
-            preferenceHandler.clearLoginAccountPreference(HomeActivity.this);
+            preferenceHandler.clearLoggedInAccountPreference(HomeActivity.this);
         }
     }
 

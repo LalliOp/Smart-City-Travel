@@ -1,7 +1,5 @@
-package com.example.smartcitytravel.Activities.PlaceDetail.Fragments;
+package com.example.smartcitytravel.Fragments;
 
-import android.graphics.text.LineBreaker;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,7 @@ import com.example.smartcitytravel.databinding.FragmentDescriptionBinding;
 
 public class DescriptionFragment extends Fragment {
     private FragmentDescriptionBinding binding;
-    private PlaceDetail placeDetail;
+    private final PlaceDetail placeDetail;
 
     public DescriptionFragment(PlaceDetail placeDetail) {
         this.placeDetail = placeDetail;
@@ -33,8 +31,8 @@ public class DescriptionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            binding.descriptionTxt.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
+        if (placeDetail.getTiming() != null) {
+            binding.timeTxt.setText(placeDetail.getTiming());
         }
         binding.descriptionTxt.setText(placeDetail.getDescription());
 

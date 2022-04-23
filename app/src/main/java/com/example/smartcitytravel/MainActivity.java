@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Check whether user is already sign in
     public void checkUserAlreadySignIn() {
-        Boolean checkPreferenceExist = preferenceHandler.checkLoginAccountPreferenceExist(MainActivity.this);
+        Boolean checkPreferenceExist = preferenceHandler.checkLoggedInAccountPreferenceExist(MainActivity.this);
 
         if (checkPreferenceExist) {
             moveToHomeActivity();

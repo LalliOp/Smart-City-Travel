@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/feedbackLayout"
+    android:id="@+id/reviewLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@id/avgRatingBar">
@@ -9,7 +9,8 @@
         android:id="@+id/profileImg"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:src="@mipmap/ic_launcher"
+        android:background="@color/light_white"
+        android:scaleType="centerCrop"
         android:theme="@style/CircularImage" />
 
     <TextView
@@ -17,10 +18,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="2dp"
         android:layout_toEndOf="@id/profileImg"
+        android:fontFamily="@font/segoe_ui"
         android:text="Name"
-        android:textColor="@color/black" />
+        android:textColor="@color/black"
+        android:textStyle="bold" />
 
     <RatingBar
         android:id="@+id/ratingBar"
@@ -38,13 +40,13 @@
         android:theme="@style/RatingBarColor" />
 
     <TextView
-        android:id="@+id/feedbackTxt"
+        android:id="@+id/reviewTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ratingBar"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_toEndOf="@id/profileImg"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
+        android:justificationMode="inter_word"
         android:text="This is my feedback"
-        android:textColor="@color/default_black" />
+        android:textColor="@color/black" />
 </RelativeLayout>

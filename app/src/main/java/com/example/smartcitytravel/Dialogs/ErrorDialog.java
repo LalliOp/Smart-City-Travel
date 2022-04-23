@@ -14,8 +14,8 @@ import androidx.fragment.app.DialogFragment;
 import com.example.smartcitytravel.R;
 
 public class ErrorDialog extends DialogFragment {
-    private String title;
-    private String message;
+    private final String title;
+    private final String message;
     private View dialogView;
 
     public ErrorDialog(String title, String message) {

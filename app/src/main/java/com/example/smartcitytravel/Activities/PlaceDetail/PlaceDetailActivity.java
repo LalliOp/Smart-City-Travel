@@ -3,16 +3,18 @@ package com.example.smartcitytravel.Activities.PlaceDetail;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.Activities.PlaceDetail.SliderViewAdapter.ImageSliderViewAdapter;
-import com.example.smartcitytravel.Activities.PlaceDetail.ViewPager2Adapter.PlaceDetailPagerAdapter;
 import com.example.smartcitytravel.DataModel.PlaceDetail;
 import com.example.smartcitytravel.R;
+import com.example.smartcitytravel.SliderViewAdapter.ImageSliderViewAdapter;
 import com.example.smartcitytravel.Util.Connection;
+import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
+import com.example.smartcitytravel.ViewPager2Adapter.PlaceDetailPagerAdapter;
 import com.example.smartcitytravel.databinding.ActivityPlaceDetailBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
@@ -28,6 +30,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
     private ActivityPlaceDetailBinding binding;
     private Util util;
     private Connection connection;
+    private PreferenceHandler preferenceHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
         util = new Util();
         connection = new Connection();
+        preferenceHandler = new PreferenceHandler();
 
         setToolbar();
         checkConnectionAndGetPlaceDetail();
@@ -103,12 +107,15 @@ public class PlaceDetailActivity extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
                             PlaceDetail placeDetail = documentSnapshot.toObject(PlaceDetail.class);
+                            placeDetail.setPlaceId(documentSnapshot.getId());
+
                             binding.placeName.setText(placeDetail.getName());
 
                             showImageSliderView(placeDetail);
-                            showPlaceDetailTabs(placeDetail);
+                            createPlaceDetailTabs(placeDetail);
                             binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
                             binding.UILayout.setVisibility(View.VISIBLE);
+
                         }
                     }
                 });
@@ -129,13 +136,13 @@ public class PlaceDetailActivity extends AppCompatActivity {
         binding.imageSliderView.setSliderAdapter(imageSliderViewAdapter);
         binding.imageSliderView.setAutoCycle(true);
         binding.imageSliderView.startAutoCycle();
+
     }
 
     //create viewpager2 and tab layout
     //show tabs which show place detail
-    public void showPlaceDetailTabs(PlaceDetail placeDetail) {
+    public void createPlaceDetailTabs(PlaceDetail placeDetail) {
         PlaceDetailPagerAdapter placeDetailPagerAdapter = new PlaceDetailPagerAdapter(this, placeDetail);
-
         binding.placeDetailViewPager2.setAdapter(placeDetailPagerAdapter);
 
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(binding.tabLayout, binding.placeDetailViewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
@@ -149,7 +156,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
                         tab.setText("Navigation");
                         break;
                     case 2:
-                        tab.setText("Feedback");
+                        tab.setText("Review");
                         break;
                 }
             }

@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.EditProfile.Broadcast;
+package com.example.smartcitytravel.Broadcast;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,8 +12,8 @@ import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.databinding.ActivityHomeBinding;
 
 public class UpdateProfileImageBroadcast extends BroadcastReceiver {
-    private PreferenceHandler preferenceHandler;
-    private ActivityHomeBinding binding;
+    private final PreferenceHandler preferenceHandler;
+    private final ActivityHomeBinding binding;
 
     public UpdateProfileImageBroadcast(ActivityHomeBinding binding) {
         this.binding = binding;
@@ -30,7 +30,7 @@ public class UpdateProfileImageBroadcast extends BroadcastReceiver {
     public void setUpdatedProfileImage(Context context) {
         View headerLayout = binding.navigationView.getHeaderView(0);
 
-        String imageURL = preferenceHandler.getImageLoginAccountPreference(context);
+        String imageURL = preferenceHandler.getImagePreference(context);
 
         Glide.with(context)
                 .load(imageURL)

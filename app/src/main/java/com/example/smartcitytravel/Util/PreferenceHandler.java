@@ -7,6 +7,7 @@ import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.R;
 
 public class PreferenceHandler {
+
     public PreferenceHandler() {
 
     }
@@ -25,7 +26,7 @@ public class PreferenceHandler {
     }
 
     //get detail of logged in account
-    public User getLoginAccountPreference(Context context) {
+    public User getLoggedInAccountPreference(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
                 Context.MODE_PRIVATE);
         User user = new User();
@@ -40,14 +41,14 @@ public class PreferenceHandler {
     }
 
     //get account type of logged in account
-    public Boolean getLoginAccountTypePreference(Context context) {
+    public Boolean getAccountTypePreference(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
                 Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean("google_account", false);
     }
 
     //clear detail of logged in account
-    public void clearLoginAccountPreference(Context context) {
+    public void clearLoggedInAccountPreference(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -56,14 +57,14 @@ public class PreferenceHandler {
     }
 
     //check preference exist or not
-    public Boolean checkLoginAccountPreferenceExist(Context context) {
+    public Boolean checkLoggedInAccountPreferenceExist(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
                 Context.MODE_PRIVATE);
         return sharedPreferences.contains("userId");
     }
 
     //update name of logged in account
-    public void updateNameLoginAccountPreference(String name, Context context) {
+    public void updateNamePreference(String name, Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -72,7 +73,7 @@ public class PreferenceHandler {
     }
 
     //update profile image of logged in account
-    public void updateImageLoginAccountPreference(String image_url, Context context) {
+    public void updateImagePreference(String image_url, Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -81,17 +82,25 @@ public class PreferenceHandler {
     }
 
     //get name of logged in account
-    public String getNameLoginAccountPreference(Context context) {
+    public String getNamePreference(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
                 Context.MODE_PRIVATE);
         return sharedPreferences.getString("name", "");
     }
 
     //get profile image of logged in account
-    public String getImageLoginAccountPreference(Context context) {
+    public String getImagePreference(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
                 Context.MODE_PRIVATE);
 
         return sharedPreferences.getString("image_url", "");
+    }
+
+    //get userId of logged in account
+    public String getUserIdPreference(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
+                Context.MODE_PRIVATE);
+
+        return sharedPreferences.getString("userId", "");
     }
 }

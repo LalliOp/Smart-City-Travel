@@ -67,4 +67,7 @@
     <string name="title_here">Title Here</string>
     <string name="_5">/5</string>
     <string name="_0_0">0.0</string>
+    <string name="write_a_review">Write a review</string>
+    <string name="write_a_review_">Write a review...</string>
+    <string name="submit">submit</string>
 </resources>

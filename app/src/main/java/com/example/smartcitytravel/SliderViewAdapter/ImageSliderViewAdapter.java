@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.PlaceDetail.SliderViewAdapter;
+package com.example.smartcitytravel.SliderViewAdapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -38,7 +38,7 @@ public class ImageSliderViewAdapter extends SliderViewAdapter<ImageSliderViewAda
     }
 
     class ImageSliderHolder extends SliderViewAdapter.ViewHolder {
-        private ImageSliderLayoutBinding binding;
+        private final ImageSliderLayoutBinding binding;
 
         public ImageSliderHolder(ImageSliderLayoutBinding imageSliderLayoutBinding) {
             super(imageSliderLayoutBinding.getRoot());

@@ -38,7 +38,7 @@ public class LiveChatActivity extends AppCompatActivity {
         binding = ActivityLiveChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         PreferenceHandler preferenceHandler = new PreferenceHandler();
-        com.example.smartcitytravel.DataModel.User user = preferenceHandler.getLoginAccountPreference(LiveChatActivity.this);
+        com.example.smartcitytravel.DataModel.User user = preferenceHandler.getLoggedInAccountPreference(LiveChatActivity.this);
         Util util = new Util();
 
         checkConnectionAndCreateLiveChat(util, user);
