@@ -180,6 +180,7 @@ public class PinCodeActivity extends AppCompatActivity {
 
             }
         });
+        executor.shutdown();
     }
 
     //generate and send pin code to email user enter
@@ -237,6 +238,7 @@ public class PinCodeActivity extends AppCompatActivity {
 
             }
         });
+        executor.shutdown();
     }
 
     //create account by passing user account info to database

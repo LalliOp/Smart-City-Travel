@@ -123,6 +123,7 @@ public class EmailActivity extends AppCompatActivity {
 
             }
         });
+        executor.shutdown();
     }
 
     //check whether email exist or not

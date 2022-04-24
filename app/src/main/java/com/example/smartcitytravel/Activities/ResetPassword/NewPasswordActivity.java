@@ -174,6 +174,7 @@ public class NewPasswordActivity extends AppCompatActivity {
 
             }
         });
+        executor.shutdown();
     }
 
     //change account password in database

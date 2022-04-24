@@ -2,6 +2,7 @@ package com.example.smartcitytravel.Activities.WriteReview;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,23 +18,35 @@ import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.DataModel.Review;
 import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.R;
+import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityWriteReviewBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class WriteReviewActivity extends AppCompatActivity {
     private ActivityWriteReviewBinding binding;
     private Util util;
     private PreferenceHandler preferenceHandler;
     private User user;
+    private Connection connection;
     private Toast updateMessageToast;
     private boolean toEdit;
     private boolean updateReview;
     private boolean updateRating;
     private boolean backPressed;
+    private Intent returnIntentData;
+    private FirebaseFirestore db;
+    private String placeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +54,29 @@ public class WriteReviewActivity extends AppCompatActivity {
         binding = ActivityWriteReviewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        util = new Util();
-        preferenceHandler = new PreferenceHandler();
-        user = preferenceHandler.getLoggedInAccountPreference(this);
-        updateMessageToast = new Toast(this);
-
-        updateReview = false;
-        updateRating = false;
-        backPressed = false;
-
+        initialize();
         getIntentData();
         setToolbar();
         setUserProfile();
         submitButtonClickListener();
         reviewChangeListener();
         ratingChangeListener();
+    }
+
+    //initialize variables
+    public void initialize() {
+        util = new Util();
+        preferenceHandler = new PreferenceHandler();
+        user = preferenceHandler.getLoggedInAccountPreference(this);
+        updateMessageToast = new Toast(this);
+        returnIntentData = new Intent();
+        connection = new Connection();
+        db = FirebaseFirestore.getInstance();
+        placeId = getIntent().getExtras().getString("placeId");
+
+        updateReview = false;
+        updateRating = false;
+        backPressed = false;
     }
 
     // get values pass by review fragment when click on edit button
@@ -84,38 +105,73 @@ public class WriteReviewActivity extends AppCompatActivity {
         binding.submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadReview();
+                util.hideKeyboard(WriteReviewActivity.this);
+
+                checkConnectionAndUploadReview();
             }
         });
 
+    }
 
+    // If review or rating is written or marked then check internet connection exist or not. If exist then upload review
+    public void checkConnectionAndUploadReview() {
+        if (updateRating || updateReview) {
+
+            boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(WriteReviewActivity.this);
+            if (isConnectionSourceAvailable) {
+                showLoadingBar();
+            }
+
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    boolean internetAvailable = connection.isInternetAvailable();
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            if (internetAvailable) {
+                                uploadReview();
+                            } else {
+                                Toast.makeText(WriteReviewActivity.this, "Unable to update review", Toast.LENGTH_SHORT).show();
+                                hideLoadingBar();
+                                finishActivity();
+                            }
+                        }
+                    });
+
+                }
+            });
+            executor.shutdown();
+
+        } else {
+            hideLoadingBar();
+        }
     }
 
     // add review in database
     public void uploadReview() {
-        showLoadingBar();
 
-        util.hideKeyboard(WriteReviewActivity.this);
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if (toEdit) {
             String reviewId = getIntent().getExtras().getString("reviewId");
             if (updateReview) {
-                updateReview(db, reviewId);
+                updateReview(reviewId);
             }
             if (updateRating) {
-                updateRating(db, reviewId);
+                updateRating(reviewId);
             }
         } else {
-            writeReview(db);
+            writeReview();
         }
+
+
     }
 
     // call when writing review first time
-    public void writeReview(FirebaseFirestore db) {
-        String placeId = getIntent().getExtras().getString("placeId");
-
+    public void writeReview() {
         Review review = new Review(user.getUserId(), placeId, binding.ratingBar.getRating(),
                 binding.reviewEdit.getText().toString());
 
@@ -124,32 +180,46 @@ public class WriteReviewActivity extends AppCompatActivity {
                 .addOnSuccessListener(this, new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        hideLoadingBar();
-                        Toast.makeText(WriteReviewActivity.this, "Review posted", Toast.LENGTH_SHORT).show();
+                        returnIntentData.putExtra("reviewId", documentReference.getId());
+                        returnIntentData.putExtra("review", review.getFeedback());
+                        returnIntentData.putExtra("rating", review.getRating());
 
+                        calculateAverageRating(review.getRating());
+
+                        updateReview = false;
+                        updateRating = false;
                         finishActivity();
                     }
                 });
     }
 
     // update old review
-    public void updateReview(FirebaseFirestore db, String reviewId) {
+    public void updateReview(String reviewId) {
         db.collection("review")
                 .document(reviewId)
                 .update("feedback", binding.reviewEdit.getText().toString())
                 .addOnSuccessListener(this, new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        hideLoadingBar();
-                        displayUpdateMessage();
+                        returnIntentData.putExtra("reviewId", reviewId);
+                        returnIntentData.putExtra("review", binding.reviewEdit.getText().toString());
+                        returnIntentData.putExtra("rating", binding.ratingBar.getRating());
+                        returnIntentData.putExtra("avgRating", -1.0);
 
+                        if (updateReview && !updateRating) {
+                            updateResultIntentData();
+                            hideLoadingBar();
+                            displayUpdateMessage();
+                        }
+
+                        updateReview = false;
                         finishActivity();
                     }
                 });
     }
 
     // update old rating
-    public void updateRating(FirebaseFirestore db, String reviewId) {
+    public void updateRating(String reviewId) {
 
         db.collection("review")
                 .document(reviewId)
@@ -157,12 +227,21 @@ public class WriteReviewActivity extends AppCompatActivity {
                 .addOnSuccessListener(this, new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        hideLoadingBar();
-                        displayUpdateMessage();
+                        returnIntentData.putExtra("reviewId", reviewId);
+                        returnIntentData.putExtra("review", binding.reviewEdit.getText().toString());
+                        returnIntentData.putExtra("rating", binding.ratingBar.getRating());
 
+                        calculateAverageRating(binding.ratingBar.getRating());
+
+                        updateRating = false;
                         finishActivity();
                     }
                 });
+    }
+
+    // setup result data which will return back to previous activity
+    void updateResultIntentData() {
+        setResult(100, returnIntentData);
     }
 
     // called when change in review occurs
@@ -277,7 +356,7 @@ public class WriteReviewActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        uploadReview();
+                        checkConnectionAndUploadReview();
                     }
                 });
         AlertDialog alertDialog = builder.create();
@@ -303,4 +382,68 @@ public class WriteReviewActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
+    // get rating for selected place and calculate average rating
+    public void calculateAverageRating(double userRating) {
+        db.collection("review")
+                .whereEqualTo("placeId", placeId)
+                .get()
+                .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            int rating_count = queryDocumentSnapshots.size();
+
+                            if (rating_count > 1) {
+                                double all_rating = 0;
+                                for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                                    Review review = querySnapshot.toObject(Review.class);
+
+                                    all_rating += review.getRating();
+                                }
+                                double newAvgRating = all_rating / rating_count;
+
+                                newAvgRating = roundDoubleValue(newAvgRating);
+
+                                updateAverageRating(newAvgRating);
+
+                            } else {
+                                updateAverageRating(userRating);
+
+                            }
+                        }
+                    }
+                });
+    }
+
+    // update new average calculate rating in database
+    public void updateAverageRating(double newAvgRating) {
+        db.collection("place")
+                .document(placeId)
+                .update("Rating", newAvgRating)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        hideLoadingBar();
+                        returnIntentData.putExtra("avgRating", newAvgRating);
+
+                        updateResultIntentData();
+
+                        if (toEdit) {
+                            displayUpdateMessage();
+                        } else {
+                            Toast.makeText(WriteReviewActivity.this, "Review posted", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+    }
+
+    //round double value to one decimal places
+    public double roundDoubleValue(double value) {
+        DecimalFormat df = new DecimalFormat("#.#");
+        df.setRoundingMode(RoundingMode.CEILING);
+        return Double.parseDouble(df.format(value));
+    }
+
 }

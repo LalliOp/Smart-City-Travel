@@ -295,6 +295,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
             }
         });
+        executor.shutdown();
     }
 
     // update account profile name in database and update in Ui too
@@ -346,7 +347,7 @@ public class EditProfileActivity extends AppCompatActivity {
             noConnectionToast.cancel();
             noConnectionToast.getView().isShown();
         } catch (Exception ignored) {
-            noConnectionToast = Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT);
+            noConnectionToast = Toast.makeText(this, "Unable to update profile", Toast.LENGTH_SHORT);
             noConnectionToast.show();
         }
     }

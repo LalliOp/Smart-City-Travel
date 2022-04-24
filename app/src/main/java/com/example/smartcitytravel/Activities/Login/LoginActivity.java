@@ -13,10 +13,10 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.Activities.Home.HomeActivity;
 import com.example.smartcitytravel.Activities.ResetPassword.EmailActivity;
 import com.example.smartcitytravel.Activities.SignUp.SignUpActivity;
+import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
@@ -194,7 +194,7 @@ public class LoginActivity extends AppCompatActivity {
         User user = new User(googleSignInAccount.getDisplayName().toLowerCase(), googleSignInAccount.getEmail().toLowerCase(),
                 "0", profile_image_url, true);
 
-        userCollection.add(user).addOnSuccessListener(this,new OnSuccessListener<DocumentReference>() {
+        userCollection.add(user).addOnSuccessListener(this, new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 if (!documentReference.getId().isEmpty()) {
@@ -215,7 +215,7 @@ public class LoginActivity extends AppCompatActivity {
     public void verifyEmail(GoogleSignInAccount googleSignInAccount) {
         userCollection.whereEqualTo("email", googleSignInAccount.getEmail().toLowerCase())
                 .get()
-                .addOnSuccessListener(this,new OnSuccessListener<QuerySnapshot>() {
+                .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if (!queryDocumentSnapshots.isEmpty()) {
@@ -348,13 +348,14 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+        executor.shutdown();
     }
 
     //check whether account exist or not and save account info in preference
     public void verifyLogin() {
 
         userCollection.whereEqualTo("email", binding.emailEdit.getText().toString().toLowerCase())
-                .get().addOnSuccessListener(this,new OnSuccessListener<QuerySnapshot>() {
+                .get().addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 if (!queryDocumentSnapshots.isEmpty()) {

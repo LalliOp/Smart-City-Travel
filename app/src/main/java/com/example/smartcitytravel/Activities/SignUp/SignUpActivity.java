@@ -235,6 +235,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
+        executor.shutdown();
     }
 
     //check whether email exist or not

@@ -18,7 +18,8 @@
         android:theme="@style/Theme.SmartCityTravel">
         <activity
             android:name=".Activities.WriteReview.WriteReviewActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.SuccessfulAccountMessage.SuccessfulAccountMessageActivity"
             android:exported="false"

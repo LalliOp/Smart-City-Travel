@@ -1,7 +1,6 @@
 package com.example.smartcitytravel.Activities.PlaceRecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -10,9 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.smartcitytravel.Activities.ItemDecoration.GridSpaceItemDecoration;
-import com.example.smartcitytravel.RecyclerView.PlaceRecyclerViewAdapter;
 import com.example.smartcitytravel.DataModel.Place;
 import com.example.smartcitytravel.R;
+import com.example.smartcitytravel.RecyclerView.PlaceRecyclerViewAdapter;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityPlaceRecyclerViewBinding;
@@ -149,7 +148,6 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
                             popularPlacesAvailable = true;
 
-                            Log.e("Popular", popularPlaceList.size() + "");
                         } else {
                             displayNoConnectionMessage();
                             retryPopularListener();
@@ -218,8 +216,6 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
                             restaurantPlacesAvailable = true;
 
-                            Log.e("Restaurant", restaurantPlaceList.size() + "");
-
                         } else {
                             displayNoConnectionMessage();
                             retryRestaurantListener();
@@ -279,8 +275,6 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
                             famousSpotsAvailable = true;
 
-                            Log.e("Famous Spot", famousSpotList.size() + "");
-
                         } else {
                             displayNoConnectionMessage();
                             retryFamousSpotListener();
@@ -339,9 +333,6 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
                             showHotelPlaces(hotelPlaceList);
 
                             hotelPlacesAvailable = true;
-
-                            Log.e("Hotel", hotelPlaceList.size() + "");
-
 
                         } else {
                             displayNoConnectionMessage();

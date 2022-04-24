@@ -3,7 +3,6 @@ package com.example.smartcitytravel.Activities.PlaceDetail;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,13 +37,18 @@ public class PlaceDetailActivity extends AppCompatActivity {
         binding = ActivityPlaceDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        util = new Util();
-        connection = new Connection();
-        preferenceHandler = new PreferenceHandler();
 
+        initialize();
         setToolbar();
         checkConnectionAndGetPlaceDetail();
 
+    }
+
+    //initialize variables
+    public void initialize() {
+        util = new Util();
+        connection = new Connection();
+        preferenceHandler = new PreferenceHandler();
     }
 
     //add toolbar in activity and customize status bar color
@@ -78,6 +82,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
             }
         });
+        executor.shutdown();
     }
 
     //run when user click on retry icon
