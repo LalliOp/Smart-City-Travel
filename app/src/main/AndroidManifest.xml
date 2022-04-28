@@ -17,6 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCityTravel">
         <activity
+            android:name=".Activities.SeeAllReview.SeeAllReviewActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".Activities.WriteReview.WriteReviewActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

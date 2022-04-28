@@ -6,8 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.Activities.PinCode.PinCodeActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
@@ -29,10 +34,27 @@ public class SignUpActivity extends AppCompatActivity {
     private Connection connection;
     private Color color;
     private Validation validation;
+    private String imageUrl;
     private boolean validate_full_name;
     private boolean validate_email;
     private boolean validate_password;
     private boolean validate_confirm_password;
+
+    //run when launch() function is called
+    //get image from gallery and save new image
+    private final ActivityResultLauncher<Intent> imagePickerActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+
+                    if (result != null && result.getData() != null) {
+                        imageUrl = result.getData().getData().toString();
+                        setProfileImage(imageUrl);
+                    }
+
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +66,9 @@ public class SignUpActivity extends AppCompatActivity {
         initialize();
         util.setStatusBarColor(SignUpActivity.this, R.color.grey);
         initializeValidator();
+        setDefaultProfileImage();
         setLoadingBarColor();
+        openGallery();
         registerAccount();
 
     }
@@ -55,6 +79,7 @@ public class SignUpActivity extends AppCompatActivity {
         connection = new Connection();
         color = new Color();
         validation = new Validation();
+        imageUrl = getString(R.string.default_profile_image_url);
     }
 
     //initialize validate variable for each edit field which help us to know which field contain error or not
@@ -63,6 +88,36 @@ public class SignUpActivity extends AppCompatActivity {
         validate_email = false;
         validate_password = false;
         validate_confirm_password = false;
+    }
+
+    // set default profile image for create account
+    public void setDefaultProfileImage() {
+        Glide.with(this)
+                .load(R.drawable.default_profile_image)
+                .into(binding.selectProfileImgLayout.profileImg);
+
+    }
+
+    // set profile image
+    public void setProfileImage(String imageUrl) {
+        Glide.with(this)
+                .load(imageUrl)
+                .into(binding.selectProfileImgLayout.profileImg);
+
+    }
+
+    //open gallery to select image
+    public void openGallery() {
+        binding.selectProfileImgLayout.changeProfileImgLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+                galleryIntent.setType("image/*");
+                imagePickerActivityResultLauncher.launch(galleryIntent);
+
+
+            }
+        });
     }
 
     //run when user click on register button
@@ -198,10 +253,12 @@ public class SignUpActivity extends AppCompatActivity {
     //Move from SignUp Activity to Pin code Activity
     //pass email to Pin code Activity
     public void moveToPinCodeActivity() {
+
         Intent intent = new Intent(this, PinCodeActivity.class);
         intent.putExtra("signup_name", binding.fullNameEdit.getText().toString());
         intent.putExtra("signup_email", binding.emailEdit.getText().toString());
         intent.putExtra("signup_password", binding.passwordEdit.getText().toString());
+        intent.putExtra("signup_imageUrl", imageUrl);
         intent.putExtra("title", "Verify Your Email");
         startActivity(intent);
 
@@ -243,7 +300,7 @@ public class SignUpActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user").whereEqualTo("email", binding.emailEdit.getText().toString().toLowerCase())
                 .get()
-                .addOnSuccessListener(this,new OnSuccessListener<QuerySnapshot>() {
+                .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if (!queryDocumentSnapshots.isEmpty()) {

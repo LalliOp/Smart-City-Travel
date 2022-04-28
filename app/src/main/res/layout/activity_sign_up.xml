@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,17 +21,34 @@
 
     </RelativeLayout>
 
+
     <include
-        android:id="@+id/logo_title_layout"
-        layout="@layout/logo_title" />
+        android:id="@+id/selectProfileImgLayout"
+        layout="@layout/select_profile_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="110dp" />
+
+    <TextView
+        android:id="@+id/createAccountTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectProfileImgLayout"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/segoe_ui"
+        android:textStyle="bold"
+        android:layout_marginTop="40dp"
+        android:text="@string/create_account"
+        android:textSize="25sp" />
 
     <com.google.android.material.textfield.TextInputLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/fullNameLayout"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/logo_title_layout"
+        android:layout_below="@id/createAccountTxt"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="40dp"
         android:textColorHint="@color/white"
         android:theme="@style/TextInputLayoutStyle"
         app:boxBackgroundMode="outline"

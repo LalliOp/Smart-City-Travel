@@ -134,12 +134,12 @@ public class EditProfileActivity extends AppCompatActivity {
     public void setProfileImage(String image_url) {
         Glide.with(this)
                 .load(image_url)
-                .into(binding.profileImg);
+                .into(binding.selectProfileImgLayout.profileImg);
     }
 
     //open gallery to select image
     public void openGallery() {
-        binding.changeProfileImgLayout.setOnClickListener(new View.OnClickListener() {
+        binding.selectProfileImgLayout.changeProfileImgLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK);
@@ -185,6 +185,7 @@ public class EditProfileActivity extends AppCompatActivity {
         Data data = new Data.Builder()
                 .putString("image_url", imageUri.toString())
                 .putString("userId", user.getUserId())
+                .putBoolean("update_UI", true)
                 .build();
 
         WorkRequest imageUpdateWorkRequest = new OneTimeWorkRequest.
@@ -361,9 +362,11 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            backPressed = true;
-            util.hideKeyboard(EditProfileActivity.this);
-            showApplyChangesConfirmationDialog();
+            if (binding.saveBtn.isEnabled()) {
+                backPressed = true;
+                util.hideKeyboard(EditProfileActivity.this);
+                showApplyChangesConfirmationDialog();
+            }
             return true;
         } else {
             return super.onOptionsItemSelected(item);

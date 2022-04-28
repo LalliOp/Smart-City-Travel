@@ -25,6 +25,7 @@ public class ImageUpdateWorkManager extends Worker {
     private final PreferenceHandler preferenceHandler;
     private final Uri imageUri;
     private final String userId;
+    private boolean updateUI;
 
     public ImageUpdateWorkManager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -32,6 +33,7 @@ public class ImageUpdateWorkManager extends Worker {
         preferenceHandler = new PreferenceHandler();
         imageUri = Uri.parse(getInputData().getString("image_url"));
         userId = getInputData().getString("userId");
+        updateUI = getInputData().getBoolean("update_UI", false);
 
     }
 
@@ -83,15 +85,13 @@ public class ImageUpdateWorkManager extends Worker {
                     @Override
                     public void onSuccess(Void unused) {
                         preferenceHandler.updateImagePreference(downloadImageUri.toString(), getApplicationContext());
-                        sendUpdateProfileImageBroadcast();
+
+                        if (updateUI) {
+                            sendUpdateProfileImageBroadcast();
+                        }
+
                     }
                 });
-    }
-
-    // send broadcast to update profile image
-    public void sendUpdateProfileImageBroadcast() {
-        Intent updateProfileImageIntent = new Intent("com.example.smartcitytravel.UPDATE_PROFILE_IMAGE");
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(updateProfileImageIntent);
     }
 
     //create name for image file
@@ -106,6 +106,12 @@ public class ImageUpdateWorkManager extends Worker {
         Random randomNumber2 = new Random();
 
         return rawImgName + randomNumber1.nextInt() + randomNumber2.nextInt();
+    }
+
+    // send broadcast to update profile image
+    public void sendUpdateProfileImageBroadcast() {
+        Intent updateProfileImageIntent = new Intent("com.example.smartcitytravel.UPDATE_PROFILE_IMAGE");
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(updateProfileImageIntent);
     }
 
 }

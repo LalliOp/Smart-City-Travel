@@ -11,14 +11,19 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
-import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.Activities.ResetPassword.NewPasswordActivity;
 import com.example.smartcitytravel.Activities.SuccessfulAccountMessage.SuccessfulAccountMessageActivity;
+import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
+import com.example.smartcitytravel.WorkManager.ImageUpdateWorkManager;
 import com.example.smartcitytravel.databinding.ActivityPinCodeBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -35,6 +40,7 @@ public class PinCodeActivity extends AppCompatActivity {
     private int pin_code;
     private String email;
     private boolean fromSignUpActivity;
+    private String uploadImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,7 @@ public class PinCodeActivity extends AppCompatActivity {
         util = new Util();
         connection = new Connection();
         fromSignUpActivity = false;
+        uploadImage = null;
     }
 
     //change default loading bar color
@@ -244,27 +251,63 @@ public class PinCodeActivity extends AppCompatActivity {
     //create account by passing user account info to database
     // and move to Successful Account Message Activity Activity if account created successfully
     public void createAccount() {
-        String password = getIntent().getExtras().getString("signup_password");
-        String name = getIntent().getExtras().getString("signup_name");
-        String normalizedFullName = name.toLowerCase();
-        normalizedFullName = normalizedFullName.trim().replaceAll("\\s{2,}", " ");
 
-        User user = new User(normalizedFullName, email, password,
-                getString(R.string.default_profile_image_url), false);
+        User user = getCreateAccountInfo();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user")
                 .add(user)
-                .addOnSuccessListener(this,new OnSuccessListener<DocumentReference>() {
+                .addOnSuccessListener(this, new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        if (!documentReference.getId().isEmpty()) {
+                        String newUserId = documentReference.getId();
+                        if (!newUserId.isEmpty()) {
+                            if (uploadImage != null) {
+                                startUpdateImageWorkManager(newUserId);
+                            }
                             moveToSuccessfulAccountMessageActivity();
                         }
                         hideLoadingBar();
                     }
                 });
 
+    }
+
+    // get new account information pass by sign up activity
+    public User getCreateAccountInfo() {
+        String password = getIntent().getExtras().getString("signup_password");
+        String name = getIntent().getExtras().getString("signup_name");
+
+        String normalizedFullName = name.toLowerCase();
+        normalizedFullName = normalizedFullName.trim().replaceAll("\\s{2,}", " ");
+
+        String imageUrl = getIntent().getExtras().getString("signup_imageUrl");
+
+        User user;
+        if (imageUrl.equals(getString(R.string.default_profile_image_url))) {
+            user = new User(normalizedFullName, email, password, imageUrl, false);
+        } else {
+            uploadImage = imageUrl;
+            user = new User(normalizedFullName, email, password, "", false);
+        }
+        return user;
+    }
+
+    // start background service to update profile image
+    public void startUpdateImageWorkManager(String newUserId) {
+        Data data = new Data.Builder()
+                .putString("image_url", uploadImage)
+                .putString("userId", newUserId)
+                .putBoolean("update_UI", false)
+                .build();
+
+        WorkRequest imageUpdateWorkRequest = new OneTimeWorkRequest.
+                Builder(ImageUpdateWorkManager.class)
+                .setInputData(data)
+                .build();
+
+        WorkManager.getInstance(this)
+                .enqueue(imageUpdateWorkRequest);
     }
 
     // show progress bar when user click on register button

@@ -3,6 +3,7 @@ package com.example.smartcitytravel.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.example.smartcitytravel.Activities.SeeAllReview.SeeAllReviewActivity;
 import com.example.smartcitytravel.Activities.WriteReview.WriteReviewActivity;
 import com.example.smartcitytravel.DataModel.PlaceDetail;
 import com.example.smartcitytravel.DataModel.Review;
 import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.RecyclerView.ReviewRecyclerViewAdapter;
+import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.FragmentReviewBinding;
@@ -31,6 +34,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ReviewFragment extends Fragment {
     private FragmentReviewBinding binding;
@@ -40,6 +45,7 @@ public class ReviewFragment extends Fragment {
     private PreferenceHandler preferenceHandler;
     private User user;
     private Review review;
+    private Connection connection;
 
     // called by launch() and pass write review activity as intent
     private ActivityResultLauncher<Intent> writeReviewResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -77,6 +83,7 @@ public class ReviewFragment extends Fragment {
         preferenceHandler = new PreferenceHandler();
         db = FirebaseFirestore.getInstance();
         review = new Review();
+        connection = new Connection();
     }
 
     @Override
@@ -91,20 +98,91 @@ public class ReviewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         user = preferenceHandler.getLoggedInAccountPreference(requireActivity());
+        checkConnectionAndLoadReviews();
+    }
 
-        loadReview();
-        setRating();
+    // load other people reviews and set recycler view
+    public void loadUsersReview() {
+        db.collection("review")
+                .whereEqualTo("placeId", placeDetail.getPlaceId())
+                .whereNotEqualTo("userId", user.getUserId())
+                .get()
+                .addOnSuccessListener(requireActivity(), new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            ArrayList<Review> allReviewList = new ArrayList<>();
+                            ArrayList<User> userList = new ArrayList<>();
+
+                            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                                Review review = querySnapshot.toObject(Review.class);
+
+                                if (!review.getFeedback().isEmpty()) {
+                                    allReviewList.add(review);
+                                }
+                            }
+
+                            if (allReviewList.size() == 0) {
+                                binding.checkConnectionLayout.loadingBar.setVisibility(View.GONE);
+                                binding.UILayout.setVisibility(View.VISIBLE);
+                            } else if (allReviewList.size() <= 2) {
+                                getUsersInfo(allReviewList);
+                            } else {
+                                ArrayList<Review> reviewList = new ArrayList<>(allReviewList.subList(0, 2));
+                                getUsersInfo(reviewList);
+                                binding.seeAllReviewButton.setVisibility(View.VISIBLE);
+                                moveToSeeAllReview();
+                            }
+
+                        } else {
+                            binding.checkConnectionLayout.loadingBar.setVisibility(View.GONE);
+                            binding.UILayout.setVisibility(View.VISIBLE);
+                        }
 
 
+                    }
+                });
     }
 
     // create and show review recycler view
-    public void createReviewRecyclerView(ArrayList<Review> reviewList) {
-        ReviewRecyclerViewAdapter reviewRecyclerViewAdapter = new ReviewRecyclerViewAdapter(requireActivity(), reviewList);
+    public void createUserReviewRecyclerView(ArrayList<Review> reviewList, ArrayList<User> userList) {
+        ReviewRecyclerViewAdapter reviewRecyclerViewAdapter = new ReviewRecyclerViewAdapter(
+                requireActivity(), reviewList, userList, true);
 
-        binding.reviewRecyclerView.setAdapter(reviewRecyclerViewAdapter);
-        binding.reviewRecyclerView.setHasFixedSize(true);
-        binding.reviewRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        binding.userReviewRecyclerView.setAdapter(reviewRecyclerViewAdapter);
+        binding.userReviewRecyclerView.setHasFixedSize(true);
+        binding.userReviewRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+    }
+
+    // get info of users who review place and then create recyclerview
+    public void getUsersInfo(ArrayList<Review> reviewList) {
+        ArrayList<User> userList = new ArrayList<>();
+        db.collection("user")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            for (Review review : reviewList) {
+
+                                for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                                    User user = querySnapshot.toObject(User.class);
+                                    user.setUserId(querySnapshot.getId());
+
+                                    if (review.getUserId().equals(user.getUserId())) {
+                                        userList.add(user);
+                                        break;
+                                    }
+                                }
+
+                            }
+                            createUserReviewRecyclerView(reviewList, userList);
+                            binding.checkConnectionLayout.loadingBar.setVisibility(View.GONE);
+                            binding.UILayout.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+                });
     }
 
     // set rating
@@ -144,6 +222,8 @@ public class ReviewFragment extends Fragment {
             binding.editReviewOption.reviewLayout.reviewTxt.setText(review.getFeedback());
         }
 
+        limitReviewLength();
+
         binding.editReviewOption.reviewLayout.nameTxt.setText(util.capitalizedName(user.getName()));
         binding.editReviewOption.reviewLayout.ratingBar.setRating(review.getRating());
 
@@ -152,6 +232,29 @@ public class ReviewFragment extends Fragment {
                 .timeout(60000)
                 .into(binding.editReviewOption.reviewLayout.profileImg);
 
+    }
+
+    // limit length of review to 3 lines
+    public void limitReviewLength() {
+        if (binding.editReviewOption.reviewLayout.reviewTxt.getMaxLines() > 3) {
+            binding.editReviewOption.reviewLayout.reviewTxt.setMaxLines(3);
+            binding.editReviewOption.reviewLayout.reviewTxt.setEllipsize(TextUtils.TruncateAt.END);
+        }
+    }
+
+    // expand or collapse review when user click on review when review is greater than 3
+    public void expandOrCollapseReview() {
+        binding.editReviewOption.reviewLayout.reviewLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (binding.editReviewOption.reviewLayout.reviewTxt.getMaxLines() == 3) {
+                    binding.editReviewOption.reviewLayout.reviewTxt.setMaxLines(Integer.MAX_VALUE);
+                } else if (binding.editReviewOption.reviewLayout.reviewTxt.getMaxLines() > 3) {
+                    binding.editReviewOption.reviewLayout.reviewTxt.setMaxLines(3);
+                    binding.editReviewOption.reviewLayout.reviewTxt.setEllipsize(TextUtils.TruncateAt.END);
+                }
+            }
+        });
     }
 
     // check whether user already review place or not. Update UI based on review existence
@@ -176,15 +279,11 @@ public class ReviewFragment extends Fragment {
                             writeReview();
                             binding.writeReviewOption.writeReviewBtn.setVisibility(View.VISIBLE);
                         }
-
-                        binding.loadingBar.setVisibility(View.GONE);
-                        binding.UILayout.setVisibility(View.VISIBLE);
                     }
                 });
     }
 
-//move to write review activity when user click on edit button under review
-
+    //move to write review activity when user click on edit button under review
     public void editReview(Review review) {
         binding.editReviewOption.editReviewTxt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,4 +306,62 @@ public class ReviewFragment extends Fragment {
         super.onDestroyView();
     }
 
+    // move to see all review activity to show all reviews
+    public void moveToSeeAllReview() {
+        binding.seeAllReviewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireActivity(), SeeAllReviewActivity.class);
+                intent.putExtra("placeId", placeDetail.getPlaceId());
+                intent.putExtra("userId", user.getUserId());
+                startActivity(intent);
+            }
+        });
+
+    }
+
+
+    // check connection exist or not. If exist than load reviews
+    public void checkConnectionAndLoadReviews() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Boolean internetAvailable = connection.isConnectionSourceAndInternetAvailable(requireActivity());
+
+                requireActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (internetAvailable) {
+                            loadReview();
+                            setRating();
+                            expandOrCollapseReview();
+                            loadUsersReview();
+                        } else {
+                            binding.checkConnectionLayout.loadingBar.setVisibility(View.GONE);
+                            binding.checkConnectionLayout.noConnectionLayout.setVisibility(View.VISIBLE);
+                            retryConnection();
+                        }
+
+
+                    }
+                });
+            }
+        });
+        executor.shutdown();
+    }
+
+    //run when user click on retry icon
+    public void retryConnection() {
+        binding.checkConnectionLayout.retryConnection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.checkConnectionLayout.loadingBar.setVisibility(View.VISIBLE);
+                binding.checkConnectionLayout.noConnectionLayout.setVisibility(View.GONE);
+
+                checkConnectionAndLoadReviews();
+            }
+        });
+
+    }
 }

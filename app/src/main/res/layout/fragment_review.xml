@@ -5,83 +5,99 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.DescriptionFragment">
 
-    <RelativeLayout
-        android:id="@+id/UILayout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginHorizontal="10dp"
-        android:visibility="gone">
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
 
         <RelativeLayout
-            android:id="@+id/avgRatingTxtLayout"
-            android:layout_width="wrap_content"
+            android:id="@+id/UILayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true">
+            android:visibility="invisible">
 
-            <TextView
-                android:id="@+id/avgRatingTxt"
+            <RelativeLayout
+                android:id="@+id/avgRatingTxtLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/_0_0"
-                android:textColor="@color/black"
-                android:textSize="50sp" />
+                android:layout_centerHorizontal="true">
 
-            <TextView
-                android:id="@+id/totalRatingTxt"
+                <TextView
+                    android:id="@+id/avgRatingTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_0_0"
+                    android:textColor="@color/black"
+                    android:textSize="50sp" />
+
+                <TextView
+                    android:id="@+id/totalRatingTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/avgRatingTxt"
+                    android:layout_toEndOf="@id/avgRatingTxt"
+                    android:text="@string/_5"
+                    android:textColor="@color/default_black"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+
+            <RatingBar
+                android:id="@+id/avgRatingBar"
+                style="?android:attr/ratingBarStyleIndicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/avgRatingTxt"
-                android:layout_toEndOf="@id/avgRatingTxt"
-                android:text="@string/_5"
-                android:textColor="@color/default_black"
-                android:textSize="15sp" />
-        </RelativeLayout>
+                android:layout_below="@id/avgRatingTxtLayout"
+                android:layout_centerHorizontal="true"
+                android:numStars="5"
+                android:stepSize="0.1"
+                android:theme="@style/RatingBarColor" />
 
-        <RatingBar
-            android:id="@+id/avgRatingBar"
-            style="?android:attr/ratingBarStyleIndicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/avgRatingTxtLayout"
-            android:layout_centerHorizontal="true"
-            android:numStars="5"
-            android:stepSize="0.1"
-            android:theme="@style/RatingBarColor" />
-
-        <RelativeLayout
-            android:id="@+id/reviewOption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/avgRatingBar"
-            android:layout_centerHorizontal="true">
-
-            <include
-                android:id="@+id/writeReviewOption"
-                layout="@layout/write_review_option"
+            <RelativeLayout
+                android:id="@+id/reviewOption"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_below="@id/avgRatingBar"
+                android:layout_centerHorizontal="true">
 
-            <include
-                android:id="@+id/editReviewOption"
-                layout="@layout/edit_review_option"
+                <include
+                    android:id="@+id/writeReviewOption"
+                    layout="@layout/write_review_option"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    android:id="@+id/editReviewOption"
+                    layout="@layout/edit_review_option"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/userReviewRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp" />
+                android:layout_below="@id/reviewOption"
+                android:layout_marginTop="20dp"
+                android:nestedScrollingEnabled="false" />
+
+            <Button
+                android:id="@+id/seeAllReviewButton"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/userReviewRecyclerView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:text="@string/see_all_reviews"
+                android:textAllCaps="false"
+                android:textColor="@color/theme_light"
+                android:textSize="15sp"
+                android:visibility="gone" />
         </RelativeLayout>
+    </ScrollView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/reviewRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/reviewOption" />
-
-
-    </RelativeLayout>
-
-    <ProgressBar
-        android:id="@+id/loadingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:indeterminate="true" />
+    <include
+        android:id="@+id/checkConnectionLayout"
+        layout="@layout/no_connection" />
 </RelativeLayout>
