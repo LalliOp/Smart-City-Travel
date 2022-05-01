@@ -35,7 +35,7 @@ public class SeeAllReviewActivity extends AppCompatActivity {
     private boolean loading;
     private String placeId;
     private String userId;
-    private DocumentSnapshot lastDocumentSnapshot;
+    private DocumentSnapshot lastLoadedReview;
     private ReviewRecyclerViewAdapter reviewRecyclerViewAdapter;
 
     @Override
@@ -57,7 +57,7 @@ public class SeeAllReviewActivity extends AppCompatActivity {
         connection = new Connection();
         placeId = getIntent().getExtras().getString("placeId");
         userId = getIntent().getExtras().getString("userId");
-        lastDocumentSnapshot = null;
+        lastLoadedReview = null;
         loading = false;
     }
 
@@ -102,14 +102,14 @@ public class SeeAllReviewActivity extends AppCompatActivity {
                 .whereEqualTo("placeId", placeId)
                 .whereNotEqualTo("userId", userId)
                 .orderBy("userId")
-                .limit(5)
+                .limit(15)
                 .get()
                 .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if (!queryDocumentSnapshots.isEmpty()) {
 
-                            lastDocumentSnapshot = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                            lastLoadedReview = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
 
                             for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
                                 Review review = querySnapshot.toObject(Review.class);
@@ -200,6 +200,12 @@ public class SeeAllReviewActivity extends AppCompatActivity {
 
     }
 
+    // invisible progress bar when reviews are loaded or no review found
+    public void inVisibleLoadMoreProgressBar() {
+        binding.loadMoreProgressBar.setVisibility(View.INVISIBLE);
+
+    }
+
     // check internet connection exist or not. If exist load more review from database
     public void checkConnectionAndLoadMoreUsersReview() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(this);
@@ -221,7 +227,7 @@ public class SeeAllReviewActivity extends AppCompatActivity {
                             loadMoreUsersReview();
                         } else {
                             Toast.makeText(SeeAllReviewActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
-                            hideLoadMoreProgressBar();
+                            inVisibleLoadMoreProgressBar();
                             binding.loadMoreNoConnectionImg.setVisibility(View.VISIBLE);
                             tryLoadMoreReviewConnection();
                         }
@@ -241,15 +247,15 @@ public class SeeAllReviewActivity extends AppCompatActivity {
                 .whereNotEqualTo("userId", userId)
                 .whereEqualTo("placeId", placeId)
                 .orderBy("userId")
-                .startAfter(lastDocumentSnapshot)
-                .limit(5)
+                .startAfter(lastLoadedReview)
+                .limit(15)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
                         if (!queryDocumentSnapshots.isEmpty()) {
-                            lastDocumentSnapshot = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                            lastLoadedReview = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
 
                             for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
 

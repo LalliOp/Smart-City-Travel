@@ -7,7 +7,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.Activities.PlaceRecyclerView.PlaceRecyclerViewActivity;
+import com.example.smartcitytravel.Activities.PlaceList.PlaceListActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityDestinationBinding;
@@ -53,7 +53,7 @@ public class DestinationActivity extends AppCompatActivity {
 
     //move to place activity which show different places of selected city
     public void moveToPlaceRecyclerViewActivity(String destination_name) {
-        Intent intent = new Intent(this, PlaceRecyclerViewActivity.class);
+        Intent intent = new Intent(this, PlaceListActivity.class);
         intent.putExtra("destination_name", destination_name);
         startActivity(intent);
     }

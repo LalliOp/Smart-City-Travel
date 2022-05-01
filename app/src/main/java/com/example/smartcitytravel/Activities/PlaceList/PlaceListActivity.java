@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.PlaceRecyclerView;
+package com.example.smartcitytravel.Activities.PlaceList;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -14,7 +14,7 @@ import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.RecyclerView.PlaceRecyclerViewAdapter;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
-import com.example.smartcitytravel.databinding.ActivityPlaceRecyclerViewBinding;
+import com.example.smartcitytravel.databinding.ActivityPlaceListBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class PlaceRecyclerViewActivity extends AppCompatActivity {
-    private ActivityPlaceRecyclerViewBinding binding;
+public class PlaceListActivity extends AppCompatActivity {
+    private ActivityPlaceListBinding binding;
     private Util util;
     private Connection connection;
     private Toast noConnectionToast;
@@ -42,12 +42,10 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityPlaceRecyclerViewBinding.inflate(getLayoutInflater());
+        binding = ActivityPlaceListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
         initialize();
-        getParentActivityIntent();
         setToolbar();
         checkConnectionAndGetPlaces();
     }
@@ -68,8 +66,8 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
     //add toolbar in activity and customize status bar color
     public void setToolbar() {
-        util.setStatusBarColor(PlaceRecyclerViewActivity.this, R.color.theme_light);
-        util.addToolbar(PlaceRecyclerViewActivity.this, binding.toolbarLayout.toolbar, city);
+        util.setStatusBarColor(PlaceListActivity.this, R.color.theme_light);
+        util.addToolbar(PlaceListActivity.this, binding.toolbarLayout.toolbar, city);
     }
 
     //check internet connection exist or not. If exist load places
@@ -78,7 +76,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Boolean internetAvailable = connection.isConnectionSourceAndInternetAvailable(PlaceRecyclerViewActivity.this);
+                Boolean internetAvailable = connection.isConnectionSourceAndInternetAvailable(PlaceListActivity.this);
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -166,7 +164,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
         binding.popularRecyclerView.setAdapter(placeRecyclerViewAdapter);
         binding.popularRecyclerView.setHasFixedSize(true);
         binding.popularRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        binding.popularRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 15, 0));
+        binding.popularRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
     }
 
     //retry to get all places which is unable to get when click on popular retry button
@@ -191,8 +189,10 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
     //get restaurant places from database and pass to recycler view
     public void getRestaurantPlaces() {
+        String placeType = "Restaurant";
+
         placeCollection.whereEqualTo("City", city)
-                .whereEqualTo("Place_type", "Restaurant")
+                .whereEqualTo("Place_type", placeType)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -210,9 +210,9 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
 //                            Collections.shuffle(restaurantPlaceList);
 //
-//                            ArrayList<Place> placeList = new ArrayList<>(restaurantPlaceList.subList(0, restaurantPlaceList.size() - 1));
+//                            ArrayList<Place> placeList = new ArrayList<>(restaurantPlaceList.subList(0, 10));
 
-                            showRestaurantPlaces(restaurantPlaceList);
+                            showRestaurantPlaces(restaurantPlaceList, placeType);
 
                             restaurantPlacesAvailable = true;
 
@@ -228,13 +228,14 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
     }
 
     //create recyclerview and show restaurant places
-    public void showRestaurantPlaces(ArrayList<Place> restaurantPlaceList) {
-        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this, restaurantPlaceList);
+    public void showRestaurantPlaces(ArrayList<Place> restaurantPlaceList, String placeType) {
+        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this,
+                restaurantPlaceList, true, "Restaurants", placeType);
 
         binding.restaurantRecyclerView.setAdapter(placeRecyclerViewAdapter);
         binding.restaurantRecyclerView.setHasFixedSize(true);
         binding.restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        binding.restaurantRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 15, 0));
+        binding.restaurantRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
     }
 
     //retry to get all places which is unable to get when click on restaurant retry button
@@ -251,8 +252,9 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
     //get famous spots from database
     public void getFamousSpots() {
+        String placeType = "Tourism_spot";
         placeCollection.whereEqualTo("City", city)
-                .whereEqualTo("Place_type", "Tourism_spot")
+                .whereEqualTo("Place_type", placeType)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -271,7 +273,7 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 //
 //                            ArrayList<Place> placeList = new ArrayList<>(famousSpotList.subList(0, famousSpotList.size() - 1));
 
-                            showFamousSpots(famousSpotList);
+                            showFamousSpots(famousSpotList, placeType);
 
                             famousSpotsAvailable = true;
 
@@ -286,13 +288,14 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
     }
 
     //create recyclerview and show famous spots
-    public void showFamousSpots(ArrayList<Place> famousSpotList) {
-        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this, famousSpotList);
+    public void showFamousSpots(ArrayList<Place> famousSpotList, String placeType) {
+        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this,
+                famousSpotList, true, "Famous Spots", placeType);
 
         binding.famousSpotRecyclerView.setAdapter(placeRecyclerViewAdapter);
         binding.famousSpotRecyclerView.setHasFixedSize(true);
         binding.famousSpotRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        binding.famousSpotRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 15, 0));
+        binding.famousSpotRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
     }
 
     //retry to get all places which is unable to get when click on famous spots retry button
@@ -309,8 +312,9 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
 
     //get hotel places from database and pass to recycler view
     public void getHotelPlaces() {
+        String placeType = "Hotel";
         placeCollection.whereEqualTo("City", city)
-                .whereEqualTo("Place_type", "Hotel")
+                .whereEqualTo("Place_type", placeType)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -325,12 +329,12 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
                                 hotelPlaceList.add(place);
 
                             }
-
+                            Toast.makeText(PlaceListActivity.this, hotelPlaceList.size() + "", Toast.LENGTH_SHORT).show();
 //                            Collections.shuffle(hotelPlaceList);
 //
 //                            ArrayList<Place> placeList = new ArrayList<>(hotelPlaceList.subList(0, hotelPlaceList.size() - 1));
 
-                            showHotelPlaces(hotelPlaceList);
+                            showHotelPlaces(hotelPlaceList, placeType);
 
                             hotelPlacesAvailable = true;
 
@@ -345,13 +349,14 @@ public class PlaceRecyclerViewActivity extends AppCompatActivity {
     }
 
     //create recyclerview and show hotel places
-    public void showHotelPlaces(ArrayList<Place> hotelPlaceList) {
-        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this, hotelPlaceList);
+    public void showHotelPlaces(ArrayList<Place> hotelPlaceList, String placeType) {
+        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this,
+                hotelPlaceList, true, "Hotels", placeType);
 
         binding.hotelRecyclerView.setAdapter(placeRecyclerViewAdapter);
         binding.hotelRecyclerView.setHasFixedSize(true);
         binding.hotelRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        binding.hotelRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 15, 0));
+        binding.hotelRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
     }
 
     //retry to get all places which is unable to get when click on hotel retry button

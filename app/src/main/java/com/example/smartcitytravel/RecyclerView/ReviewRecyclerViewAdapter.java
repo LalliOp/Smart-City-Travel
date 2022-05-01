@@ -23,8 +23,6 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
     private Context context;
     private Util util;
     private boolean trimReviewLength;
-    private final static int REVIEW_TYPE = 0;
-    private final static int LOAD_TYPE = 1;
 
     public ReviewRecyclerViewAdapter(Context context, ArrayList<Review> reviewList, ArrayList<User> userList, boolean trimReviewLength) {
         this.context = context;
@@ -69,10 +67,12 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
         }
     }
 
+    // set more data and notify in recyclerview
     public void setData(ArrayList<Review> reviewList, ArrayList<User> userList) {
+        int insertPosition = this.reviewList.size();
         this.reviewList.addAll(reviewList);
         this.userList.addAll(userList);
-        notifyItemInserted(this.reviewList.size());
+        notifyItemInserted(insertPosition);
     }
 
     // set data in recycler view

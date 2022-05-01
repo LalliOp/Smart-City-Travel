@@ -29,7 +29,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
     private ActivityPlaceDetailBinding binding;
     private Util util;
     private Connection connection;
-    private PreferenceHandler preferenceHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +40,12 @@ public class PlaceDetailActivity extends AppCompatActivity {
         initialize();
         setToolbar();
         checkConnectionAndGetPlaceDetail();
-
     }
 
     //initialize variables
     public void initialize() {
         util = new Util();
         connection = new Connection();
-        preferenceHandler = new PreferenceHandler();
     }
 
     //add toolbar in activity and customize status bar color

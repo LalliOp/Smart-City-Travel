@@ -1,6 +1,8 @@
 package com.example.smartcitytravel.DataModel;
 
-public class Place {
+import java.io.Serializable;
+
+public class Place implements Serializable {
     private String placeId;
     private String Name;
     private String Image1;
