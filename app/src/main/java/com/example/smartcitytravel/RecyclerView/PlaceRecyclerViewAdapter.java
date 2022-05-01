@@ -76,7 +76,12 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public int getItemCount() {
-        return placeArrayList.size() + 1;
+        if (enableShowMoreOption) {
+            return placeArrayList.size() + 1;
+        } else {
+            return placeArrayList.size();
+
+        }
     }
 
     @Override

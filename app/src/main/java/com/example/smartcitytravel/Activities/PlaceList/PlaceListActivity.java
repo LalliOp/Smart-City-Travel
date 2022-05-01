@@ -329,7 +329,6 @@ public class PlaceListActivity extends AppCompatActivity {
                                 hotelPlaceList.add(place);
 
                             }
-                            Toast.makeText(PlaceListActivity.this, hotelPlaceList.size() + "", Toast.LENGTH_SHORT).show();
 //                            Collections.shuffle(hotelPlaceList);
 //
 //                            ArrayList<Place> placeList = new ArrayList<>(hotelPlaceList.subList(0, hotelPlaceList.size() - 1));

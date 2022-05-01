@@ -122,8 +122,6 @@ public class ShowMorePlaceActivity extends AppCompatActivity {
                             binding.loadMoreProgressBar.setVisibility(View.INVISIBLE);
                             retryConnection();
                         }
-
-
                     }
                 });
             }
