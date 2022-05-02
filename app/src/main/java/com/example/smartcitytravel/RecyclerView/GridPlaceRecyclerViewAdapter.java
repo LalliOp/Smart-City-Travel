@@ -19,11 +19,11 @@ import com.example.smartcitytravel.databinding.BiggerPlaceViewBinding;
 
 import java.util.ArrayList;
 
-public class ShowMorePlaceRecyclerViewAdapter extends RecyclerView.Adapter<ShowMorePlaceRecyclerViewAdapter.PlaceViewHolder> {
+public class GridPlaceRecyclerViewAdapter extends RecyclerView.Adapter<GridPlaceRecyclerViewAdapter.PlaceViewHolder> {
     private ArrayList<Place> placeList;
     private Context context;
 
-    public ShowMorePlaceRecyclerViewAdapter(Context context, ArrayList<Place> placeList) {
+    public GridPlaceRecyclerViewAdapter(Context context, ArrayList<Place> placeList) {
         this.context = context;
         this.placeList = placeList;
     }
@@ -81,8 +81,33 @@ public class ShowMorePlaceRecyclerViewAdapter extends RecyclerView.Adapter<ShowM
         notifyItemInserted(insertPosition);
     }
 
+    // get data
     public ArrayList<Place> getData() {
         return placeList;
+    }
+
+    // remove all data
+    public void clearData() {
+        placeList.clear();
+        notifyItemRangeRemoved(0, getItemCount());
+    }
+
+    // remove place which is not exist in new place list
+    public void removeData(ArrayList<Place> newPlaceList) {
+        for (int i = 0; i < this.placeList.size(); i++) {
+            boolean placeExist = false;
+            for (int j = 0; j < newPlaceList.size(); j++) {
+                if (placeList.get(i).getPlaceId().equals(newPlaceList.get(j).getPlaceId())) {
+                    placeExist = true;
+                    break;
+                }
+            }
+            if (!placeExist) {
+                this.placeList.remove(i);
+                notifyItemRemoved(i);
+            }
+        }
+
     }
 
     // zoom in animation

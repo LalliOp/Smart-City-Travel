@@ -21,6 +21,10 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private Util util;
 
+    public HomeFragment() {
+        util = new Util();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -29,10 +33,8 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
-        util = new Util();
-
+        util.setStatusBarColor(requireActivity(), R.color.black);
         setLoadingBarColor();
         openLiveChat();
         moveToDestinationActivity();

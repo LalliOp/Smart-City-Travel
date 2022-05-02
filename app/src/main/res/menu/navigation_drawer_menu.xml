@@ -8,6 +8,10 @@
             android:icon="@drawable/ic_home"
             android:title="@string/home" />
         <item
+            android:id="@+id/favorite_menu"
+            android:icon="@drawable/ic_favorite"
+            android:title="@string/favorites" />
+        <item
             android:id="@+id/settings_menu"
             android:icon="@drawable/ic_settings"
             android:title="@string/settings" />
@@ -15,9 +19,5 @@
             android:id="@+id/about_us_menu"
             android:icon="@drawable/ic_about_us"
             android:title="@string/about_us" />
-        <item
-            android:id="@+id/logout_menu"
-            android:icon="@drawable/ic_logout"
-            android:title="@string/logout" />
     </group>
 </menu>

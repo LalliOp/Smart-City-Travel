@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartcitytravel.Activities.ItemDecoration.GridSpaceItemDecoration;
 import com.example.smartcitytravel.DataModel.Place;
 import com.example.smartcitytravel.R;
-import com.example.smartcitytravel.RecyclerView.ShowMorePlaceRecyclerViewAdapter;
+import com.example.smartcitytravel.RecyclerView.GridPlaceRecyclerViewAdapter;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityShowMorePlaceBinding;
@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 public class ShowMorePlaceActivity extends AppCompatActivity {
     private ActivityShowMorePlaceBinding binding;
     private Util util;
-    private ShowMorePlaceRecyclerViewAdapter placeRecyclerViewAdapter;
+    private GridPlaceRecyclerViewAdapter placeRecyclerViewAdapter;
     private boolean loading;
     private DocumentSnapshot lastLoadedPlace;
     private String placeType;
@@ -75,7 +75,7 @@ public class ShowMorePlaceActivity extends AppCompatActivity {
     public void createRecyclerView() {
         ArrayList<Place> placeList = (ArrayList<Place>) getIntent().getExtras().getSerializable("placeList");
 
-        placeRecyclerViewAdapter = new ShowMorePlaceRecyclerViewAdapter(this,
+        placeRecyclerViewAdapter = new GridPlaceRecyclerViewAdapter(this,
                 placeList);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);

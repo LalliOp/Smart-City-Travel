@@ -324,9 +324,13 @@ public class WriteReviewActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            backPressed = true;
-            util.hideKeyboard(this);
-            showUpdateReviewConfirmationDialog();
+            if (updateReview || updateRating) {
+                backPressed = true;
+                util.hideKeyboard(this);
+                showUpdateReviewConfirmationDialog();
+            } else {
+                finish();
+            }
             return true;
         } else {
             return super.onOptionsItemSelected(item);

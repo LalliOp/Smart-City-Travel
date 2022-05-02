@@ -19,14 +19,15 @@ import androidx.core.view.GravityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
-import com.example.smartcitytravel.DataModel.User;
+import com.example.smartcitytravel.Activities.EditProfile.EditProfileActivity;
+import com.example.smartcitytravel.Activities.Login.LoginActivity;
 import com.example.smartcitytravel.Broadcast.UpdateProfileImageBroadcast;
 import com.example.smartcitytravel.Broadcast.UpdateProfileNameBroadcast;
-import com.example.smartcitytravel.Activities.EditProfile.EditProfileActivity;
+import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.Fragments.AboutUsFragment;
+import com.example.smartcitytravel.Fragments.FavoriteFragment;
 import com.example.smartcitytravel.Fragments.HomeFragment;
 import com.example.smartcitytravel.Fragments.SettingsFragment;
-import com.example.smartcitytravel.Activities.Login.LoginActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
@@ -62,6 +63,7 @@ public class HomeActivity extends AppCompatActivity {
         navigationDrawerToggle();
         selectFragmentFromDrawer();
         editUserProfile();
+        onLogoutButtonClicked();
 
     }
 
@@ -114,30 +116,64 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         if (item.getItemId() == R.id.home_menu) {
-                            getSupportFragmentManager().beginTransaction()
-                                    .setReorderingAllowed(true)
-                                    .replace(binding.fragmentContainer.getId(), new HomeFragment())
-                                    .commit();
+                            createHomeFragment();
+                            setNavigationDrawerIcon(R.drawable.ic_light_white_navigation_drawer_menu);
+                        } else if (item.getItemId() == R.id.favorite_menu) {
+                            createFavoriteFragment();
+                            setNavigationDrawerIcon(R.drawable.ic_white_navigation_drawer_menu);
                         } else if (item.getItemId() == R.id.settings_menu) {
-                            getSupportFragmentManager().beginTransaction()
-                                    .setReorderingAllowed(true)
-                                    .replace(binding.fragmentContainer.getId(), new SettingsFragment())
-                                    .commit();
+                            createSettingsFragment();
+                            setNavigationDrawerIcon(R.drawable.ic_light_white_navigation_drawer_menu);
                         } else if (item.getItemId() == R.id.about_us_menu) {
-                            getSupportFragmentManager().beginTransaction()
-                                    .setReorderingAllowed(true)
-                                    .replace(binding.fragmentContainer.getId(), new AboutUsFragment())
-                                    .commit();
-                        } else if (item.getItemId() == R.id.logout_menu) {
-                            showLogoutDialog("Logout", "Do you want to logout?");
+                            createAboutUsFragment();
+                            setNavigationDrawerIcon(R.drawable.ic_light_white_navigation_drawer_menu);
                         }
-
                         binding.drawerLayout.closeDrawer(GravityCompat.START);
                         return true;
                     }
                 });
 
     }
+
+    // set icon for navigation drawer button
+    public void setNavigationDrawerIcon(int drawableId) {
+        Glide.with(HomeActivity.this)
+                .load(drawableId)
+                .into(binding.navigationDrawerImg);
+    }
+
+    // create home fragment
+    public void createHomeFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(binding.fragmentContainer.getId(), new HomeFragment())
+                .commit();
+    }
+
+    // create favorite fragment
+    public void createFavoriteFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(binding.fragmentContainer.getId(), new FavoriteFragment())
+                .commit();
+    }
+
+    // create settings fragment
+    public void createSettingsFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(binding.fragmentContainer.getId(), new SettingsFragment())
+                .commit();
+    }
+
+    // create about us fragment
+    public void createAboutUsFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(binding.fragmentContainer.getId(), new AboutUsFragment())
+                .commit();
+    }
+
 
     //open and close navigation drawer
     public void navigationDrawerToggle() {
@@ -176,6 +212,18 @@ public class HomeActivity extends AppCompatActivity {
             super.onBackPressed();
         }
 
+    }
+
+    //show logout dialog when user click on logout button
+    public void onLogoutButtonClicked() {
+        binding.logoutLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.drawerLayout.closeDrawer(GravityCompat.START);
+
+                showLogoutDialog("Logout", "Do you want to logout?");
+            }
+        });
     }
 
     //create layout of dialog and set title and message in dialog textview
@@ -242,7 +290,7 @@ public class HomeActivity extends AppCompatActivity {
 
             GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
-            googleSignInClient.signOut().addOnCompleteListener(this,new OnCompleteListener<Void>() {
+            googleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {

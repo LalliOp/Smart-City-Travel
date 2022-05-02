@@ -49,7 +49,7 @@ public class ImageUpdateWorkManager extends Worker {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference().child("profile-images");
 
-        String imageName = getImageName();
+        String imageName = generateImageName();
 
         StorageReference imageReference = storageReference.child(imageName);
         UploadTask uploadImage = imageReference.putFile(imageUri);
@@ -95,7 +95,7 @@ public class ImageUpdateWorkManager extends Worker {
     }
 
     //create name for image file
-    public String getImageName() {
+    public String generateImageName() {
         int startIndex = imageUri.getLastPathSegment().lastIndexOf("/");
         int endIndex = imageUri.getLastPathSegment().lastIndexOf(".");
 

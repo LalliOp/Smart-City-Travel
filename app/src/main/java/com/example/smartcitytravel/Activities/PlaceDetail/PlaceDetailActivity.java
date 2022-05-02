@@ -3,9 +3,14 @@ package com.example.smartcitytravel.Activities.PlaceDetail;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.example.smartcitytravel.DataModel.PlaceDetail;
 import com.example.smartcitytravel.R;
@@ -14,12 +19,15 @@ import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.ViewPager2Adapter.PlaceDetailPagerAdapter;
+import com.example.smartcitytravel.WorkManager.AddToFavoriteWorkManager;
+import com.example.smartcitytravel.WorkManager.RemoveFromFavoriteWorkManager;
 import com.example.smartcitytravel.databinding.ActivityPlaceDetailBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -29,6 +37,10 @@ public class PlaceDetailActivity extends AppCompatActivity {
     private ActivityPlaceDetailBinding binding;
     private Util util;
     private Connection connection;
+    private FirebaseFirestore db;
+    private String userId;
+    private PreferenceHandler preferenceHandler;
+    private String placeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +52,18 @@ public class PlaceDetailActivity extends AppCompatActivity {
         initialize();
         setToolbar();
         checkConnectionAndGetPlaceDetail();
+        fillFavorite();
+        blankFavorite();
     }
 
     //initialize variables
     public void initialize() {
         util = new Util();
         connection = new Connection();
+        db = FirebaseFirestore.getInstance();
+        preferenceHandler = new PreferenceHandler();
+        userId = preferenceHandler.getUserIdPreference(this);
+        placeId = getIntent().getExtras().getString("placeId");
     }
 
     //add toolbar in activity and customize status bar color
@@ -53,6 +71,132 @@ public class PlaceDetailActivity extends AppCompatActivity {
         util.setStatusBarColor(PlaceDetailActivity.this, R.color.theme_light);
         util.addToolbar(PlaceDetailActivity.this, binding.toolbarLayout.toolbar, "Detail");
 
+    }
+
+    //change favorite icon to filled pink color and add place in favorite
+    public void fillFavorite() {
+        binding.favoriteBorder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.favoriteBorder.setVisibility(View.GONE);
+                binding.favoriteFilled.setVisibility(View.VISIBLE);
+
+                checkConnectionAndAddToFavorite();
+            }
+        });
+
+    }
+
+    // add place in favorite in database
+    public void startAddToFavoriteWorkManager() {
+        Data data = new Data.Builder()
+                .putString("placeId", placeId)
+                .putString("userId", userId)
+                .build();
+
+        WorkRequest addToFavoriteWorkRequest = new OneTimeWorkRequest.
+                Builder(AddToFavoriteWorkManager.class)
+                .setInputData(data)
+                .build();
+
+        WorkManager.getInstance(this)
+                .enqueue(addToFavoriteWorkRequest);
+    }
+
+    //check connection exist or not. If exist then add place to favorite
+    public void checkConnectionAndAddToFavorite() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Boolean isInternetAvailable = connection.isConnectionSourceAndInternetAvailable(PlaceDetailActivity.this);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isInternetAvailable) {
+                            startAddToFavoriteWorkManager();
+                        } else {
+                            Toast.makeText(PlaceDetailActivity.this, "Unable to add in favorites", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+            }
+        });
+        executor.shutdown();
+    }
+
+    //change favorite icon to blank icon and remove place from favorite
+    public void blankFavorite() {
+        binding.favoriteFilled.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.favoriteBorder.setVisibility(View.VISIBLE);
+                binding.favoriteFilled.setVisibility(View.GONE);
+
+                checkConnectionAndRemoveFromFavorite();
+            }
+        });
+    }
+
+    // remove favorite place from database
+    public void startRemoveFromFavoriteWorkManager() {
+        Data data = new Data.Builder()
+                .putString("placeId", placeId)
+                .putString("userId", userId)
+                .build();
+
+        WorkRequest removeFromFavoriteWorkRequest = new OneTimeWorkRequest.
+                Builder(RemoveFromFavoriteWorkManager.class)
+                .setInputData(data)
+                .build();
+
+        WorkManager.getInstance(this)
+                .enqueue(removeFromFavoriteWorkRequest);
+
+
+    }
+
+    //check connection exist or not. If exist then remove place from favorites
+    public void checkConnectionAndRemoveFromFavorite() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Boolean isInternetAvailable = connection.isConnectionSourceAndInternetAvailable(PlaceDetailActivity.this);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isInternetAvailable) {
+                            startRemoveFromFavoriteWorkManager();
+                        } else {
+                            Toast.makeText(PlaceDetailActivity.this, "Unable to remove from favorites", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+            }
+        });
+        executor.shutdown();
+    }
+
+    //check from database whether this place is in favorite place list of user and change favorite icon based on that
+    public void isPlaceFavorite() {
+        db.collection("favorite")
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("placeId", placeId)
+                .get()
+                .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            binding.favoriteBorder.setVisibility(View.GONE);
+                            binding.favoriteFilled.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
     }
 
     //check internet connection exist or not. If exist get place details
@@ -69,6 +213,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
                         if (internetAvailable) {
                             getPlaceDetail();
+                            isPlaceFavorite();
                         } else {
                             binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
                             binding.CheckConnectionLayout.noConnectionLayout.setVisibility(View.VISIBLE);
@@ -98,9 +243,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     // get detail of place from database
     public void getPlaceDetail() {
-        String placeId = getIntent().getExtras().getString("placeId");
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         db.collection("place")
                 .document(placeId)
                 .get()

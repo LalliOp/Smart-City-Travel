@@ -366,6 +366,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 backPressed = true;
                 util.hideKeyboard(EditProfileActivity.this);
                 showApplyChangesConfirmationDialog();
+            } else {
+                finish();
             }
             return true;
         } else {

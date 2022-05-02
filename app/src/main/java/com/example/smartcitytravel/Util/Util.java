@@ -92,4 +92,10 @@ public class Util {
         activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
     }
 
+    //customize and add toolbar without up button
+    public void addToolbarAndNoUpButton(AppCompatActivity activity, Toolbar toolbar, String title) {
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setTitle(title);
+    }
+
 }

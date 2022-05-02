@@ -51,9 +51,32 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="24dp"
+                    android:text="Place Name"
                     android:textSize="22sp" />
 
+                <RelativeLayout
+                    android:id="@+id/favoriteLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp">
+
+                    <ImageView
+                        android:id="@+id/favoriteBorder"
+                        android:layout_width="31dp"
+                        android:layout_height="31dp"
+                        android:src="@drawable/ic_favorite_border" />
+
+                    <ImageView
+                        android:id="@+id/favoriteFilled"
+                        android:layout_width="31dp"
+                        android:layout_height="31dp"
+                        android:src="@drawable/ic_favorite_filled"
+                        android:visibility="gone" />
+                </RelativeLayout>
             </RelativeLayout>
+
 
         </RelativeLayout>
 
