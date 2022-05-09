@@ -19,6 +19,7 @@ public class PreferenceHandler {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("userId", user.getUserId());
         editor.putString("name", user.getName());
+        editor.putString("password", user.getPassword());
         editor.putString("email", user.getEmail());
         editor.putString("image_url", user.getImage_url());
         editor.putBoolean("google_account", user.getGoogle_account());
@@ -33,6 +34,7 @@ public class PreferenceHandler {
         user.setUserId(sharedPreferences.getString("userId", ""));
         user.setName(sharedPreferences.getString("name", ""));
         user.setEmail(sharedPreferences.getString("email", ""));
+        user.setPassword(sharedPreferences.getString("password", ""));
         user.setImage_url(sharedPreferences.getString("image_url", ""));
         user.setGoogle_account(sharedPreferences.getBoolean("google_account", false));
 
@@ -72,6 +74,15 @@ public class PreferenceHandler {
         editor.apply();
     }
 
+    //update password of logged in account
+    public void updatePasswordPreference(String password, Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("password", password);
+        editor.apply();
+    }
+
     //update profile image of logged in account
     public void updateImagePreference(String image_url, Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
@@ -86,6 +97,13 @@ public class PreferenceHandler {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
                 Context.MODE_PRIVATE);
         return sharedPreferences.getString("name", "");
+    }
+
+    //get password of logged in account
+    public String getPasswordPreference(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
+                Context.MODE_PRIVATE);
+        return sharedPreferences.getString("password", "");
     }
 
     //get profile image of logged in account

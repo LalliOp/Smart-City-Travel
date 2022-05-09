@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -97,14 +98,53 @@ public class HomeActivity extends AppCompatActivity {
 
         View headerLayout = binding.navigationView.getHeaderView(0);
 
+        setName(headerLayout, user.getName());
+        setEmail(headerLayout, user.getEmail());
+        setProfileImage(headerLayout, user.getImage_url());
+
+    }
+
+    // set name of user in UI
+    // short name if name is longer than single line
+    public void setName(View headerLayout, String name) {
+
         TextView nameTxt = headerLayout.findViewById(R.id.profileNameTxt);
-        nameTxt.setText(util.capitalizedName(user.getName()));
+        nameTxt.setText(util.capitalizedName(name));
+
+        nameTxt.post(new Runnable() {
+            @Override
+            public void run() {
+                if (nameTxt.getLineCount() > 1) {
+                    nameTxt.setMaxLines(1);
+                    nameTxt.setEllipsize(TextUtils.TruncateAt.END);
+                }
+            }
+        });
+    }
+
+    // set email of user in UI
+    // short email if email is longer than single line
+    public void setEmail(View headerLayout, String email) {
 
         TextView emailTxt = headerLayout.findViewById(R.id.profileEmailTxt);
-        emailTxt.setText(user.getEmail());
+        emailTxt.setText(email);
 
+        emailTxt.post(new Runnable() {
+            @Override
+            public void run() {
+                if (emailTxt.getLineCount() > 1) {
+                    emailTxt.setMaxLines(1);
+                    emailTxt.setEllipsize(TextUtils.TruncateAt.END);
+                }
+            }
+        });
+
+    }
+
+    // set profile image of user in UI
+    public void setProfileImage(View headerLayout, String imageUrl) {
         Glide.with(HomeActivity.this)
-                .load(user.getImage_url())
+                .load(imageUrl)
                 .timeout(60000)
                 .into((ImageView) headerLayout.findViewById(R.id.profileImg));
     }

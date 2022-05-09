@@ -34,8 +34,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:itemVerticalPadding="14dp"
         app:headerLayout="@layout/navigation_drawer_header"
+        app:itemVerticalPadding="14dp"
         app:menu="@menu/navigation_drawer_menu">
 
         <RelativeLayout

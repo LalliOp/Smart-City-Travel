@@ -54,7 +54,6 @@
     <string name="lahore">Lahore</string>
     <string name="islamabad">Islamabad</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="save">Save</string>
     <string name="no_internet_connection">No Internet Connection</string>
     <string name="famous_spot">Famous Spot</string>
     <string name="restaurant">Restaurant</string>
@@ -78,4 +77,9 @@
     <string name="see_all_reviews">see all reviews</string>
     <string name="nothing_to_show">Nothing to show</string>
     <string name="favorites">Favorites</string>
+    <string name="change_password">Change Password</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="save">Save</string>
 </resources>

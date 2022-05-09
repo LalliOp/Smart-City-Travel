@@ -24,6 +24,7 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
 import com.bumptech.glide.Glide;
+import com.example.smartcitytravel.Activities.ChangePassword.ChangePasswordActivity;
 import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
@@ -54,6 +55,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private Toast noConnectionToast;
     private boolean backPressed;
 
+
     //run when launch() function is called
     //get image from gallery and save new image
     private final ActivityResultLauncher<Intent> imagePickerActivityResultLauncher = registerForActivityResult(
@@ -77,7 +79,6 @@ public class EditProfileActivity extends AppCompatActivity {
         binding = ActivityEditProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.saveBtn.setEnabled(false);
         initialize();
         setToolBarTheme();
         setUserProfile();
@@ -86,7 +87,9 @@ public class EditProfileActivity extends AppCompatActivity {
         save();
 
 
+        testing();
     }
+
 
     //initialize variables
     public void initialize() {
@@ -102,6 +105,8 @@ public class EditProfileActivity extends AppCompatActivity {
         newProfileImageSelected = false;
         newProfileName = false;
         backPressed = false;
+
+
     }
 
 
@@ -424,4 +429,15 @@ public class EditProfileActivity extends AppCompatActivity {
             finish();
         }
     }
+
+    public void testing() {
+        binding.changePasswordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EditProfileActivity.this, ChangePasswordActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
 }

@@ -22,8 +22,9 @@ public class Color {
         int whiteColor = context.getResources().getColor(R.color.white);
         return ColorStateList.valueOf(whiteColor);
     }
+
     //create color
-    public ColorStateList createColor(Context context,int colorResId) {
+    public ColorStateList createColor(Context context, int colorResId) {
         int redColor = context.getResources().getColor(colorResId);
         return ColorStateList.valueOf(redColor);
     }
