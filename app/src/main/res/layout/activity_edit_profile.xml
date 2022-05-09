@@ -73,6 +73,7 @@
         android:layout_below="@id/emailLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
+        android:enabled="false"
         android:text="@string/save"
         android:textAllCaps="false" />
 
