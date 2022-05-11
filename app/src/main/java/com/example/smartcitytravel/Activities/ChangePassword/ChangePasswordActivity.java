@@ -1,12 +1,15 @@
 package com.example.smartcitytravel.Activities.ChangePassword;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smartcitytravel.DataModel.User;
+import com.example.smartcitytravel.R;
+import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.Util.Validation;
@@ -14,14 +17,19 @@ import com.example.smartcitytravel.databinding.ActivityChangePasswordBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class ChangePasswordActivity extends AppCompatActivity {
     private ActivityChangePasswordBinding binding;
     private PreferenceHandler preferenceHandler;
     private Validation validation;
     private Util util;
+    private Connection connection;
     private boolean validate_old_password;
     private boolean validate_new_password;
     private boolean validate_confirm_new_password;
+    private boolean validate_different_password;
     private User user;
 
     @Override
@@ -30,17 +38,32 @@ public class ChangePasswordActivity extends AppCompatActivity {
         binding = ActivityChangePasswordBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
+        initialize();
+        setToolBarTheme();
+        save();
+
+    }
+
+    //initialize variables
+    public void initialize() {
         preferenceHandler = new PreferenceHandler();
         validation = new Validation();
         util = new Util();
         user = preferenceHandler.getLoggedInAccountPreference(this);
+        connection = new Connection();
 
         validate_old_password = false;
         validate_new_password = false;
+        validate_different_password = false;
         validate_confirm_new_password = false;
 
-        save();
+    }
 
+    // style and customize toolbar and theme
+    public void setToolBarTheme() {
+        util.setStatusBarColor(this, R.color.theme_light);
+        util.addToolbar(this, binding.toolbarLayout.toolbar, "Change Password");
     }
 
     // check whether existing password is equal to input password
@@ -111,21 +134,64 @@ public class ChangePasswordActivity extends AppCompatActivity {
         validate_confirm_new_password = true;
     }
 
+    // check old password and new password is same or not
+    public void validateDifferentPassword() {
+        String oldPassword = binding.oldPasswordEdit.getText().toString();
+        String newPassword = binding.newPasswordEdit.getText().toString();
+        if (newPassword.equals(oldPassword)) {
+            util.createErrorDialog(this, "Password Issue", "New password should be different from current password");
+            validate_different_password = false;
+        } else {
+            validate_different_password = true;
+        }
+
+    }
+
+    //check connection exist or not. If exist then update password
+    public void checkConnectionAndUpdateNewPassword() {
+        boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(this);
+        if (isConnectionSourceAvailable) {
+            showLoadingBar();
+        }
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Boolean isInternetAvailable = connection.isInternetAvailable();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isInternetAvailable) {
+                            updateNewPassword();
+                        } else {
+                            hideLoadingBar();
+                            Toast.makeText(ChangePasswordActivity.this, "Unable to update password", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+            }
+        });
+        executor.shutdown();
+    }
+
     // save new password in database
     public void updateNewPassword() {
-        if (validate_new_password && validate_old_password && validate_confirm_new_password) {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("user")
-                    .document(user.getUserId())
-                    .update("password", binding.newPasswordEdit.getText().toString())
-                    .addOnSuccessListener(this, new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            preferenceHandler.updatePasswordPreference(binding.newPasswordEdit.getText().toString(), ChangePasswordActivity.this);
-                            Toast.makeText(ChangePasswordActivity.this, "Password changed successfully", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user")
+                .document(user.getUserId())
+                .update("password", binding.newPasswordEdit.getText().toString())
+                .addOnSuccessListener(this, new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        hideLoadingBar();
+                        preferenceHandler.updatePasswordPreference(binding.newPasswordEdit.getText().toString(), ChangePasswordActivity.this);
+                        user.setPassword(binding.newPasswordEdit.getText().toString());
+                        Toast.makeText(ChangePasswordActivity.this, "Password changed successfully", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     //validate and save record in database
@@ -137,8 +203,39 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 validateOldPassword();
                 validateNewPassword();
                 matchNewPasswordAndConfirmNewPassword();
-                updateNewPassword();
+
+                if (validate_new_password && validate_old_password && validate_confirm_new_password) {
+                    validateDifferentPassword();
+
+                    if (validate_different_password) {
+                        checkConnectionAndUpdateNewPassword();
+                    }
+                }
             }
         });
+    }
+
+    // show progress bar
+    public void showLoadingBar() {
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
+        util.makeScreenNotTouchable(this);
+    }
+
+    //hide progressbar
+    public void hideLoadingBar() {
+        binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
+        util.makeScreenTouchable(this);
+    }
+
+    // end this activity when user click on up button (which is back button on top life side)
+    @Override
+    public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+
     }
 }
