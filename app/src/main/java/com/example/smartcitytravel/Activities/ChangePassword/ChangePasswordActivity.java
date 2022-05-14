@@ -139,7 +139,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         String oldPassword = binding.oldPasswordEdit.getText().toString();
         String newPassword = binding.newPasswordEdit.getText().toString();
         if (newPassword.equals(oldPassword)) {
-            util.createErrorDialog(this, "Password Issue", "New password should be different from current password");
+            util.createErrorDialog(this, "Password Issue", "New password should not be same as old password");
             validate_different_password = false;
         } else {
             validate_different_password = true;

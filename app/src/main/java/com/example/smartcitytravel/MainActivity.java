@@ -12,14 +12,12 @@ import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 
 public class MainActivity extends AppCompatActivity {
-    private Connection connection;
     private PreferenceHandler preferenceHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        connection = new Connection();
         preferenceHandler = new PreferenceHandler();
         Util util = new Util();
 
