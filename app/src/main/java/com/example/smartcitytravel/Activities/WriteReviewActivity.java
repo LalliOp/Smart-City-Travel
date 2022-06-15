@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.WriteReview;
+package com.example.smartcitytravel.Activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

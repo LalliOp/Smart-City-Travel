@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.EditProfile;
+package com.example.smartcitytravel.Activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -24,7 +24,6 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
 import com.bumptech.glide.Glide;
-import com.example.smartcitytravel.Activities.ChangePassword.ChangePasswordActivity;
 import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;

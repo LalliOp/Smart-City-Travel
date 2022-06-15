@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.PinCode;
+package com.example.smartcitytravel.Activities;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -17,8 +17,6 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
 import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
-import com.example.smartcitytravel.Activities.ResetPassword.NewPasswordActivity;
-import com.example.smartcitytravel.Activities.SuccessfulAccountMessage.SuccessfulAccountMessageActivity;
 import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Connection;

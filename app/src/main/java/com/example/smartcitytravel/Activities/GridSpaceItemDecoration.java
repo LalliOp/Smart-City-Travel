@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.ItemDecoration;
+package com.example.smartcitytravel.Activities;
 
 import android.graphics.Rect;
 import android.view.View;

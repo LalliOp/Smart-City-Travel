@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.SuccessfulAccountMessage;
+package com.example.smartcitytravel.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.Activities.Login.LoginActivity;
+import com.example.smartcitytravel.Activities.LoginActivity;
 import com.example.smartcitytravel.databinding.ActivitySuccessfulAccountMessageBinding;
 
 public class SuccessfulAccountMessageActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.LiveChat;
+package com.example.smartcitytravel.Activities;
 
 import android.os.Bundle;
 import android.view.View;
@@ -66,10 +66,11 @@ public class LiveChatActivity extends AppCompatActivity {
                 String messageText = binding.enterMessageEdit.getText().toString();
                 if (!messageText.isEmpty()) {
 
-                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm aa", Locale.getDefault());
                     String currentTime = timeFormat.format(new Date());
                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd:MM:yyyy", Locale.getDefault());
                     String currentDate = dateFormat.format(new Date());
+
                     String id = reference.push().getKey();
                     Message message = new Message(id, user.getUserId(), user.getName(), messageText, currentDate, currentTime);
                     reference.child(id).setValue(message).addOnCompleteListener(task -> {

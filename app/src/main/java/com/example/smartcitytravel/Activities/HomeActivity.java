@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.Home;
+package com.example.smartcitytravel.Activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -20,8 +20,6 @@ import androidx.core.view.GravityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
-import com.example.smartcitytravel.Activities.EditProfile.EditProfileActivity;
-import com.example.smartcitytravel.Activities.Login.LoginActivity;
 import com.example.smartcitytravel.Broadcast.UpdateProfileImageBroadcast;
 import com.example.smartcitytravel.Broadcast.UpdateProfileNameBroadcast;
 import com.example.smartcitytravel.DataModel.User;

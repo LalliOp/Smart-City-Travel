@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.Login;
+package com.example.smartcitytravel.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,9 +13,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.Activities.Home.HomeActivity;
-import com.example.smartcitytravel.Activities.ResetPassword.EmailActivity;
-import com.example.smartcitytravel.Activities.SignUp.SignUpActivity;
 import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;

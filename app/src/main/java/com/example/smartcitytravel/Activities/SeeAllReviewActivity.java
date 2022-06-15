@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.SeeAllReview;
+package com.example.smartcitytravel.Activities;
 
 import android.os.Bundle;
 import android.os.Handler;

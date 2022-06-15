@@ -5,9 +5,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.Activities.Home.HomeActivity;
-import com.example.smartcitytravel.Activities.Login.LoginActivity;
-import com.example.smartcitytravel.Util.Connection;
+import com.example.smartcitytravel.Activities.HomeActivity;
+import com.example.smartcitytravel.Activities.LoginActivity;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 

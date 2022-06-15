@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.Destination;
+package com.example.smartcitytravel.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.Activities.PlaceList.PlaceListActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityDestinationBinding;

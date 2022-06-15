@@ -18,8 +18,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
-import com.example.smartcitytravel.Activities.SeeAllReview.SeeAllReviewActivity;
-import com.example.smartcitytravel.Activities.WriteReview.WriteReviewActivity;
+import com.example.smartcitytravel.Activities.SeeAllReviewActivity;
+import com.example.smartcitytravel.Activities.WriteReviewActivity;
 import com.example.smartcitytravel.DataModel.PlaceDetail;
 import com.example.smartcitytravel.DataModel.Review;
 import com.example.smartcitytravel.DataModel.User;

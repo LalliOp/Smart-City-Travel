@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.ShowMorePlace;
+package com.example.smartcitytravel.Activities;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.smartcitytravel.Activities.ItemDecoration.GridSpaceItemDecoration;
 import com.example.smartcitytravel.DataModel.Place;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.RecyclerView.GridPlaceAdapter;

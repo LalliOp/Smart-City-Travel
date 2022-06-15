@@ -16,66 +16,66 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCityTravel">
         <activity
-            android:name=".Activities.ChangePassword.ChangePasswordActivity"
+            android:name=".Activities.ChangePasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.ShowMorePlace.ShowMorePlaceActivity"
+            android:name=".Activities.ShowMorePlaceActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.SeeAllReview.SeeAllReviewActivity"
+            android:name=".Activities.SeeAllReviewActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.WriteReview.WriteReviewActivity"
+            android:name=".Activities.WriteReviewActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.SuccessfulAccountMessage.SuccessfulAccountMessageActivity"
+            android:name=".Activities.SuccessfulAccountMessageActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.PlaceDetail.PlaceDetailActivity"
+            android:name=".Activities.PlaceDetailActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.PlaceList.PlaceListActivity"
+            android:name=".Activities.PlaceListActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.EditProfile.EditProfileActivity"
+            android:name=".Activities.EditProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.Destination.DestinationActivity"
+            android:name=".Activities.DestinationActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.LiveChat.LiveChatActivity"
+            android:name=".Activities.LiveChatActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.ResetPassword.NewPasswordActivity"
+            android:name=".Activities.NewPasswordActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.PinCode.PinCodeActivity"
+            android:name=".Activities.PinCodeActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.ResetPassword.EmailActivity"
+            android:name=".Activities.EmailActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.SignUp.SignUpActivity"
+            android:name=".Activities.SignUpActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.Home.HomeActivity"
+            android:name=".Activities.HomeActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.Login.LoginActivity"
+            android:name=".Activities.LoginActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

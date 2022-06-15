@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.smartcitytravel.Activities.Destination.DestinationActivity;
-import com.example.smartcitytravel.Activities.LiveChat.LiveChatActivity;
+import com.example.smartcitytravel.Activities.DestinationActivity;
+import com.example.smartcitytravel.Activities.LiveChatActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.FragmentHomeBinding;

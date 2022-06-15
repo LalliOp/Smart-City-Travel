@@ -1,4 +1,4 @@
-package com.example.smartcitytravel.Activities.ResetPassword;
+package com.example.smartcitytravel.Activities;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.Activities.SuccessfulAccountMessage.SuccessfulAccountMessageActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
