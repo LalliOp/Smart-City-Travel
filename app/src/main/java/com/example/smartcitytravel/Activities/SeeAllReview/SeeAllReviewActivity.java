@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartcitytravel.DataModel.Review;
 import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.R;
-import com.example.smartcitytravel.RecyclerView.ReviewRecyclerViewAdapter;
+import com.example.smartcitytravel.RecyclerView.ReviewAdapter;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivitySeeAllReviewBinding;
@@ -36,7 +36,7 @@ public class SeeAllReviewActivity extends AppCompatActivity {
     private String placeId;
     private String userId;
     private DocumentSnapshot lastLoadedReview;
-    private ReviewRecyclerViewAdapter reviewRecyclerViewAdapter;
+    private ReviewAdapter reviewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,12 +161,12 @@ public class SeeAllReviewActivity extends AppCompatActivity {
 
     // create and show review recycler view
     public void createReviewRecyclerView(ArrayList<Review> reviewList, ArrayList<User> userList) {
-        reviewRecyclerViewAdapter = new ReviewRecyclerViewAdapter(
+        reviewAdapter = new ReviewAdapter(
                 this, reviewList, userList, false);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
-        binding.seeAllReviewRecyclerView.setAdapter(reviewRecyclerViewAdapter);
+        binding.seeAllReviewRecyclerView.setAdapter(reviewAdapter);
         binding.seeAllReviewRecyclerView.setLayoutManager(linearLayoutManager);
         binding.seeAllReviewRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -174,7 +174,7 @@ public class SeeAllReviewActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
 
                 if (linearLayoutManager.findLastCompletelyVisibleItemPosition()
-                        == reviewRecyclerViewAdapter.getItemCount() - 1 && !loading) {
+                        == reviewAdapter.getItemCount() - 1 && !loading) {
                     loading = true;
                     checkConnectionAndLoadMoreUsersReview();
                 }
@@ -296,7 +296,7 @@ public class SeeAllReviewActivity extends AppCompatActivity {
                                 }
 
                             }
-                            reviewRecyclerViewAdapter.setData(moreReviewList, moreUserList);
+                            reviewAdapter.setData(moreReviewList, moreUserList);
                             hideLoadMoreProgressBar();
                             loading = false;
                         }

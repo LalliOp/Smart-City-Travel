@@ -19,11 +19,11 @@ import com.example.smartcitytravel.databinding.BiggerPlaceViewBinding;
 
 import java.util.ArrayList;
 
-public class GridPlaceRecyclerViewAdapter extends RecyclerView.Adapter<GridPlaceRecyclerViewAdapter.PlaceViewHolder> {
+public class GridPlaceAdapter extends RecyclerView.Adapter<GridPlaceAdapter.PlaceViewHolder> {
     private ArrayList<Place> placeList;
     private Context context;
 
-    public GridPlaceRecyclerViewAdapter(Context context, ArrayList<Place> placeList) {
+    public GridPlaceAdapter(Context context, ArrayList<Place> placeList) {
         this.context = context;
         this.placeList = placeList;
     }

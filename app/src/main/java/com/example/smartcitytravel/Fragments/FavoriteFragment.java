@@ -15,7 +15,7 @@ import com.example.smartcitytravel.Activities.ItemDecoration.GridSpaceItemDecora
 import com.example.smartcitytravel.DataModel.Favorite;
 import com.example.smartcitytravel.DataModel.Place;
 import com.example.smartcitytravel.R;
-import com.example.smartcitytravel.RecyclerView.GridPlaceRecyclerViewAdapter;
+import com.example.smartcitytravel.RecyclerView.GridPlaceAdapter;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
@@ -35,7 +35,7 @@ public class FavoriteFragment extends Fragment {
     private PreferenceHandler preferenceHandler;
     private String userId;
     private Util util;
-    private GridPlaceRecyclerViewAdapter placeRecyclerViewAdapter;
+    private GridPlaceAdapter placeRecyclerViewAdapter;
     private Connection connection;
     private boolean firstTime;
 
@@ -167,7 +167,7 @@ public class FavoriteFragment extends Fragment {
 
     //create recyclerview and show places
     public void createRecyclerView(ArrayList<Place> placeList) {
-        placeRecyclerViewAdapter = new GridPlaceRecyclerViewAdapter(requireContext(),
+        placeRecyclerViewAdapter = new GridPlaceAdapter(requireContext(),
                 placeList);
 
         binding.placeRecyclerView.setAdapter(placeRecyclerViewAdapter);

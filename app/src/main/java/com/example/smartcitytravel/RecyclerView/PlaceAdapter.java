@@ -2,7 +2,6 @@ package com.example.smartcitytravel.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +10,9 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.example.smartcitytravel.Activities.PlaceDetail.PlaceDetailActivity;
 import com.example.smartcitytravel.Activities.ShowMorePlace.ShowMorePlaceActivity;
 import com.example.smartcitytravel.DataModel.Place;
@@ -27,7 +21,7 @@ import com.example.smartcitytravel.databinding.ShowMorePlacesBinding;
 
 import java.util.ArrayList;
 
-public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Place> placeArrayList;
     private Context context;
     public static final int PLACE_VIEW = 0;
@@ -36,12 +30,12 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     private String title = null;
     private String placeType = null;
 
-    public PlaceRecyclerViewAdapter(Context context, ArrayList<Place> placeArrayList) {
+    public PlaceAdapter(Context context, ArrayList<Place> placeArrayList) {
         this.context = context;
         this.placeArrayList = placeArrayList;
     }
 
-    public PlaceRecyclerViewAdapter(Context context, ArrayList<Place> placeArrayList, boolean enableShowMoreOption, String title, String placeType) {
+    public PlaceAdapter(Context context, ArrayList<Place> placeArrayList, boolean enableShowMoreOption, String title, String placeType) {
         this.context = context;
         this.placeArrayList = placeArrayList;
         this.enableShowMoreOption = enableShowMoreOption;
@@ -53,10 +47,10 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == PLACE_VIEW) {
-            return new PlaceRecyclerViewAdapter.PlaceViewHolder(PlaceViewBinding.inflate(
+            return new PlaceAdapter.PlaceViewHolder(PlaceViewBinding.inflate(
                     LayoutInflater.from(parent.getContext()), parent, false));
         } else {
-            return new PlaceRecyclerViewAdapter.ShowMoreViewHolder(ShowMorePlacesBinding.inflate(
+            return new PlaceAdapter.ShowMoreViewHolder(ShowMorePlacesBinding.inflate(
                     LayoutInflater.from(parent.getContext()), parent, false));
         }
     }
@@ -100,7 +94,7 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     // set data in place UI
-    public void setPlaceUI(PlaceRecyclerViewAdapter.PlaceViewHolder holder, Place place) {
+    public void setPlaceUI(PlaceAdapter.PlaceViewHolder holder, Place place) {
         holder.binding.placeName.setText(place.getName());
         holder.binding.placeRatingTxt.setText(place.getRating().toString());
         Glide.with(context)
@@ -113,7 +107,7 @@ public class PlaceRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     //move to place detail activity when click on place ui
-    public void moveToPlaceDetailActivity(PlaceRecyclerViewAdapter.PlaceViewHolder holder, Place place) {
+    public void moveToPlaceDetailActivity(PlaceAdapter.PlaceViewHolder holder, Place place) {
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

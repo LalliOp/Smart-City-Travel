@@ -29,7 +29,7 @@ public class Connection {
     public boolean isInternetAvailable() {
         try {
             InetAddress googleAddress = InetAddress.getByName("www.google.com");
-            return googleAddress.isReachable(1500);
+            return !googleAddress.equals("");
         } catch (IOException | IllegalArgumentException e) {
             return false;
         }

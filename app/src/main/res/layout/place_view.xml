@@ -31,16 +31,23 @@
             android:textColor="@color/white"
             android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/placeName"
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:background="@color/trans_black"
-            android:gravity="center"
-            android:text="Place"
-            android:textColor="@color/white" />
+            android:background="@color/trans_black">
+
+            <TextView
+                android:id="@+id/placeName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginHorizontal="5dp"
+                android:gravity="center"
+                android:text="Place"
+                android:textColor="@color/white" />
+        </RelativeLayout>
 
         <ProgressBar
             android:id="@+id/placeLoadingBar"

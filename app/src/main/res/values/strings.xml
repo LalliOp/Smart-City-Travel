@@ -82,4 +82,10 @@
     <string name="new_password">New Password</string>
     <string name="confirm_new_password">Confirm New Password</string>
     <string name="save">Save</string>
+    <string name="send_message">SEND MESSAGE</string>
+    <string name="send_receive">SEND RECEIVE</string>
+    <string name="datetime">DateTime</string>
+    <string name="time">time</string>
+    <string name="type_message">Type Message...</string>
+    <string name="username">userName</string>
 </resources>

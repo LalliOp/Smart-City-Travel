@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.smartcitytravel.Activities.ItemDecoration.GridSpaceItemDecoration;
 import com.example.smartcitytravel.DataModel.Place;
 import com.example.smartcitytravel.R;
-import com.example.smartcitytravel.RecyclerView.PlaceRecyclerViewAdapter;
+import com.example.smartcitytravel.RecyclerView.PlaceAdapter;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityPlaceListBinding;
@@ -159,9 +159,9 @@ public class PlaceListActivity extends AppCompatActivity {
 
     //create recyclerview and show popular places
     public void showPopularPlaces(ArrayList<Place> popularPlaceList) {
-        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this, popularPlaceList);
+        PlaceAdapter placeAdapter = new PlaceAdapter(this, popularPlaceList);
 
-        binding.popularRecyclerView.setAdapter(placeRecyclerViewAdapter);
+        binding.popularRecyclerView.setAdapter(placeAdapter);
         binding.popularRecyclerView.setHasFixedSize(true);
         binding.popularRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         binding.popularRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
@@ -178,10 +178,10 @@ public class PlaceListActivity extends AppCompatActivity {
         });
     }
 
-    public void createRecommendationRecyclerView(PlaceRecyclerViewAdapter
-                                                         placeRecyclerViewAdapter, GridSpaceItemDecoration gridSpaceItemDecoration) {
+    public void createRecommendationRecyclerView(PlaceAdapter
+                                                         placeAdapter, GridSpaceItemDecoration gridSpaceItemDecoration) {
 
-        binding.recommendationRecyclerView.setAdapter(placeRecyclerViewAdapter);
+        binding.recommendationRecyclerView.setAdapter(placeAdapter);
         binding.recommendationRecyclerView.setHasFixedSize(true);
         binding.recommendationRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         binding.recommendationRecyclerView.addItemDecoration(gridSpaceItemDecoration);
@@ -229,10 +229,10 @@ public class PlaceListActivity extends AppCompatActivity {
 
     //create recyclerview and show restaurant places
     public void showRestaurantPlaces(ArrayList<Place> restaurantPlaceList, String placeType) {
-        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this,
+        PlaceAdapter placeAdapter = new PlaceAdapter(this,
                 restaurantPlaceList, true, "Restaurants", placeType);
 
-        binding.restaurantRecyclerView.setAdapter(placeRecyclerViewAdapter);
+        binding.restaurantRecyclerView.setAdapter(placeAdapter);
         binding.restaurantRecyclerView.setHasFixedSize(true);
         binding.restaurantRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         binding.restaurantRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
@@ -289,10 +289,10 @@ public class PlaceListActivity extends AppCompatActivity {
 
     //create recyclerview and show famous spots
     public void showFamousSpots(ArrayList<Place> famousSpotList, String placeType) {
-        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this,
+        PlaceAdapter placeAdapter = new PlaceAdapter(this,
                 famousSpotList, true, "Famous Spots", placeType);
 
-        binding.famousSpotRecyclerView.setAdapter(placeRecyclerViewAdapter);
+        binding.famousSpotRecyclerView.setAdapter(placeAdapter);
         binding.famousSpotRecyclerView.setHasFixedSize(true);
         binding.famousSpotRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         binding.famousSpotRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
@@ -349,10 +349,10 @@ public class PlaceListActivity extends AppCompatActivity {
 
     //create recyclerview and show hotel places
     public void showHotelPlaces(ArrayList<Place> hotelPlaceList, String placeType) {
-        PlaceRecyclerViewAdapter placeRecyclerViewAdapter = new PlaceRecyclerViewAdapter(this,
+        PlaceAdapter placeAdapter = new PlaceAdapter(this,
                 hotelPlaceList, true, "Hotels", placeType);
 
-        binding.hotelRecyclerView.setAdapter(placeRecyclerViewAdapter);
+        binding.hotelRecyclerView.setAdapter(placeAdapter);
         binding.hotelRecyclerView.setHasFixedSize(true);
         binding.hotelRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         binding.hotelRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));

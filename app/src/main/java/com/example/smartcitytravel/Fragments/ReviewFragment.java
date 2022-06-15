@@ -23,7 +23,7 @@ import com.example.smartcitytravel.Activities.WriteReview.WriteReviewActivity;
 import com.example.smartcitytravel.DataModel.PlaceDetail;
 import com.example.smartcitytravel.DataModel.Review;
 import com.example.smartcitytravel.DataModel.User;
-import com.example.smartcitytravel.RecyclerView.ReviewRecyclerViewAdapter;
+import com.example.smartcitytravel.RecyclerView.ReviewAdapter;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
@@ -146,10 +146,10 @@ public class ReviewFragment extends Fragment {
 
     // create and show review recycler view
     public void createUserReviewRecyclerView(ArrayList<Review> reviewList, ArrayList<User> userList) {
-        ReviewRecyclerViewAdapter reviewRecyclerViewAdapter = new ReviewRecyclerViewAdapter(
+        ReviewAdapter reviewAdapter = new ReviewAdapter(
                 requireActivity(), reviewList, userList, true);
 
-        binding.userReviewRecyclerView.setAdapter(reviewRecyclerViewAdapter);
+        binding.userReviewRecyclerView.setAdapter(reviewAdapter);
         binding.userReviewRecyclerView.setHasFixedSize(true);
         binding.userReviewRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
     }

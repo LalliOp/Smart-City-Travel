@@ -17,14 +17,14 @@ import com.example.smartcitytravel.databinding.ReviewViewBinding;
 
 import java.util.ArrayList;
 
-public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecyclerViewAdapter.ReviewViewHolder> {
+public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
     private ArrayList<Review> reviewList;
     private ArrayList<User> userList;
     private Context context;
     private Util util;
     private boolean trimReviewLength;
 
-    public ReviewRecyclerViewAdapter(Context context, ArrayList<Review> reviewList, ArrayList<User> userList, boolean trimReviewLength) {
+    public ReviewAdapter(Context context, ArrayList<Review> reviewList, ArrayList<User> userList, boolean trimReviewLength) {
         this.context = context;
         this.reviewList = reviewList;
         util = new Util();
@@ -35,13 +35,13 @@ public class ReviewRecyclerViewAdapter extends RecyclerView.Adapter<ReviewRecycl
 
     @NonNull
     @Override
-    public ReviewRecyclerViewAdapter.ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ReviewAdapter.ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ReviewViewHolder(ReviewViewBinding.inflate(
                 LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReviewRecyclerViewAdapter.ReviewViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ReviewAdapter.ReviewViewHolder holder, int position) {
         Review review = reviewList.get(position);
         User user = userList.get(position);
         setUI(holder, review, user);
