@@ -69,6 +69,7 @@ public class GeneralSearchActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.search_menu, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
+
         SearchView searchView = (SearchView) searchItem.getActionView();
         setSearchViewUI(searchView);
 
@@ -81,10 +82,16 @@ public class GeneralSearchActivity extends AppCompatActivity {
     public void setSearchViewUI(SearchView searchView) {
         searchView.setQueryHint("Search Place by Name");
         searchView.setIconified(false);
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                return true;
+            }
+        });
 
-        TextView text = searchView.findViewById(R.id.search_src_text);
-        text.setTextColor(getResources().getColor(R.color.white));
-        text.setHintTextColor(getResources().getColor(R.color.trans_white));
+        TextView searchEditText = searchView.findViewById(R.id.search_src_text);
+        searchEditText.setTextColor(getResources().getColor(R.color.white));
+        searchEditText.setHintTextColor(getResources().getColor(R.color.trans_white));
 
         ImageView closeIcon = searchView.findViewById(R.id.search_close_btn);
         closeIcon.setColorFilter(getResources().getColor(R.color.white));
