@@ -3,6 +3,9 @@ package com.example.smartcitytravel.WorkManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -21,19 +24,22 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.Random;
 
+
 public class ImageUpdateWorkManager extends Worker {
     private final PreferenceHandler preferenceHandler;
     private final Uri imageUri;
     private final String userId;
     private boolean updateUI;
+    private Handler mainThreadHandler;
 
     public ImageUpdateWorkManager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
 
-        preferenceHandler = new PreferenceHandler();
-        imageUri = Uri.parse(getInputData().getString("image_url"));
-        userId = getInputData().getString("userId");
-        updateUI = getInputData().getBoolean("update_UI", false);
+        this.preferenceHandler = new PreferenceHandler();
+        this.imageUri = Uri.parse(getInputData().getString("image_url"));
+        this.userId = getInputData().getString("userId");
+        this.updateUI = getInputData().getBoolean("update_UI", false);
+        this.mainThreadHandler = new Handler(Looper.getMainLooper());
 
     }
 
@@ -58,6 +64,13 @@ public class ImageUpdateWorkManager extends Worker {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                 if (!task.isSuccessful()) {
+                    mainThreadHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "Unable to update image profile", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                     throw task.getException();
 
                 } else {
@@ -71,6 +84,13 @@ public class ImageUpdateWorkManager extends Worker {
                 if (task.isSuccessful()) {
                     Uri downloadImageUri = task.getResult();
                     updateProfileImage(downloadImageUri);
+                } else {
+                    mainThreadHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "Unable to update image profile", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         });

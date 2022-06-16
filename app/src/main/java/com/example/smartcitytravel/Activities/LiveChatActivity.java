@@ -1,6 +1,7 @@
 package com.example.smartcitytravel.Activities;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -108,5 +109,15 @@ public class LiveChatActivity extends AppCompatActivity {
         binding.chatLoadingBar.setVisibility(View.GONE);
     }
 
+    // return to previous activity when user click on up button (which is back button on top life side)
+    @Override
+    public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
 
+    }
 }

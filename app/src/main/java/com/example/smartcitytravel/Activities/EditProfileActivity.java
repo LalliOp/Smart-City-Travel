@@ -84,9 +84,7 @@ public class EditProfileActivity extends AppCompatActivity {
         openGallery();
         nameChangeListener();
         save();
-
-
-        testing();
+        changePassword();
     }
 
 
@@ -168,7 +166,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     public void run() {
                         if (internetAvailable) {
                             startUpdateImageWorkManager(imageUri);
-                            Toast.makeText(EditProfileActivity.this, "Profile image updated", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditProfileActivity.this, "Profile image take time to update", Toast.LENGTH_SHORT).show();
 
                             newProfileImageSelected = false;
                             setSaveButtonState();
@@ -429,7 +427,7 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    public void testing() {
+    public void changePassword() {
         binding.changePasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

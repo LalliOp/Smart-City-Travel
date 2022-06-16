@@ -252,12 +252,11 @@ public class LoginActivity extends AppCompatActivity {
     //check email field contain valid and allowed characters
     public void validateEmail() {
         String email = binding.emailEdit.getText().toString();
-        String errorMessage = validation.validateEmail(email);
-        if (errorMessage.isEmpty()) {
+        if (email.isEmpty()) {
+            showEmailError("Error! Empty Email");
+        } else {
             hideEmailError();
 
-        } else {
-            showEmailError(errorMessage);
         }
     }
 
@@ -353,33 +352,33 @@ public class LoginActivity extends AppCompatActivity {
 
         userCollection.whereEqualTo("email", binding.emailEdit.getText().toString().toLowerCase())
                 .get().addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if (!queryDocumentSnapshots.isEmpty()) {
-                    for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
-                        String userInputPassword = binding.passwordEdit.getText().toString();
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                                String userInputPassword = binding.passwordEdit.getText().toString();
 
-                        User user = querySnapshot.toObject(User.class);
-                        user.setUserId(querySnapshot.getId());
-                        if (user.getGoogle_account()) {
-                            util.createErrorDialog(LoginActivity.this, "Account", "Account already exist with google. Try sign in with google");
-                        } else {
-                            if (user.getPassword().equals(userInputPassword)) {
-                                preferenceHandler.setLoginAccountPreference(user, LoginActivity.this);
-                                moveToHomeActivity();
-                            } else {
-                                util.createErrorDialog(LoginActivity.this, "Password", "Incorrect Password");
+                                User user = querySnapshot.toObject(User.class);
+                                user.setUserId(querySnapshot.getId());
+                                if (user.getGoogle_account()) {
+                                    util.createErrorDialog(LoginActivity.this, "Account", "Account already exist with google. Try sign in with google");
+                                } else {
+                                    if (user.getPassword().equals(userInputPassword)) {
+                                        preferenceHandler.setLoginAccountPreference(user, LoginActivity.this);
+                                        moveToHomeActivity();
+                                    } else {
+                                        util.createErrorDialog(LoginActivity.this, "Password", "Incorrect Password");
+                                    }
+                                }
+
                             }
+                        } else {
+                            util.createErrorDialog(LoginActivity.this, "Account", "No account exist with this email");
                         }
+                        hideLoadingBar();
 
                     }
-                } else {
-                    util.createErrorDialog(LoginActivity.this, "Account", "No account exist with this email");
-                }
-                hideLoadingBar();
-
-            }
-        });
+                });
     }
 
     //change default loading bar color

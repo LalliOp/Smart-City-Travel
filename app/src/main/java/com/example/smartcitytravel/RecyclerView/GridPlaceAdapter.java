@@ -81,6 +81,13 @@ public class GridPlaceAdapter extends RecyclerView.Adapter<GridPlaceAdapter.Plac
         notifyItemInserted(insertPosition);
     }
 
+    // data completely changed. Data maybe remove or new added
+    public void setNewData(ArrayList<Place> newPlaceList) {
+        this.placeList.clear();
+        this.placeList.addAll(newPlaceList);
+        notifyDataSetChanged();
+    }
+
     // get data
     public ArrayList<Place> getData() {
         return placeList;

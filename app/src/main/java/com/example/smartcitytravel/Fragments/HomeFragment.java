@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.smartcitytravel.Activities.DestinationActivity;
+import com.example.smartcitytravel.Activities.GeneralSearchActivity;
 import com.example.smartcitytravel.Activities.LiveChatActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Util;
@@ -38,6 +39,7 @@ public class HomeFragment extends Fragment {
         setLoadingBarColor();
         openLiveChat();
         moveToDestinationActivity();
+        moveToSearchActivity();
     }
 
     @Override
@@ -55,6 +57,19 @@ public class HomeFragment extends Fragment {
                 moveToLiveChatActivity();
             }
         });
+    }
+
+
+    public void moveToSearchActivity() {
+        binding.generalSearchCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLoadingBar();
+                Intent intent = new Intent(requireActivity(), GeneralSearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     //move from home fragment to live chat activity

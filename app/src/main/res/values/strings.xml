@@ -88,4 +88,7 @@
     <string name="time">time</string>
     <string name="type_message">Type Message...</string>
     <string name="username">userName</string>
+    <string name="search">Search</string>
+    <string name="no_result_found">No result found</string>
+    <string name="no_connection">No Connection</string>
 </resources>
