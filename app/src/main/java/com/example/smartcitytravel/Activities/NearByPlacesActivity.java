@@ -42,6 +42,7 @@ public class NearByPlacesActivity extends AppCompatActivity {
     private GpsTracker gpsTracker;
     private boolean locationPermissionAllowed;
 
+
     private final ActivityResultLauncher<String[]> locationPermissionRequest = registerForActivityResult
             (new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
                 @Override
