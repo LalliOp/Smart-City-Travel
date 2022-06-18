@@ -1,0 +1,143 @@
+package com.example.smartcitytravel.Util;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.provider.Settings;
+
+import androidx.annotation.NonNull;
+
+import com.google.type.LatLng;
+
+public class GpsTracker implements LocationListener {
+    private Context context;
+    boolean isGPSEnabled;
+    boolean isNetworkEnabled;
+    boolean canGetLocation;
+    Location location;
+    double latitude;
+    double longitude;
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
+    private static final long MIN_TIME_BTW_UPDATES = 1000 * 60 * 1;
+    protected LocationManager locationManager;
+
+    public GpsTracker(Context context) {
+        this.context = context;
+        isGPSEnabled = false;
+        isNetworkEnabled = false;
+        canGetLocation = false;
+        latitude = 0.0;
+        longitude = 0.0;
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+    }
+
+    public Location getLocation() {
+        isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        isNetworkEnabled = locationManager
+                .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        if (!isGPSEnabled && !isNetworkEnabled) {
+            canGetLocation = false;
+            return null;
+        } else {
+            canGetLocation = true;
+            if (isNetworkEnabled) {
+                location = networkProvider();
+
+            }
+            if (isGPSEnabled) {
+                location = GPSProvider();
+            }
+            return location;
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    public Location networkProvider() {
+        locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER,
+                MIN_TIME_BTW_UPDATES,
+                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+
+        if (locationManager != null) {
+            location = locationManager
+                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+        }
+        return location;
+    }
+
+    @SuppressLint("MissingPermission")
+    public Location GPSProvider() {
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                MIN_TIME_BTW_UPDATES,
+                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+
+        if (locationManager != null) {
+            location = locationManager
+                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+        }
+        return location;
+    }
+
+    public LatLng getLocationLatLng() {
+        getLocation();
+        return LatLng
+                .newBuilder()
+                .setLatitude(latitude)
+                .setLongitude(longitude)
+                .build();
+    }
+
+    public boolean canGetLocation() {
+        isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        isNetworkEnabled = locationManager
+                .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        if (!isGPSEnabled && !isNetworkEnabled) {
+            canGetLocation = false;
+        } else {
+            canGetLocation = true;
+        }
+        return this.canGetLocation;
+    }
+
+    // open location setting to on or off location
+    public void openLocationSetting() {
+        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        context.startActivity(intent);
+    }
+
+    //call when location changed
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        getLocation();
+
+    }
+
+    // call on gps enable
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+        canGetLocation = true;
+        LocationListener.super.onProviderEnabled(provider);
+    }
+
+    //call on gps disable
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+        canGetLocation = false;
+        LocationListener.super.onProviderDisabled(provider);
+    }
+}

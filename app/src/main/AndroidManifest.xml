@@ -16,6 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartCityTravel">
         <activity
+            android:name=".Activities.NearByPlacesActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".Activities.GeneralSearchActivity"
             android:exported="false"
             android:screenOrientation="portrait" />

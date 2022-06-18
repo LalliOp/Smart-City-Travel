@@ -1,25 +1,35 @@
 package com.example.smartcitytravel.DataModel;
 
 public class PlaceDetail extends Place {
-    String Description;
-    String Image2;
-    String Image3;
-    String Latitude;
-    String Longitude;
-    String Timing;
+    private String Description;
+    private String Image2;
+    private String Image3;
+    private String Latitude;
+    private String Longitude;
+    private String Timing;
+    private String City;
 
     public PlaceDetail() {
         super();
     }
 
-    public PlaceDetail(String name, String description, String image1, String image2, String image3, Float rating, String latitude, String longitude, String timing) {
+    public PlaceDetail(String name, String city, String description, String image1, String image2, String image3, Float rating, String latitude, String longitude, String timing) {
         super(name, image1, rating);
+        City = city;
         Description = description;
         Image2 = image2;
         Image3 = image3;
         Latitude = latitude;
         Longitude = longitude;
         Timing = timing;
+    }
+
+    public String getCity() {
+        return City;
+    }
+
+    public void setCity(String city) {
+        City = city;
     }
 
     public String getDescription() {

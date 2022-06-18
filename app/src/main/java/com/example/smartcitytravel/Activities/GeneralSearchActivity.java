@@ -132,7 +132,7 @@ public class GeneralSearchActivity extends AppCompatActivity {
         db
                 .collection("place")
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if (queryDocumentSnapshots != null || !queryDocumentSnapshots.isEmpty()) {
@@ -150,7 +150,7 @@ public class GeneralSearchActivity extends AppCompatActivity {
                 .collection("place")
                 .whereIn("Name", matchPlaceNameList)
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if (queryDocumentSnapshots != null || !queryDocumentSnapshots.isEmpty()) {

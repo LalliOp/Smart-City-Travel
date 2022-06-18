@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.example.smartcitytravel.Activities.DestinationActivity;
 import com.example.smartcitytravel.Activities.GeneralSearchActivity;
 import com.example.smartcitytravel.Activities.LiveChatActivity;
+import com.example.smartcitytravel.Activities.NearByPlacesActivity;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.FragmentHomeBinding;
@@ -39,6 +40,7 @@ public class HomeFragment extends Fragment {
         setLoadingBarColor();
         openLiveChat();
         moveToDestinationActivity();
+        moveToNearByPlacesActivity();
         moveToSearchActivity();
     }
 
@@ -85,6 +87,18 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 showLoadingBar();
                 Intent intent = new Intent(getActivity(), DestinationActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    //when user click on nearby place button, open nearby place activity
+    public void moveToNearByPlacesActivity() {
+        binding.nearbyCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLoadingBar();
+                Intent intent = new Intent(getActivity(), NearByPlacesActivity.class);
                 startActivity(intent);
             }
         });

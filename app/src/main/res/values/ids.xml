@@ -15,4 +15,7 @@
     <item name="hotelLayout" type="id" />
     <item name="hotelTitle" type="id" />
     <item name="hotelRecyclerView" type="id" />
+    <item name="backImg" type="id" />
+    <item name="searchView" type="id" />
+    <item name="clearImg" type="id" />
 </resources>

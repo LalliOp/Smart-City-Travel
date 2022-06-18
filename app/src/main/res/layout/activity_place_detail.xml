@@ -48,11 +48,19 @@
                     android:id="@+id/placeName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
+                    android:layout_above="@id/cityTxt"
                     android:layout_marginStart="10dp"
-                    android:layout_marginBottom="24dp"
-                    android:text="Place Name"
+                    android:text="@string/place_name"
                     android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/cityTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="11dp"
+                    android:layout_marginBottom="7dp"
+                    android:text="@string/city" />
 
                 <RelativeLayout
                     android:id="@+id/favoriteLayout"

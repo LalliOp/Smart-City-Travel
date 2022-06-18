@@ -256,6 +256,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
                             placeDetail.setPlaceId(documentSnapshot.getId());
 
                             binding.placeName.setText(placeDetail.getName());
+                            binding.cityTxt.setText(placeDetail.getCity());
 
                             showImageSliderView(placeDetail);
                             createPlaceDetailTabs(placeDetail);

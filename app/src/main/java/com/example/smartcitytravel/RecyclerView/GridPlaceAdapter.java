@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.Activities.PlaceDetailActivity;
 import com.example.smartcitytravel.DataModel.Place;
+import com.example.smartcitytravel.DataModel.PlaceLocation;
 import com.example.smartcitytravel.databinding.BiggerPlaceViewBinding;
 
 import java.util.ArrayList;
@@ -27,7 +28,6 @@ public class GridPlaceAdapter extends RecyclerView.Adapter<GridPlaceAdapter.Plac
         this.context = context;
         this.placeList = placeList;
     }
-
     @NonNull
     @Override
     public PlaceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
