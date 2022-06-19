@@ -98,4 +98,6 @@
     <string name="km">Km</string>
     <string name="location_settings">Location Settings</string>
     <string name="allow_location_permission">Allow Location Permission</string>
+    <string name="navigate">Navigate</string>
+    <string name="navigation">Navigation</string>
 </resources>

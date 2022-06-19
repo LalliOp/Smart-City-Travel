@@ -23,11 +23,11 @@ import com.example.smartcitytravel.RecyclerView.GridPlaceAdapter;
 import com.example.smartcitytravel.Util.GpsTracker;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityNearByPlacesBinding;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.type.LatLng;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -147,11 +147,7 @@ public class NearByPlacesActivity extends AppCompatActivity {
                                     PlaceLocation placeLocation = querySnapshot.toObject(PlaceLocation.class);
                                     placeLocation.setPlaceId(querySnapshot.getId());
 
-                                    LatLng placeLatLng = LatLng
-                                            .newBuilder()
-                                            .setLatitude(Double.parseDouble(placeLocation.getLatitude()))
-                                            .setLongitude(Double.parseDouble(placeLocation.getLongitude()))
-                                            .build();
+                                    LatLng placeLatLng = new LatLng(Double.parseDouble(placeLocation.getLatitude()), Double.parseDouble(placeLocation.getLongitude()));
 
                                     double placeDistance = calculateDistance(currentLocationLatLng, placeLatLng);
 
@@ -187,10 +183,10 @@ public class NearByPlacesActivity extends AppCompatActivity {
 
     public double calculateDistance(LatLng StartP, LatLng EndP) {
         int Radius = 6371;// radius of earth in Km
-        double lat1 = StartP.getLatitude();
-        double lat2 = EndP.getLatitude();
-        double lon1 = StartP.getLongitude();
-        double lon2 = EndP.getLongitude();
+        double lat1 = StartP.latitude;
+        double lat2 = EndP.latitude;
+        double lon1 = StartP.longitude;
+        double lon2 = EndP.longitude;
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)

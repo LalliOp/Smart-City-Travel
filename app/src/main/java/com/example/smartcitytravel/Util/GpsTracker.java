@@ -10,7 +10,7 @@ import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 
-import com.google.type.LatLng;
+import com.google.android.gms.maps.model.LatLng;
 
 public class GpsTracker implements LocationListener {
     private Context context;
@@ -26,12 +26,22 @@ public class GpsTracker implements LocationListener {
 
     public GpsTracker(Context context) {
         this.context = context;
-        isGPSEnabled = false;
-        isNetworkEnabled = false;
-        canGetLocation = false;
-        latitude = 0.0;
-        longitude = 0.0;
-        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        this.isGPSEnabled = false;
+        this.isNetworkEnabled = false;
+        this.canGetLocation = false;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
+        this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+    }
+
+    public GpsTracker(Context context, LocationManager locationManager) {
+        this.context = context;
+        this.isGPSEnabled = false;
+        this.isNetworkEnabled = false;
+        this.canGetLocation = false;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
+        this.locationManager = locationManager;
     }
 
     public Location getLocation() {
@@ -95,11 +105,7 @@ public class GpsTracker implements LocationListener {
 
     public LatLng getLocationLatLng() {
         getLocation();
-        return LatLng
-                .newBuilder()
-                .setLatitude(latitude)
-                .setLongitude(longitude)
-                .build();
+        return new LatLng(latitude, longitude);
     }
 
     public boolean canGetLocation() {

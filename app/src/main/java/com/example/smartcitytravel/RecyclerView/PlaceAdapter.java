@@ -41,6 +41,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.enableShowMoreOption = enableShowMoreOption;
         this.title = title;
         this.placeType = placeType;
+
     }
 
     @NonNull
@@ -53,6 +54,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             return new PlaceAdapter.ShowMoreViewHolder(ShowMorePlacesBinding.inflate(
                     LayoutInflater.from(parent.getContext()), parent, false));
         }
+
     }
 
     @Override

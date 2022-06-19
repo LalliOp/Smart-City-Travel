@@ -1,6 +1,7 @@
 package com.example.smartcitytravel.Activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -128,11 +129,9 @@ public class PlaceListActivity extends AppCompatActivity {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if (!queryDocumentSnapshots.isEmpty()) {
                             ArrayList<Place> popularPlaceList = new ArrayList<>();
-
                             for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
                                 Place place = querySnapshot.toObject(Place.class);
                                 place.setPlaceId(querySnapshot.getId());
-
                                 popularPlaceList.add(place);
 
                             }
