@@ -364,4 +364,5 @@ public class ReviewFragment extends Fragment {
         });
 
     }
+
 }

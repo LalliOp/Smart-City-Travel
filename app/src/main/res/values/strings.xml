@@ -100,4 +100,6 @@
     <string name="allow_location_permission">Allow Location Permission</string>
     <string name="navigate">Navigate</string>
     <string name="navigation">Navigation</string>
+    <string name="title">Title</string>
+    <string name="message">Message</string>
 </resources>

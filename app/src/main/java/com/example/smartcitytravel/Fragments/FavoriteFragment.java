@@ -58,19 +58,19 @@ public class FavoriteFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        userId = preferenceHandler.getUserIdPreference(requireContext());
+        userId = preferenceHandler.getUserIdPreference(requireActivity());
         setToolBarTheme();
         checkConnectionAndGetFavoritePlaceList();
+
     }
 
     @Override
     public void onResume() {
-        super.onResume();
-
         if (!firstTime) {
             getUpdatedFavoritePlaceList();
         }
         firstTime = false;
+        super.onResume();
     }
 
 
@@ -167,12 +167,13 @@ public class FavoriteFragment extends Fragment {
 
     //create recyclerview and show places
     public void createRecyclerView(ArrayList<Place> placeList) {
-        placeRecyclerViewAdapter = new GridPlaceAdapter(requireContext(),
+        placeRecyclerViewAdapter = new GridPlaceAdapter(requireActivity(),
                 placeList);
 
         binding.placeRecyclerView.setAdapter(placeRecyclerViewAdapter);
         binding.placeRecyclerView.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
         binding.placeRecyclerView.addItemDecoration(new GridSpaceItemDecoration(20, 26, 10, 0));
+
     }
 
     //run when user click on retry icon
@@ -246,4 +247,10 @@ public class FavoriteFragment extends Fragment {
                 });
     }
 
+    //make binding null which garbage collector auto collect and remove binding object with end of fragment
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 }

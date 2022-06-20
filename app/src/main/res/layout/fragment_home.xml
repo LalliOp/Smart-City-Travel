@@ -82,6 +82,7 @@
                     android:fontFamily="@font/segoe_ui"
                     android:gravity="center"
                     android:text="@string/destination"
+                    android:textColor="@color/white"
                     android:textSize="17sp"
                     android:textStyle="bold" />
 
@@ -94,7 +95,8 @@
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="90dp"
                     android:gravity="center"
-                    android:text="@string/destination_description" />
+                    android:text="@string/destination_description"
+                    android:textColor="@color/white" />
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -137,6 +139,7 @@
                     android:fontFamily="@font/segoe_ui"
                     android:gravity="center"
                     android:text="@string/nearby_places"
+                    android:textColor="@color/white"
                     android:textSize="17sp"
                     android:textStyle="bold" />
 
@@ -149,7 +152,8 @@
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="40dp"
                     android:gravity="center"
-                    android:text="@string/nearby_description" />
+                    android:text="@string/nearby_description"
+                    android:textColor="@color/white" />
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -191,6 +195,7 @@
                     android:fontFamily="@font/segoe_ui"
                     android:gravity="center"
                     android:text="@string/general_search"
+                    android:textColor="@color/white"
                     android:textSize="17sp"
                     android:textStyle="bold" />
 
@@ -203,7 +208,8 @@
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="40dp"
                     android:gravity="center"
-                    android:text="@string/general_search_description" />
+                    android:text="@string/general_search_description"
+                    android:textColor="@color/white" />
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>

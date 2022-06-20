@@ -29,11 +29,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class NavigationFragment extends Fragment implements OnMapReadyCallback {
     private FragmentNavigationBinding binding;
-    private PlaceDetail placeDetail;
-    private GpsTracker gpsTracker;
-    private LatLng currentLocationLatLng;
-    private LatLng placeLatLng;
-    private Context context;
+    private final PlaceDetail placeDetail;
+    private final GpsTracker gpsTracker;
+    private final LatLng currentLocationLatLng;
+    private final LatLng placeLatLng;
+    private final Context context;
 
     public NavigationFragment(Context context, PlaceDetail placeDetail) {
         this.context = context;

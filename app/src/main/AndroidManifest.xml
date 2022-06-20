@@ -86,7 +86,8 @@
         <activity
             android:name=".Activities.HomeActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/PreferenceTheme" />
         <activity
             android:name=".Activities.LoginActivity"
             android:exported="false"
