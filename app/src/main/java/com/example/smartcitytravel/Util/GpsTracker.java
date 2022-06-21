@@ -22,7 +22,7 @@ public class GpsTracker implements LocationListener {
     double longitude;
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
     private static final long MIN_TIME_BTW_UPDATES = 1000 * 60 * 1;
-    protected LocationManager locationManager;
+    private LocationManager locationManager;
 
     public GpsTracker(Context context) {
         this.context = context;
@@ -32,16 +32,6 @@ public class GpsTracker implements LocationListener {
         this.latitude = 0.0;
         this.longitude = 0.0;
         this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-    }
-
-    public GpsTracker(Context context, LocationManager locationManager) {
-        this.context = context;
-        this.isGPSEnabled = false;
-        this.isNetworkEnabled = false;
-        this.canGetLocation = false;
-        this.latitude = 0.0;
-        this.longitude = 0.0;
-        this.locationManager = locationManager;
     }
 
     public Location getLocation() {

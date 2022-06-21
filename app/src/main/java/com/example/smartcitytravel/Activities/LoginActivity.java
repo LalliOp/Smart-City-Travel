@@ -252,11 +252,12 @@ public class LoginActivity extends AppCompatActivity {
     //check email field contain valid and allowed characters
     public void validateEmail() {
         String email = binding.emailEdit.getText().toString();
-        if (email.isEmpty()) {
-            showEmailError("Error! Empty Email");
-        } else {
+        String errorMessage = validation.validateEmail(email);
+        if (errorMessage.isEmpty()) {
             hideEmailError();
 
+        } else {
+            showEmailError(errorMessage);
         }
     }
 

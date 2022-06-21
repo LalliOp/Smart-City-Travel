@@ -33,10 +33,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
     private final GpsTracker gpsTracker;
     private final LatLng currentLocationLatLng;
     private final LatLng placeLatLng;
-    private final Context context;
 
     public NavigationFragment(Context context, PlaceDetail placeDetail) {
-        this.context = context;
         this.placeDetail = placeDetail;
         this.gpsTracker = new GpsTracker(context);
         currentLocationLatLng = gpsTracker.getLocationLatLng();

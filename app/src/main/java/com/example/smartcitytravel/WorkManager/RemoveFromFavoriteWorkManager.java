@@ -60,7 +60,7 @@ public class RemoveFromFavoriteWorkManager extends Worker {
     //remove place from favorite list in database
     public void removeFromFavorite(Favorite favorite) {
         db.collection("favorite")
-                .document(favorite.favoriteId)
+                .document(favorite.getFavoriteId())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

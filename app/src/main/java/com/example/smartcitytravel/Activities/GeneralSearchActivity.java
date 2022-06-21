@@ -15,6 +15,7 @@ import com.example.smartcitytravel.DataModel.Place;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.RecyclerView.GridPlaceAdapter;
 import com.example.smartcitytravel.Util.Connection;
+import com.example.smartcitytravel.Util.GridSpaceItemDecoration;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityGeneralSearchBinding;
 import com.google.android.gms.tasks.OnSuccessListener;

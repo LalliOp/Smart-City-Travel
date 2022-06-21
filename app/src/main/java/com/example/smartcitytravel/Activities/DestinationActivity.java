@@ -35,7 +35,7 @@ public class DestinationActivity extends AppCompatActivity {
         binding.lahoreCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moveToPlaceRecyclerViewActivity("Lahore");
+                moveToPlaceListActivity("Lahore");
             }
         });
     }
@@ -45,13 +45,13 @@ public class DestinationActivity extends AppCompatActivity {
         binding.islamabadCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moveToPlaceRecyclerViewActivity("Islamabad");
+                moveToPlaceListActivity("Islamabad");
             }
         });
     }
 
     //move to place activity which show different places of selected city
-    public void moveToPlaceRecyclerViewActivity(String destination_name) {
+    public void moveToPlaceListActivity(String destination_name) {
         Intent intent = new Intent(this, PlaceListActivity.class);
         intent.putExtra("destination_name", destination_name);
         startActivity(intent);

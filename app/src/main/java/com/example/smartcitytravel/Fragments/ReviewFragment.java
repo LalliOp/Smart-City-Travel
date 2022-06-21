@@ -293,7 +293,7 @@ public class ReviewFragment extends Fragment {
                 intent.putExtra("reviewId", review.getReviewId());
                 intent.putExtra("review", review.getFeedback());
                 intent.putExtra("rating", review.getRating());
-                intent.putExtra("placeId", review.getPlaceId());
+                intent.putExtra("placeId", placeDetail.getPlaceId());
                 writeReviewResultLauncher.launch(intent);
             }
         });

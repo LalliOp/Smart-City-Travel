@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.example.smartcitytravel.Activities.GridSpaceItemDecoration;
+import com.example.smartcitytravel.Util.GridSpaceItemDecoration;
 import com.example.smartcitytravel.DataModel.Favorite;
 import com.example.smartcitytravel.DataModel.Place;
 import com.example.smartcitytravel.R;

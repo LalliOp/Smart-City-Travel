@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.smartcitytravel.Activities.HomeActivity;
 import com.example.smartcitytravel.Activities.LoginActivity;
 import com.example.smartcitytravel.Util.PreferenceHandler;
-import com.example.smartcitytravel.Util.Util;
 
 public class MainActivity extends AppCompatActivity {
     private PreferenceHandler preferenceHandler;
@@ -18,9 +17,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         preferenceHandler = new PreferenceHandler();
-        Util util = new Util();
-
-        util.setStatusBarColor(MainActivity.this, R.color.white);
         checkUserAlreadySignIn();
     }
 

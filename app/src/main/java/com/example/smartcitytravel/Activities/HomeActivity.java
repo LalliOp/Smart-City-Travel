@@ -60,7 +60,7 @@ public class HomeActivity extends AppCompatActivity {
         setUserProfile(user);
         createHomeFragment(savedInstanceState);
         navigationDrawerToggle();
-        selectFragmentFromDrawer();
+        selectFragmentFromDrawer(savedInstanceState);
         editUserProfile();
         onLogoutButtonClicked();
 
@@ -148,22 +148,22 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     //change or select fragment from navigation drawer
-    public void selectFragmentFromDrawer() {
+    public void selectFragmentFromDrawer(Bundle savedInstanceState) {
         binding.navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         if (item.getItemId() == R.id.home_menu) {
-                            createHomeFragment();
+                            createHomeFragment(savedInstanceState);
                             setNavigationDrawerIcon(R.drawable.ic_light_white_navigation_drawer_menu);
                         } else if (item.getItemId() == R.id.favorite_menu) {
-                            createFavoriteFragment();
+                            createFavoriteFragment(savedInstanceState);
                             setNavigationDrawerIcon(R.drawable.ic_white_navigation_drawer_menu);
                         } else if (item.getItemId() == R.id.settings_menu) {
-                            createSettingsFragment();
+                            createSettingsFragment(savedInstanceState);
                             setNavigationDrawerIcon(R.drawable.ic_light_white_navigation_drawer_menu);
                         } else if (item.getItemId() == R.id.about_us_menu) {
-                            createAboutUsFragment();
+                            createAboutUsFragment(savedInstanceState);
                             setNavigationDrawerIcon(R.drawable.ic_light_white_navigation_drawer_menu);
                         }
                         binding.drawerLayout.closeDrawer(GravityCompat.START);
@@ -180,36 +180,35 @@ public class HomeActivity extends AppCompatActivity {
                 .into(binding.navigationDrawerImg);
     }
 
-    // create home fragment
-    public void createHomeFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(binding.fragmentContainer.getId(), new HomeFragment())
-                .commit();
-    }
-
     // create favorite fragment
-    public void createFavoriteFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(binding.fragmentContainer.getId(), new FavoriteFragment())
-                .commit();
+    public void createFavoriteFragment(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(binding.fragmentContainer.getId(), new FavoriteFragment())
+                    .commit();
+        }
+
     }
 
     // create settings fragment
-    public void createSettingsFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(binding.fragmentContainer.getId(), new SettingsFragment())
-                .commit();
+    public void createSettingsFragment(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(binding.fragmentContainer.getId(), new SettingsFragment())
+                    .commit();
+        }
     }
 
     // create about us fragment
-    public void createAboutUsFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(binding.fragmentContainer.getId(), new AboutUsFragment())
-                .commit();
+    public void createAboutUsFragment(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .replace(binding.fragmentContainer.getId(), new AboutUsFragment())
+                    .commit();
+        }
     }
 
 
@@ -235,8 +234,8 @@ public class HomeActivity extends AppCompatActivity {
                     .setReorderingAllowed(true)
                     .add(binding.fragmentContainer.getId(), new HomeFragment())
                     .commit();
-            binding.navigationView.setCheckedItem(R.id.home_menu);
         }
+        binding.navigationView.setCheckedItem(R.id.home_menu);
     }
 
     //override default back press behavior

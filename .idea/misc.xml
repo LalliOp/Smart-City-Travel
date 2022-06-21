@@ -13,6 +13,7 @@
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/drawable-anydpi/ic_send_message.xml" value="0.1595" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/drawable/all_round_corner.xml" value="0.1595" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/drawable/color_cursor.xml" value="0.1595" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1595" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/drawable/message_edittext_bg.xml" value="0.1595" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/drawable/message_left.xml" value="0.1595" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/drawable/message_right.xml" value="0.1595" />
@@ -20,7 +21,9 @@
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/drawable/round_button.xml" value="0.1595" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/drawable/round_corner.xml" value="0.1595" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/drawable/splash_screen_background.xml" value="0.1595" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_change_password.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_edit_profile.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_email.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_general_search.xml" value="0.25" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_home.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_live_chat.xml" value="0.22" />
@@ -28,11 +31,13 @@
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_near_by_places.xml" value="0.25" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_place_detail.xml" value="0.25" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_place_list.xml" value="0.12364130434782608" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_write_review.xml" value="0.43333333333333335" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/dialog.xml" value="0.25" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/fragment_about_us.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/fragment_favorite.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/fragment_home.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/fragment_navigation.xml" value="0.21" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/fragment_review.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/fragment_settings.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/item_message_receive.xml" value="0.5" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/item_message_send.xml" value="0.21" />

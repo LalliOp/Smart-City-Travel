@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +31,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         util = new Util();
         this.trimReviewLength = trimReviewLength;
         this.userList = userList;
+        Toast.makeText(context, reviewList.size(), Toast.LENGTH_SHORT).show();
 
     }
 

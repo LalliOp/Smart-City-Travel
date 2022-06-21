@@ -52,8 +52,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
         initialize();
         setToolbar();
         checkConnectionAndGetPlaceDetail();
-        fillFavorite();
-        blankFavorite();
+        fillFavoriteIcon();
+        blankFavoriteIcon();
     }
 
     //initialize variables
@@ -74,7 +74,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
     }
 
     //change favorite icon to filled pink color and add place in favorite
-    public void fillFavorite() {
+    public void fillFavoriteIcon() {
         binding.favoriteBorder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +128,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
     }
 
     //change favorite icon to blank icon and remove place from favorite
-    public void blankFavorite() {
+    public void blankFavoriteIcon() {
         binding.favoriteFilled.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

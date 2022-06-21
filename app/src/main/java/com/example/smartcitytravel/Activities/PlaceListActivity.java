@@ -1,7 +1,6 @@
 package com.example.smartcitytravel.Activities;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -13,6 +12,7 @@ import com.example.smartcitytravel.DataModel.Place;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.RecyclerView.PlaceAdapter;
 import com.example.smartcitytravel.Util.Connection;
+import com.example.smartcitytravel.Util.GridSpaceItemDecoration;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityPlaceListBinding;
 import com.google.android.gms.tasks.OnSuccessListener;

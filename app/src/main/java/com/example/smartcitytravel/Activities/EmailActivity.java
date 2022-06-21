@@ -53,7 +53,7 @@ public class EmailActivity extends AppCompatActivity {
     }
 
     // call when user click on continue button
-    // check email ,send pin code and move to pin code activity
+    // check email and move to pin code activity
     public void continueButtonClickListener() {
         binding.continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +130,7 @@ public class EmailActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user").whereEqualTo("email", binding.emailEdit.getText().toString().toLowerCase())
                 .get()
-                .addOnSuccessListener(this,new OnSuccessListener<QuerySnapshot>() {
+                .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if (!queryDocumentSnapshots.isEmpty()) {

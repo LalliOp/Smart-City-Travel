@@ -21,6 +21,7 @@ import com.example.smartcitytravel.DataModel.PlaceLocation;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.RecyclerView.GridPlaceAdapter;
 import com.example.smartcitytravel.Util.GpsTracker;
+import com.example.smartcitytravel.Util.GridSpaceItemDecoration;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityNearByPlacesBinding;
 import com.google.android.gms.maps.model.LatLng;

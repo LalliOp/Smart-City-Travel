@@ -98,14 +98,6 @@ public class PreferenceHandler {
                 Context.MODE_PRIVATE);
         return sharedPreferences.getString("name", "");
     }
-
-    //get password of logged in account
-    public String getPasswordPreference(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),
-                Context.MODE_PRIVATE);
-        return sharedPreferences.getString("password", "");
-    }
-
     //get profile image of logged in account
     public String getImagePreference(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.PREFERENCE),

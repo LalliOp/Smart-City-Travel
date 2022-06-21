@@ -2,10 +2,11 @@ package com.example.smartcitytravel.DataModel;
 
 import com.google.firebase.firestore.Exclude;
 
+
 public class Favorite {
-    public String favoriteId;
-    public String userId;
-    public String placeId;
+    private String favoriteId;
+    private String userId;
+    private String placeId;
 
     public Favorite() {
     }

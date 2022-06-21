@@ -14,7 +14,7 @@ import com.example.smartcitytravel.databinding.FragmentDescriptionBinding;
 
 public class DescriptionFragment extends Fragment {
     private FragmentDescriptionBinding binding;
-    private final PlaceDetail placeDetail;
+    private PlaceDetail placeDetail;
 
     public DescriptionFragment(PlaceDetail placeDetail) {
         this.placeDetail = placeDetail;

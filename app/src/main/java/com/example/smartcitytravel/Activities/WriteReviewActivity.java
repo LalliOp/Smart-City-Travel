@@ -83,7 +83,6 @@ public class WriteReviewActivity extends AppCompatActivity {
     public void getIntentData() {
         if (getIntent().getExtras() != null) {
             toEdit = getIntent().getExtras().getBoolean("edit");
-
             setReviewAndRating();
         } else {
             toEdit = false;
@@ -231,10 +230,9 @@ public class WriteReviewActivity extends AppCompatActivity {
                         returnIntentData.putExtra("review", binding.reviewEdit.getText().toString());
                         returnIntentData.putExtra("rating", binding.ratingBar.getRating());
 
-                        calculateAverageRating(binding.ratingBar.getRating());
-
                         updateRating = false;
                         finishActivity();
+                        calculateAverageRating(binding.ratingBar.getRating());
                     }
                 });
     }
@@ -317,6 +315,7 @@ public class WriteReviewActivity extends AppCompatActivity {
         } catch (Exception ignored) {
             updateMessageToast = Toast.makeText(this, "Review updated", Toast.LENGTH_SHORT);
             updateMessageToast.show();
+            finish();
         }
     }
 
@@ -410,12 +409,14 @@ public class WriteReviewActivity extends AppCompatActivity {
                                 newAvgRating = roundDoubleValue(newAvgRating);
 
                                 updateAverageRating(newAvgRating);
-
                             } else {
-                                updateAverageRating(userRating);
+                                Toast.makeText(WriteReviewActivity.this, "ELSE", Toast.LENGTH_SHORT).show();
 
+                                updateAverageRating(userRating);
                             }
+                            updateVotes(rating_count);
                         }
+
                     }
                 });
     }
@@ -437,10 +438,17 @@ public class WriteReviewActivity extends AppCompatActivity {
                             displayUpdateMessage();
                         } else {
                             Toast.makeText(WriteReviewActivity.this, "Review posted", Toast.LENGTH_SHORT).show();
-
+                            finish();
                         }
                     }
                 });
+    }
+
+    // update the total number of votes for specific place
+    public void updateVotes(int no_of_votes) {
+        db.collection("place")
+                .document(placeId)
+                .update("Vote", no_of_votes);
     }
 
     //round double value to one decimal places
