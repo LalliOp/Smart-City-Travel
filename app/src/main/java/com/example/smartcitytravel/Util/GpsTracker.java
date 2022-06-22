@@ -24,6 +24,7 @@ public class GpsTracker implements LocationListener {
     private static final long MIN_TIME_BTW_UPDATES = 1000 * 60 * 1;
     private LocationManager locationManager;
 
+
     public GpsTracker(Context context) {
         this.context = context;
         this.isGPSEnabled = false;
@@ -32,6 +33,19 @@ public class GpsTracker implements LocationListener {
         this.latitude = 0.0;
         this.longitude = 0.0;
         this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
+    }
+
+    @SuppressLint("MissingPermission")
+    public void registerForLocationUpdates() {
+        locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER,
+                MIN_TIME_BTW_UPDATES,
+                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                MIN_TIME_BTW_UPDATES,
+                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
     }
 
     public Location getLocation() {
@@ -44,6 +58,8 @@ public class GpsTracker implements LocationListener {
             return null;
         } else {
             canGetLocation = true;
+            registerForLocationUpdates();
+
             if (isNetworkEnabled) {
                 location = networkProvider();
 
@@ -57,11 +73,6 @@ public class GpsTracker implements LocationListener {
 
     @SuppressLint("MissingPermission")
     public Location networkProvider() {
-        locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                MIN_TIME_BTW_UPDATES,
-                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-
         if (locationManager != null) {
             location = locationManager
                     .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -76,11 +87,6 @@ public class GpsTracker implements LocationListener {
 
     @SuppressLint("MissingPermission")
     public Location GPSProvider() {
-        locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                MIN_TIME_BTW_UPDATES,
-                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-
         if (locationManager != null) {
             location = locationManager
                     .getLastKnownLocation(LocationManager.GPS_PROVIDER);

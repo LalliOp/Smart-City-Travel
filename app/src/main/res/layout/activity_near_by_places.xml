@@ -11,6 +11,16 @@
         android:id="@+id/toolbarLayout"
         layout="@layout/toolbar" />
 
+    <TextView
+        android:id="@+id/noPlaceTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/no_nearby_place_to_show"
+        android:textColor="@color/default_black"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/PlaceRecyclerView"
         android:layout_width="match_parent"
@@ -80,5 +90,8 @@
         android:text="@string/location_settings"
         android:visibility="gone" />
 
+    <include
+        android:id="@+id/CheckConnectionLayout"
+        layout="@layout/no_connection" />
 
 </RelativeLayout>

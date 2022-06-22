@@ -102,4 +102,5 @@
     <string name="navigation">Navigation</string>
     <string name="title">Title</string>
     <string name="message">Message</string>
+    <string name="no_nearby_place_to_show">No nearby place to show</string>
 </resources>
