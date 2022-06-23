@@ -1,9 +1,11 @@
 package com.example.smartcitytravel.Activities;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,8 +16,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -39,12 +45,22 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.Map;
+
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
     private Util util;
     private PreferenceHandler preferenceHandler;
     private UpdateProfileImageBroadcast updateProfileImageBroadcast;
     private UpdateProfileNameBroadcast updateProfileNameBroadcast;
+
+    private final ActivityResultLauncher<String[]> locationPermissionRequest = registerForActivityResult
+            (new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
+                @Override
+                public void onActivityResult(Map<String, Boolean> result) {
+                }
+            });
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +69,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         initialize();
+        requestLocationPermission();
         User user = preferenceHandler.getLoggedInAccountPreference(HomeActivity.this);
         registerUpdateProfileImageBroadcastReceiver();
         registerUpdateProfileNameBroadcastReceiver();
@@ -374,6 +391,16 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    // request location permission. If permission is denied, Ask for location permission
+    public void requestLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            locationPermissionRequest.launch(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION});
+
+        }
 
     }
 

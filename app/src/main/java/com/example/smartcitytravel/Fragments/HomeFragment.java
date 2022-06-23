@@ -3,6 +3,7 @@ package com.example.smartcitytravel.Fragments;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +67,6 @@ public class HomeFragment extends Fragment {
         binding.generalSearchCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLoadingBar();
                 Intent intent = new Intent(requireActivity(), GeneralSearchActivity.class);
                 startActivity(intent);
             }
@@ -86,8 +86,15 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showLoadingBar();
-                Intent intent = new Intent(getActivity(), DestinationActivity.class);
-                startActivity(intent);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        Intent intent = new Intent(getActivity(), DestinationActivity.class);
+                        startActivity(intent);
+                    }
+                }, 100);
+
             }
         });
     }
@@ -97,9 +104,14 @@ public class HomeFragment extends Fragment {
         binding.nearbyCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLoadingBar();
-                Intent intent = new Intent(getActivity(), NearByPlacesActivity.class);
-                startActivity(intent);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(getActivity(), NearByPlacesActivity.class);
+                        startActivity(intent);
+                    }
+                }, 100);
+
             }
         });
     }

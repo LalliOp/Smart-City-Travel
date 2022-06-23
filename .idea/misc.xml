@@ -22,6 +22,7 @@
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/drawable/round_corner.xml" value="0.1595" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/drawable/splash_screen_background.xml" value="0.1595" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_change_password.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_destination.xml" value="0.12364130434782608" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_edit_profile.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_email.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_general_search.xml" value="0.25" />
@@ -29,27 +30,42 @@
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_live_chat.xml" value="0.22" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_login.xml" value="0.12364130434782608" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_near_by_places.xml" value="0.25" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_new_password.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_pin_code.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_place_detail.xml" value="0.25" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_place_list.xml" value="0.12364130434782608" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_see_all_review.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_show_more_place.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_sign_up.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_successful_account_message.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_write_review.xml" value="0.43333333333333335" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/bigger_place_view.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/dialog.xml" value="0.25" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/edit_review_option.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/fragment_about_us.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/fragment_description.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/fragment_favorite.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/fragment_home.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/fragment_navigation.xml" value="0.21" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/fragment_review.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/fragment_settings.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/image_slider_layout.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/item_message_receive.xml" value="0.5" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/item_message_send.xml" value="0.21" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/loading_progress_bar.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/logo.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/logo_title.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/navigation_drawer_header.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/no_connection.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/place_view.xml" value="0.25" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/reset_password_background.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/retry_connection.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/review_view.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/search_bar.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/select_profile_image.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/show_more_places.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/toolbar.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/write_review_option.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/menu/menu_main.xml" value="0.2" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/menu/navigation_drawer_menu.xml" value="0.2" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/menu/search_menu.xml" value="0.2" />

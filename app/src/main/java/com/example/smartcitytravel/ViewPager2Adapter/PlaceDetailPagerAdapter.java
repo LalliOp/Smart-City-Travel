@@ -1,5 +1,7 @@
 package com.example.smartcitytravel.ViewPager2Adapter;
 
+import android.location.LocationManager;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -13,12 +15,12 @@ import com.example.smartcitytravel.Fragments.ReviewFragment;
 
 public class PlaceDetailPagerAdapter extends FragmentStateAdapter {
     private PlaceDetail placeDetail;
-    private FragmentActivity fragmentActivity;
+    private LocationManager locationManager;
 
-    public PlaceDetailPagerAdapter(@NonNull FragmentActivity fragmentActivity, PlaceDetail placeDetail) {
+    public PlaceDetailPagerAdapter(@NonNull FragmentActivity fragmentActivity, PlaceDetail placeDetail, LocationManager locationManager) {
         super(fragmentActivity);
         this.placeDetail = placeDetail;
-        this.fragmentActivity = fragmentActivity;
+        this.locationManager = locationManager;
     }
 
     @NonNull
@@ -28,7 +30,7 @@ public class PlaceDetailPagerAdapter extends FragmentStateAdapter {
             case 0:
                 return new DescriptionFragment(placeDetail);
             case 1:
-                return new NavigationFragment(fragmentActivity, placeDetail);
+                return new NavigationFragment(placeDetail, locationManager);
             case 2:
                 return new ReviewFragment(placeDetail);
             default:

@@ -1,5 +1,6 @@
 package com.example.smartcitytravel.Activities;
 
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -289,7 +290,9 @@ public class PlaceDetailActivity extends AppCompatActivity {
     //create viewpager2 and tab layout
     //show tabs which show place detail
     public void createPlaceDetailTabs(PlaceDetail placeDetail) {
-        PlaceDetailPagerAdapter placeDetailPagerAdapter = new PlaceDetailPagerAdapter(this, placeDetail);
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        PlaceDetailPagerAdapter placeDetailPagerAdapter = new PlaceDetailPagerAdapter(this, placeDetail, locationManager);
         binding.placeDetailViewPager2.setAdapter(placeDetailPagerAdapter);
 
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(binding.tabLayout, binding.placeDetailViewPager2, new TabLayoutMediator.TabConfigurationStrategy() {

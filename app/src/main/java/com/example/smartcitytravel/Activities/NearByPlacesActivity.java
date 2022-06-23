@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -56,56 +55,34 @@ public class NearByPlacesActivity extends AppCompatActivity {
     private Location currentLocation;
     private boolean lastKnownLocationAccess;
     private Connection connection;
+    private String city;
 
 
     // whenever location is changed or location is on or off
     private final LocationListener locationListener = new LocationListener() {
         @Override
-        public void onFlushComplete(int requestCode) {
-            Toast.makeText(NearByPlacesActivity.this, "onFlush", Toast.LENGTH_SHORT).show();
-            LocationListener.super.onFlushComplete(requestCode);
-        }
-
-        @Override
         public void onLocationChanged(@NonNull Location location) {
-            checkLocationPermission();
             if (locationPermissionAllowed) {
                 currentLocation = location;
                 if (lastKnownLocationAccess) {
                     lastKnownLocationAccess = false;
                 } else {
-                    hideLocationPermissionButton();
-
-                    requestLocationPermission();
+                    city = getCityName();
                     checkConnectionAndGetNearByPlaces();
-                    Toast.makeText(NearByPlacesActivity.this, "LOCATION: " + location.getLongitude(), Toast.LENGTH_SHORT).show();
-
                 }
-            } else {
-                showLocationPermissionButton();
             }
-
-            Toast.makeText(NearByPlacesActivity.this, "onChanged", Toast.LENGTH_SHORT).show();
-
         }
 
         @Override
         public void onProviderEnabled(@NonNull String provider) {
-            Toast.makeText(NearByPlacesActivity.this, "ENABLED", Toast.LENGTH_SHORT).show();
-
-            checkLocationPermission();
             if (locationPermissionAllowed) {
                 hideLocationSettingsButton();
-
             }
             LocationListener.super.onProviderEnabled(provider);
         }
 
         @Override
         public void onProviderDisabled(@NonNull String provider) {
-            Toast.makeText(NearByPlacesActivity.this, "DISABLED", Toast.LENGTH_SHORT).show();
-
-            checkLocationPermission();
             if (locationPermissionAllowed) {
                 showLocationSettingsButton();
 
@@ -124,10 +101,11 @@ public class NearByPlacesActivity extends AppCompatActivity {
                     if (fineLocationPermission != null && fineLocationPermission
                             || coarseLocationPermission != null && coarseLocationPermission) {
                         locationPermissionAllowed = true;
+                        getNearByPlacesWithLastKnownLocation();
                     } else {
                         locationPermissionAllowed = false;
-
                     }
+                    checkLocationPermission();
                 }
             });
 
@@ -140,16 +118,15 @@ public class NearByPlacesActivity extends AppCompatActivity {
 
         initialize();
         requestLocationPermission();
-        getNearByPlacesWithOldLocation();
         setToolBarTheme();
         openLocationSetting();
         changeRange();
-
-
+        getNearByPlacesWithLastKnownLocation();
     }
 
     @Override
     protected void onResume() {
+        checkLocationPermission();
         registerForLocationUpdates();
         super.onResume();
     }
@@ -163,7 +140,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         lastKnownLocationAccess = false;
         connection = new Connection();
-
     }
 
     //change range when user click range button
@@ -203,7 +179,7 @@ public class NearByPlacesActivity extends AppCompatActivity {
     public void getNearByPlaces() {
         if (locationPermissionAllowed) {
             db.collection("place")
-                    .whereEqualTo("City", getCityName())
+                    .whereEqualTo("City", city)
                     .get()
                     .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
                         @Override
@@ -255,14 +231,20 @@ public class NearByPlacesActivity extends AppCompatActivity {
 
     }
 
+    // get near by places by using last known location
     @SuppressLint("MissingPermission")
-    public void getNearByPlacesWithOldLocation() {
+    public void getNearByPlacesWithLastKnownLocation() {
         if (locationPermissionAllowed) {
-            currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            if (currentLocation != null) {
-                checkConnectionAndGetNearByPlaces();
+            if (locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null) {
+                currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 lastKnownLocationAccess = true;
+                city = getCityName();
+                checkConnectionAndGetNearByPlaces();
+            } else if (locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) != null) {
+                currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                lastKnownLocationAccess = true;
+                city = getCityName();
+                checkConnectionAndGetNearByPlaces();
             }
         }
     }
@@ -377,14 +359,17 @@ public class NearByPlacesActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationPermissionAllowed = true;
+            hideLocationPermissionButton();
         } else {
             locationPermissionAllowed = false;
+            showLocationPermissionButton();
         }
     }
 
     // show when location permission is denied
     // it show button which navigate to settings page which can navigate to permission page
     public void showLocationPermissionButton() {
+        binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
         binding.PlaceRecyclerView.setVisibility(View.GONE);
         binding.rangeLayout.setVisibility(View.GONE);
         binding.locationPermissionBtn.setVisibility(View.VISIBLE);
@@ -399,6 +384,8 @@ public class NearByPlacesActivity extends AppCompatActivity {
     //hide when location permission is allowed
     public void hideLocationPermissionButton() {
         binding.locationPermissionBtn.setVisibility(View.GONE);
+        binding.PlaceRecyclerView.setVisibility(View.VISIBLE);
+        binding.rangeBtn.setVisibility(View.VISIBLE);
     }
 
     // app detail settings page are open, where we navigate to permissions page
@@ -411,6 +398,7 @@ public class NearByPlacesActivity extends AppCompatActivity {
 
     //show when location settings is off
     void showLocationSettingsButton() {
+        binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
         binding.PlaceRecyclerView.setVisibility(View.GONE);
         binding.rangeLayout.setVisibility(View.GONE);
         binding.locationSettingBtn.setVisibility(View.VISIBLE);
@@ -424,7 +412,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
     // register to get current location
     @SuppressLint("MissingPermission")
     public void registerForLocationUpdates() {
-        checkLocationPermission();
         if (locationPermissionAllowed) {
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,

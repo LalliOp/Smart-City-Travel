@@ -11,13 +11,13 @@
         android:id="@+id/mapFragment"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/navigateBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="20dp"
@@ -25,7 +25,24 @@
         android:text="@string/navigation"
         android:textAllCaps="false"
         android:textColor="@color/white"
+        android:visibility="gone"
         app:icon="@drawable/ic_navigation"
         app:iconTint="@color/white" />
 
+    <Button
+        android:id="@+id/locationPermissionBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/allow_location_permission"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/locationSettingBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/locationPermissionBtn"
+        android:layout_centerInParent="true"
+        android:text="@string/location_settings"
+        android:visibility="gone" />
 </RelativeLayout>
