@@ -13,8 +13,8 @@ public class PlaceDetail extends Place {
         super();
     }
 
-    public PlaceDetail(String name, String city, String description, String image1, String image2, String image3, Float rating, String latitude, String longitude, String timing) {
-        super(name, image1, rating);
+    public PlaceDetail(String name, String city, String description, String image1, String image2, String image3, Float rating, String latitude, String longitude, String timing, String sub_type, String place_type) {
+        super(name, image1, rating, sub_type, place_type);
         City = city;
         Description = description;
         Image2 = image2;

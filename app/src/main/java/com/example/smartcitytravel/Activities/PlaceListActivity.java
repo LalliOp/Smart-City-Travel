@@ -3,40 +3,41 @@ package com.example.smartcitytravel.Activities;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.smartcitytravel.DataModel.Favorite;
 import com.example.smartcitytravel.DataModel.Place;
+import com.example.smartcitytravel.DataModel.Review;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.RecyclerView.PlaceAdapter;
 import com.example.smartcitytravel.Util.Connection;
 import com.example.smartcitytravel.Util.GridSpaceItemDecoration;
+import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ActivityPlaceListBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class PlaceListActivity extends AppCompatActivity {
     private ActivityPlaceListBinding binding;
     private Util util;
+    private String userId;
     private Connection connection;
-    private Toast noConnectionToast;
-    private boolean popularPlacesAvailable;
-    private boolean restaurantPlacesAvailable;
-    private boolean famousSpotsAvailable;
-    private boolean hotelPlacesAvailable;
-    private CollectionReference placeCollection;
     private String city;
+    private PreferenceHandler preferenceHandler;
+    private ArrayList<Place> placeList;
+    private FirebaseFirestore db;
 
 
     @Override
@@ -54,14 +55,11 @@ public class PlaceListActivity extends AppCompatActivity {
     public void initialize() {
         connection = new Connection();
         util = new Util();
-        noConnectionToast = new Toast(this);
-        placeCollection = FirebaseFirestore.getInstance().collection("place");
+        db = FirebaseFirestore.getInstance();
         city = getIntent().getExtras().getString("destination_name");
-
-        popularPlacesAvailable = false;
-        restaurantPlacesAvailable = false;
-        famousSpotsAvailable = false;
-        hotelPlacesAvailable = false;
+        preferenceHandler = new PreferenceHandler();
+        userId = preferenceHandler.getUserIdPreference(this);
+        placeList = new ArrayList<>();
     }
 
     //add toolbar in activity and customize status bar color
@@ -87,10 +85,7 @@ public class PlaceListActivity extends AppCompatActivity {
                             binding.famousSpotLayout.setVisibility(View.VISIBLE);
                             binding.hotelLayout.setVisibility(View.VISIBLE);
 
-                            getPopularPlaces();
-                            getRestaurantPlaces();
-                            getFamousSpots();
-                            getHotelPlaces();
+                            getPlaceList();
                         } else {
                             binding.checkConnectionLayout.noConnectionLayout.setVisibility(View.VISIBLE);
                             retryConnection();
@@ -118,40 +113,48 @@ public class PlaceListActivity extends AppCompatActivity {
 
     }
 
-    //get popular places from database and pass to recycler view
-    public void getPopularPlaces() {
-        placeCollection.whereEqualTo("City", city)
-                .orderBy("Rating", Query.Direction.DESCENDING)
-                .limit(100)
+    public void getPlaceList() {
+        db.collection("place")
+                .whereEqualTo("City", city)
                 .get()
-                .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if (!queryDocumentSnapshots.isEmpty()) {
-                            ArrayList<Place> popularPlaceList = new ArrayList<>();
                             for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
                                 Place place = querySnapshot.toObject(Place.class);
                                 place.setPlaceId(querySnapshot.getId());
-                                popularPlaceList.add(place);
-
+                                placeList.add(place);
                             }
 
-//                            Collections.shuffle(popularPlaceList);
-//
-//                            ArrayList<Place> placeList = new ArrayList<>(popularPlaceList.subList(0, popularPlaceList.size() - 1));
+                            getRecommendedPlaces();
+                            getPopularPlaces();
+                            getRestaurantPlaces();
+                            getFamousSpots();
+                            getHotelPlaces();
 
-                            showPopularPlaces(popularPlaceList);
-
-                            popularPlacesAvailable = true;
-
-                        } else {
-                            displayNoConnectionMessage();
-                            retryPopularListener();
-                            popularPlacesAvailable = false;
                         }
-                        binding.popularLoadingBar.setVisibility(View.GONE);
                     }
                 });
+    }
+
+    //get popular places by using placeList
+    public void getPopularPlaces() {
+        Collections.sort(placeList, new Comparator<Place>() {
+            @Override
+            public int compare(Place place1, Place place2) {
+                return place1.getRating().compareTo(place2.getRating());
+            }
+        });
+        Collections.reverse(placeList);
+
+        ArrayList<Place> popularPlaceList = new ArrayList<>(placeList.subList(0, 10));
+        Collections.shuffle(popularPlaceList);
+
+        //ArrayList<Place> placeList = new ArrayList<>(popularPlaceList.subList(0, popularPlaceList.size() - 1));
+
+        showPopularPlaces(popularPlaceList);
+        binding.popularLoadingBar.setVisibility(View.GONE);
 
     }
 
@@ -165,64 +168,20 @@ public class PlaceListActivity extends AppCompatActivity {
         binding.popularRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
     }
 
-    //retry to get all places which is unable to get when click on popular retry button
-    public void retryPopularListener() {
-        binding.popularNoConnectionLayout.retryConnectionImg.setVisibility(View.VISIBLE);
-        binding.popularNoConnectionLayout.retryConnectionImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                retryGetPlaces();
-            }
-        });
-    }
-
-    public void createRecommendationRecyclerView(PlaceAdapter
-                                                         placeAdapter, GridSpaceItemDecoration gridSpaceItemDecoration) {
-
-        binding.recommendationRecyclerView.setAdapter(placeAdapter);
-        binding.recommendationRecyclerView.setHasFixedSize(true);
-        binding.recommendationRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        binding.recommendationRecyclerView.addItemDecoration(gridSpaceItemDecoration);
-    }
-
-    //get restaurant places from database and pass to recycler view
+    //get restaurant places by using placeList
     public void getRestaurantPlaces() {
+        ArrayList<Place> restaurantPlaceList = new ArrayList<>();
         String placeType = "Restaurant";
+        for (Place place : placeList) {
+            if (place.getPlace_type().equals(placeType)) {
+                restaurantPlaceList.add(place);
+            }
+        }
+        Collections.shuffle(restaurantPlaceList);
+        //ArrayList<Place> placeList = new ArrayList<>(popularPlaceList.subList(0, popularPlaceList.size() - 1));
 
-        placeCollection.whereEqualTo("City", city)
-                .whereEqualTo("Place_type", placeType)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            ArrayList<Place> restaurantPlaceList = new ArrayList<>();
-
-                            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
-                                Place place = querySnapshot.toObject(Place.class);
-                                place.setPlaceId(querySnapshot.getId());
-
-                                restaurantPlaceList.add(place);
-
-                            }
-
-//                            Collections.shuffle(restaurantPlaceList);
-//
-//                            ArrayList<Place> placeList = new ArrayList<>(restaurantPlaceList.subList(0, 10));
-
-                            showRestaurantPlaces(restaurantPlaceList, placeType);
-
-                            restaurantPlacesAvailable = true;
-
-                        } else {
-                            displayNoConnectionMessage();
-                            retryRestaurantListener();
-                            restaurantPlacesAvailable = false;
-                        }
-                        binding.restaurantLoadingBar.setVisibility(View.GONE);
-                    }
-                });
-
+        showRestaurantPlaces(restaurantPlaceList, placeType);
+        binding.restaurantLoadingBar.setVisibility(View.GONE);
     }
 
     //create recyclerview and show restaurant places
@@ -236,53 +195,20 @@ public class PlaceListActivity extends AppCompatActivity {
         binding.restaurantRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
     }
 
-    //retry to get all places which is unable to get when click on restaurant retry button
-    public void retryRestaurantListener() {
-        binding.restaurantNoConnectionLayout.retryConnectionImg.setVisibility(View.VISIBLE);
-        binding.restaurantNoConnectionLayout.retryConnectionImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                retryGetPlaces();
-
-            }
-        });
-    }
-
-    //get famous spots from database
+    //get famous spots by using placeList
     public void getFamousSpots() {
+        ArrayList<Place> famousSpotList = new ArrayList<>();
         String placeType = "Tourism_spot";
-        placeCollection.whereEqualTo("City", city)
-                .whereEqualTo("Place_type", placeType)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            ArrayList<Place> famousSpotList = new ArrayList<>();
+        for (Place place : placeList) {
+            if (place.getPlace_type().equals(placeType)) {
+                famousSpotList.add(place);
+            }
+        }
+        Collections.shuffle(famousSpotList);
+        //ArrayList<Place> placeList = new ArrayList<>(popularPlaceList.subList(0, popularPlaceList.size() - 1));
 
-                            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
-                                Place place = querySnapshot.toObject(Place.class);
-                                place.setPlaceId(querySnapshot.getId());
-
-                                famousSpotList.add(place);
-                            }
-
-//                            Collections.shuffle(famousSpotList);
-//
-//                            ArrayList<Place> placeList = new ArrayList<>(famousSpotList.subList(0, famousSpotList.size() - 1));
-
-                            showFamousSpots(famousSpotList, placeType);
-
-                            famousSpotsAvailable = true;
-
-                        } else {
-                            displayNoConnectionMessage();
-                            retryFamousSpotListener();
-                            famousSpotsAvailable = false;
-                        }
-                        binding.famousSpotLoadingBar.setVisibility(View.GONE);
-                    }
-                });
+        showFamousSpots(famousSpotList, placeType);
+        binding.famousSpotLoadingBar.setVisibility(View.GONE);
     }
 
     //create recyclerview and show famous spots
@@ -296,53 +222,20 @@ public class PlaceListActivity extends AppCompatActivity {
         binding.famousSpotRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
     }
 
-    //retry to get all places which is unable to get when click on famous spots retry button
-    public void retryFamousSpotListener() {
-        binding.famousSpotNoConnectionLayout.retryConnectionImg.setVisibility(View.VISIBLE);
-        binding.famousSpotNoConnectionLayout.retryConnectionImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                retryGetPlaces();
-
-            }
-        });
-    }
-
-    //get hotel places from database and pass to recycler view
+    //get hotel places by using placeList
     public void getHotelPlaces() {
+        ArrayList<Place> hotelPlaceList = new ArrayList<>();
         String placeType = "Hotel";
-        placeCollection.whereEqualTo("City", city)
-                .whereEqualTo("Place_type", placeType)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            ArrayList<Place> hotelPlaceList = new ArrayList<>();
+        for (Place place : placeList) {
+            if (place.getPlace_type().equals(placeType)) {
+                hotelPlaceList.add(place);
+            }
+        }
+        Collections.shuffle(hotelPlaceList);
+        //ArrayList<Place> placeList = new ArrayList<>(popularPlaceList.subList(0, popularPlaceList.size() - 1));
 
-                            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
-                                Place place = querySnapshot.toObject(Place.class);
-                                place.setPlaceId(querySnapshot.getId());
-
-                                hotelPlaceList.add(place);
-
-                            }
-//                            Collections.shuffle(hotelPlaceList);
-//
-//                            ArrayList<Place> placeList = new ArrayList<>(hotelPlaceList.subList(0, hotelPlaceList.size() - 1));
-
-                            showHotelPlaces(hotelPlaceList, placeType);
-
-                            hotelPlacesAvailable = true;
-
-                        } else {
-                            displayNoConnectionMessage();
-                            retryHotelListener();
-                            hotelPlacesAvailable = false;
-                        }
-                        binding.hotelLoadingBar.setVisibility(View.GONE);
-                    }
-                });
+        showHotelPlaces(hotelPlaceList, placeType);
+        binding.hotelLoadingBar.setVisibility(View.GONE);
     }
 
     //create recyclerview and show hotel places
@@ -356,54 +249,6 @@ public class PlaceListActivity extends AppCompatActivity {
         binding.hotelRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
     }
 
-    //retry to get all places which is unable to get when click on hotel retry button
-    public void retryHotelListener() {
-        binding.hotelNoConnectionLayout.retryConnectionImg.setVisibility(View.VISIBLE);
-        binding.hotelNoConnectionLayout.retryConnectionImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                retryGetPlaces();
-            }
-        });
-    }
-
-    // retry to get places
-    public void retryGetPlaces() {
-        if (!popularPlacesAvailable) {
-            binding.popularLoadingBar.setVisibility(View.VISIBLE);
-            binding.popularNoConnectionLayout.retryConnectionImg.setVisibility(View.GONE);
-            getPopularPlaces();
-        }
-        if (!restaurantPlacesAvailable) {
-            binding.restaurantLoadingBar.setVisibility(View.VISIBLE);
-            binding.restaurantNoConnectionLayout.retryConnectionImg.setVisibility(View.GONE);
-            getRestaurantPlaces();
-        }
-        if (!famousSpotsAvailable) {
-            binding.famousSpotLoadingBar.setVisibility(View.VISIBLE);
-            binding.famousSpotNoConnectionLayout.retryConnectionImg.setVisibility(View.GONE);
-            getFamousSpots();
-        }
-        if (!hotelPlacesAvailable) {
-            binding.hotelLoadingBar.setVisibility(View.VISIBLE);
-            binding.hotelNoConnectionLayout.retryConnectionImg.setVisibility(View.GONE);
-            getHotelPlaces();
-
-        }
-
-    }
-
-    // show only one no connection msg when multiple connection failed at a same time to get places
-    public void displayNoConnectionMessage() {
-        try {
-            noConnectionToast.cancel();
-            noConnectionToast.getView().isShown();
-        } catch (Exception ignored) {
-            noConnectionToast = Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT);
-            noConnectionToast.show();
-        }
-    }
-
     // return to previous activity when user click on up button (which is back button on top life side)
     @Override
     public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
@@ -415,4 +260,109 @@ public class PlaceListActivity extends AppCompatActivity {
         }
 
     }
+
+    // get recommended places
+    public void getRecommendedPlaces() {
+        getUserFavoritePlaces();
+    }
+
+    // get places ids which user add in favorite
+    public void getUserFavoritePlaces() {
+        ArrayList<String> favoritePlacesIdList = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("favorite")
+                .whereEqualTo("userId", userId)
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                                Favorite favoritePlace = querySnapshot.toObject(Favorite.class);
+                                favoritePlacesIdList.add(favoritePlace.getPlaceId());
+
+                            }
+                            getUserTopRatedPlaces(favoritePlacesIdList);
+                        }
+                    }
+                });
+    }
+
+    // get places ids which user rate 3.5 or higher
+    public void getUserTopRatedPlaces(ArrayList<String> favoritePlacesIdList) {
+        ArrayList<String> topRatedPlacesIdList = new ArrayList<>();
+        db.collection("review")
+                .whereEqualTo("userId", userId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                                Review place = querySnapshot.toObject(Review.class);
+                                topRatedPlacesIdList.add(place.getPlaceId());
+                            }
+                            createRecommendation(favoritePlacesIdList, topRatedPlacesIdList);
+
+                        }
+                    }
+                });
+    }
+
+    // create recommendation
+    // use user favorite places ids and 3.5 or higher rated places ids to get type of places user like
+    // get places which match with type of places user liked
+    public void createRecommendation(ArrayList<String> favoritePlacesIdList,
+                                     ArrayList<String> topRatedPlacesIdList) {
+
+        HashSet<String> placeSubTypeHashSet = new HashSet<>();
+        for (Place place : placeList) {
+            for (String favoritePlaceId : favoritePlacesIdList) {
+                if (place.getPlaceId().equals(favoritePlaceId)) {
+                    placeSubTypeHashSet.add(place.getSub_type());
+                    break;
+                }
+            }
+        }
+        for (Place place : placeList) {
+            for (String topRatedPlaceId : topRatedPlacesIdList) {
+                if (place.getPlaceId().equals(topRatedPlaceId)
+                        && place.getRating() >= 3.5) {
+                    placeSubTypeHashSet.add(place.getSub_type());
+                    break;
+                }
+            }
+        }
+
+        ArrayList<Place> recommendedPlaceList = new ArrayList<>();
+        for (Place place : placeList) {
+            for (String placeSubType : placeSubTypeHashSet) {
+                if (place.getSub_type().equals(placeSubType)) {
+                    recommendedPlaceList.add(place);
+                    break;
+                }
+
+            }
+        }
+
+        if (!recommendedPlaceList.isEmpty()) {
+            Collections.shuffle(recommendedPlaceList);
+            // limit size of recommended places as same implementation remain in other places
+
+            showRecommendedPlaces(recommendedPlaceList);
+            binding.recommendationLayout.setVisibility(View.VISIBLE);
+        }
+
+
+    }
+
+    //create recyclerview for recommended places
+    public void showRecommendedPlaces(ArrayList<Place> recommendedPlaceList) {
+        PlaceAdapter placeAdapter = new PlaceAdapter(this, recommendedPlaceList);
+
+        binding.recommendationRecyclerView.setAdapter(placeAdapter);
+        binding.recommendationRecyclerView.setHasFixedSize(true);
+        binding.recommendationRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        binding.recommendationRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
+    }
+
 }

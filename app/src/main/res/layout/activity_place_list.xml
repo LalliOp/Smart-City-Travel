@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:animateLayoutChanges="true"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/recyclerViewLayout"
@@ -54,12 +54,6 @@
                         android:indeterminate="true"
                         android:indeterminateTint="@color/blue" />
 
-                    <include
-                        android:id="@+id/popularNoConnectionLayout"
-                        layout="@layout/retry_connection"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true" />
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -82,32 +76,11 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/recommendationTitle">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recommendationRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="250dp" />
-
-                    <ProgressBar
-                        android:id="@+id/recommendationLoadingBar"
-                        android:layout_width="wrap_content"
-
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:indeterminate="true"
-                        android:indeterminateTint="@color/blue" />
-
-                    <include
-                        android:id="@+id/recommendation_no_connection_layout"
-                        layout="@layout/retry_connection"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true" />
-                </RelativeLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recommendationRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_below="@id/recommendationTitle" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -142,19 +115,11 @@
 
                     <ProgressBar
                         android:id="@+id/restaurantLoadingBar"
-
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:indeterminate="true"
                         android:indeterminateTint="@color/blue" />
-
-                    <include
-                        android:id="@+id/restaurant_no_connection_layout"
-                        layout="@layout/retry_connection"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true" />
                 </RelativeLayout>
 
             </RelativeLayout>
@@ -192,19 +157,12 @@
 
                     <ProgressBar
                         android:id="@+id/famousSpotLoadingBar"
-
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:indeterminate="true"
                         android:indeterminateTint="@color/blue" />
 
-                    <include
-                        android:id="@+id/famous_spot_no_connection_layout"
-                        layout="@layout/retry_connection"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true" />
                 </RelativeLayout>
 
             </RelativeLayout>
@@ -242,19 +200,11 @@
 
                     <ProgressBar
                         android:id="@+id/hotelLoadingBar"
-
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:indeterminate="true"
                         android:indeterminateTint="@color/blue" />
-
-                    <include
-                        android:id="@+id/hotel_no_connection_layout"
-                        layout="@layout/retry_connection"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true" />
                 </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>

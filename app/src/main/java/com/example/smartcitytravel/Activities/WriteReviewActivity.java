@@ -410,8 +410,6 @@ public class WriteReviewActivity extends AppCompatActivity {
 
                                 updateAverageRating(newAvgRating);
                             } else {
-                                Toast.makeText(WriteReviewActivity.this, "ELSE", Toast.LENGTH_SHORT).show();
-
                                 updateAverageRating(userRating);
                             }
                             updateVotes(rating_count);
