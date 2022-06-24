@@ -87,7 +87,7 @@ public class ReviewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentReviewBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -96,6 +96,7 @@ public class ReviewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        binding.checkConnectionLayout.noConnectionTxt.setTextSize(15);
 
         user = preferenceHandler.getLoggedInAccountPreference(requireActivity());
         checkConnectionAndLoadReviews();

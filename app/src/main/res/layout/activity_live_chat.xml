@@ -2,12 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:animateLayoutChanges="true"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
 
     <include
         android:id="@+id/toolbarLayout"
         layout="@layout/toolbar" />
+
+    <ProgressBar
+        android:id="@+id/loadingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/blue"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecyclerView"
@@ -17,14 +26,6 @@
         android:layout_below="@id/toolbarLayout"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:stackFromEnd="true" />
-
-
-    <ProgressBar
-        android:id="@+id/chatLoadingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:indeterminate="true" />
 
     <RelativeLayout
         android:id="@+id/messageLayout"
@@ -42,7 +43,7 @@
             android:background="@drawable/message_edittext_bg"
             android:focusable="true"
             android:hint="@string/type_message"
-            android:paddingHorizontal="10dp"
+            android:paddingHorizontal="15dp"
             android:textSize="16sp" />
 
         <RelativeLayout
@@ -60,5 +61,22 @@
                 android:src="@drawable/ic_send_message" />
         </RelativeLayout>
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/locationPermissionBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/allow_location_permission"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/locationSettingBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/locationPermissionBtn"
+        android:layout_centerInParent="true"
+        android:text="@string/location_settings"
+        android:visibility="gone" />
 
 </RelativeLayout>

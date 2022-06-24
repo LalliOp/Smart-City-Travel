@@ -15,6 +15,7 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -46,7 +47,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
     private static final long MIN_TIME_BTW_UPDATES = 60000;
     private LocationManager locationManager;
     private Location currentLocation;
-    private boolean lastKnownLocationAccess;
     private GoogleMap googleMap;
 
     // whenever location is changed or location is on or off
@@ -55,31 +55,28 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         public void onLocationChanged(@NonNull Location location) {
             if (locationPermissionAllowed) {
                 currentLocation = location;
-                if (lastKnownLocationAccess) {
-                    lastKnownLocationAccess = false;
-                } else {
-                    setLocationOnMap();
-                }
+                setLocationOnMap();
             }
         }
 
         @Override
         public void onProviderEnabled(@NonNull String provider) {
             if (locationPermissionAllowed) {
-                setLocationOnMap();
                 hideLocationSettingsButton();
 
             }
             LocationListener.super.onProviderEnabled(provider);
+
         }
 
         @Override
         public void onProviderDisabled(@NonNull String provider) {
-            if (locationPermissionAllowed) {
+            if (locationPermissionAllowed && currentLocation == null) {
                 showLocationSettingsButton();
 
             }
             LocationListener.super.onProviderDisabled(provider);
+
         }
     };
 
@@ -108,7 +105,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         this.locationManager = locationManager;
         placeLatLng = new LatLng(Double.parseDouble(placeDetail.getLatitude()), Double.parseDouble(placeDetail.getLongitude()));
         locationPermissionAllowed = false;
-        lastKnownLocationAccess = false;
     }
 
     @Override
@@ -131,6 +127,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         checkLocationPermission();
         registerForLocationUpdates();
+        setLocationOnMap();
         super.onResume();
     }
 
@@ -306,11 +303,9 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         if (locationPermissionAllowed) {
             if (locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null) {
                 currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                lastKnownLocationAccess = true;
                 setLocationOnMap();
             } else if (locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) != null) {
                 currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                lastKnownLocationAccess = true;
                 setLocationOnMap();
             }
         }

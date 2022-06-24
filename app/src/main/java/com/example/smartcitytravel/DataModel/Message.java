@@ -1,24 +1,27 @@
 package com.example.smartcitytravel.DataModel;
 
+import com.google.firebase.firestore.Exclude;
+
 public class Message {
 
-    private String id;
     private String senderID;
     private String senderName;
     private String message;
     private String date;
     private String time;
+    private String city;
+    private boolean error = false;
 
     public Message() {
     }
 
-    public Message(String id, String senderID, String senderName, String message, String date, String time) {
-        this.id = id;
+    public Message(String senderID, String senderName, String message, String date, String time, String city) {
         this.senderID = senderID;
         this.senderName = senderName;
         this.message = message;
         this.date = date;
         this.time = time;
+        this.city = city;
     }
 
     public String getDate() {
@@ -35,14 +38,6 @@ public class Message {
 
     public void setTime(String time) {
         this.time = time;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getSenderID() {
@@ -67,5 +62,22 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    @Exclude
+    public boolean isError() {
+        return error;
+    }
+
+    public void setError(boolean error) {
+        this.error = error;
     }
 }

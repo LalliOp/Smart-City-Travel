@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -83,9 +84,8 @@ public class NearByPlacesActivity extends AppCompatActivity {
 
         @Override
         public void onProviderDisabled(@NonNull String provider) {
-            if (locationPermissionAllowed) {
+            if (locationPermissionAllowed && currentLocation == null) {
                 showLocationSettingsButton();
-
             }
             LocationListener.super.onProviderDisabled(provider);
         }

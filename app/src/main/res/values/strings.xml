@@ -103,4 +103,6 @@
     <string name="title">Title</string>
     <string name="message">Message</string>
     <string name="no_nearby_place_to_show">No nearby place to show</string>
+    <string name="retry">Retry</string>
+    <string name="failed">failed</string>
 </resources>
