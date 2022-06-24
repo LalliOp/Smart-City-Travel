@@ -204,8 +204,8 @@ public class PinCodeActivity extends AppCompatActivity {
         }
 
         BackgroundMail.newBuilder(PinCodeActivity.this)
-                .withUsername("abdulmuqeet10012@yahoo.com")
-                .withPassword("A.undertaker485")
+                .withUsername("smartcitytravel011@gmail.com")
+                .withPassword("kcfhrubiwizacdeq")
                 .withMailto(email)
                 .withType(BackgroundMail.TYPE_PLAIN)
                 .withSubject("Pin code from smart city travel")
