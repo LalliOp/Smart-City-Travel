@@ -11,12 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.example.smartcitytravel.Util.GridSpaceItemDecoration;
 import com.example.smartcitytravel.DataModel.Favorite;
 import com.example.smartcitytravel.DataModel.Place;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.RecyclerView.GridPlaceAdapter;
 import com.example.smartcitytravel.Util.Connection;
+import com.example.smartcitytravel.Util.GridSpaceItemDecoration;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.FragmentFavoriteBinding;
@@ -61,7 +61,6 @@ public class FavoriteFragment extends Fragment {
         userId = preferenceHandler.getUserIdPreference(requireActivity());
         setToolBarTheme();
         checkConnectionAndGetFavoritePlaceList();
-
     }
 
     @Override
@@ -156,8 +155,11 @@ public class FavoriteFragment extends Fragment {
                                 }
                             }
 
-                            createRecyclerView(placeList);
-                            binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
+                            try {
+                                createRecyclerView(placeList);
+                                binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
+                            } catch (Exception ignored) {
+                            }
 
                         }
 
@@ -166,14 +168,12 @@ public class FavoriteFragment extends Fragment {
     }
 
     //create recyclerview and show places
-    public void createRecyclerView(ArrayList<Place> placeList) {
+    public void createRecyclerView(ArrayList<Place> placeList) throws Exception {
         placeRecyclerViewAdapter = new GridPlaceAdapter(requireActivity(),
                 placeList);
-
         binding.placeRecyclerView.setAdapter(placeRecyclerViewAdapter);
         binding.placeRecyclerView.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
         binding.placeRecyclerView.addItemDecoration(new GridSpaceItemDecoration(20, 26, 10, 0));
-
     }
 
     //run when user click on retry icon

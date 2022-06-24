@@ -12,7 +12,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
 import com.example.smartcitytravel.Util.Connection;
@@ -23,6 +22,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -91,7 +91,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     // set default profile image for create account
     public void setDefaultProfileImage() {
-        Glide.with(this)
+        Picasso.get()
                 .load(R.drawable.default_profile_image)
                 .into(binding.selectProfileImgLayout.profileImg);
 
@@ -99,7 +99,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     // set profile image
     public void setProfileImage(String imageUrl) {
-        Glide.with(this)
+        Picasso.get()
                 .load(imageUrl)
                 .into(binding.selectProfileImgLayout.profileImg);
 

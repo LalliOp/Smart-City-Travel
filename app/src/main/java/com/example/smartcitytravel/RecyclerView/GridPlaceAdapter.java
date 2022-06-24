@@ -12,11 +12,10 @@ import android.view.animation.ScaleAnimation;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.Activities.PlaceDetailActivity;
 import com.example.smartcitytravel.DataModel.Place;
-import com.example.smartcitytravel.DataModel.PlaceLocation;
 import com.example.smartcitytravel.databinding.BiggerPlaceViewBinding;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -28,6 +27,7 @@ public class GridPlaceAdapter extends RecyclerView.Adapter<GridPlaceAdapter.Plac
         this.context = context;
         this.placeList = placeList;
     }
+
     @NonNull
     @Override
     public PlaceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -54,9 +54,8 @@ public class GridPlaceAdapter extends RecyclerView.Adapter<GridPlaceAdapter.Plac
     public void setPlaceUI(PlaceViewHolder holder, Place place) {
         holder.binding.placeNameTxt.setText(place.getName());
         holder.binding.ratingTxt.setText(place.getRating().toString());
-        Glide.with(context)
+        Picasso.get()
                 .load(place.getImage1())
-                .timeout(60000)
                 .into(holder.binding.placeImg);
 
         holder.binding.loadingBar.setVisibility(View.GONE);

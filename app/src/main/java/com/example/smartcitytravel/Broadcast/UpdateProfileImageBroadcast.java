@@ -5,12 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.PreferenceHandler;
 import com.example.smartcitytravel.databinding.ActivityHomeBinding;
+import com.squareup.picasso.Picasso;
 
 public class UpdateProfileImageBroadcast extends BroadcastReceiver {
     private final PreferenceHandler preferenceHandler;
@@ -33,9 +32,8 @@ public class UpdateProfileImageBroadcast extends BroadcastReceiver {
 
         String imageURL = preferenceHandler.getImagePreference(context);
 
-        Glide.with(context)
+        Picasso.get()
                 .load(imageURL)
-                .timeout(60000)
                 .into((ImageView) headerLayout.findViewById(R.id.profileImg));
     }
 }

@@ -4,9 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.databinding.ImageSliderLayoutBinding;
 import com.smarteist.autoimageslider.SliderViewAdapter;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -27,7 +27,7 @@ public class ImageSliderViewAdapter extends SliderViewAdapter<ImageSliderViewAda
 
     @Override
     public void onBindViewHolder(ImageSliderHolder viewHolder, int position) {
-        Glide.with(context)
+        Picasso.get()
                 .load(imageList.get(position))
                 .into(viewHolder.binding.placeImg);
     }

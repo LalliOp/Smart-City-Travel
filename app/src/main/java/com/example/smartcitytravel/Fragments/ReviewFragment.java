@@ -17,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.Activities.SeeAllReviewActivity;
 import com.example.smartcitytravel.Activities.WriteReviewActivity;
 import com.example.smartcitytravel.DataModel.PlaceDetail;
@@ -32,6 +31,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -228,9 +228,8 @@ public class ReviewFragment extends Fragment {
         binding.editReviewOption.reviewLayout.nameTxt.setText(util.capitalizedName(user.getName()));
         binding.editReviewOption.reviewLayout.ratingBar.setRating(review.getRating());
 
-        Glide.with(requireActivity())
+        Picasso.get()
                 .load(user.getImage_url())
-                .timeout(60000)
                 .into(binding.editReviewOption.reviewLayout.profileImg);
 
     }

@@ -44,6 +44,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationView;
+import com.squareup.picasso.Picasso;
 
 import java.util.Map;
 
@@ -158,9 +159,8 @@ public class HomeActivity extends AppCompatActivity {
 
     // set profile image of user in UI
     public void setProfileImage(View headerLayout, String imageUrl) {
-        Glide.with(HomeActivity.this)
+        Picasso.get()
                 .load(imageUrl)
-                .timeout(60000)
                 .into((ImageView) headerLayout.findViewById(R.id.profileImg));
     }
 
@@ -192,7 +192,7 @@ public class HomeActivity extends AppCompatActivity {
 
     // set icon for navigation drawer button
     public void setNavigationDrawerIcon(int drawableId) {
-        Glide.with(HomeActivity.this)
+        Glide.with(this)
                 .load(drawableId)
                 .into(binding.navigationDrawerImg);
     }

@@ -55,9 +55,9 @@ dependencies {
     implementation 'commons-codec:commons-codec:1.15'
     implementation 'com.github.smarteist:autoimageslider:1.4.0'
     implementation 'com.github.yesidlazaro:GmailBackground:1.2.0'
-//    implementation 'com.google.firebase:firebase-database:20.0.5'
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'com.google.maps.android:android-maps-utils:2.3.0'
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
 

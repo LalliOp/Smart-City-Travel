@@ -31,7 +31,7 @@
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_login.xml" value="0.12364130434782608" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_near_by_places.xml" value="0.25" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_new_password.xml" value="0.17074275362318841" />
-        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_pin_code.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_pin_code.xml" value="0.25" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_place_detail.xml" value="0.25" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_place_list.xml" value="0.12364130434782608" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/layout/activity_see_all_review.xml" value="0.17074275362318841" />
@@ -69,6 +69,7 @@
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/menu/menu_main.xml" value="0.2" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/menu/navigation_drawer_menu.xml" value="0.2" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/menu/search_menu.xml" value="0.2" />
+        <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/xml/fragment_preference.xml" value="0.17074275362318841" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/Smart-City-Travel/app/src/main/res/xml/fragment_settings.xml" value="0.25" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable-anydpi/ic_action_name.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/AbdulMuqeet/AndroidStudioProjects/SmartCityTravel/app/src/main/res/drawable-anydpi/ic_back.xml" value="0.167" />

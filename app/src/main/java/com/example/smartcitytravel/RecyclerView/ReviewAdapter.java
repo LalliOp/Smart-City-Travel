@@ -10,11 +10,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.DataModel.Review;
 import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.Util.Util;
 import com.example.smartcitytravel.databinding.ReviewViewBinding;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -84,9 +84,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
         holder.binding.reviewTxt.setText(review.getFeedback());
 
-        Glide.with(context)
+        Picasso.get()
                 .load(user.getImage_url())
-                .timeout(60000)
                 .into(holder.binding.profileImg);
     }
 

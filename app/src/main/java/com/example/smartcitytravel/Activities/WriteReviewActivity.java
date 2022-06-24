@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.DataModel.Review;
 import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.R;
@@ -27,6 +26,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -289,7 +289,7 @@ public class WriteReviewActivity extends AppCompatActivity {
     public void setUserProfile() {
         binding.nameTxt.setText(util.capitalizedName(user.getName()));
 
-        Glide.with(this)
+        Picasso.get()
                 .load(user.getImage_url())
                 .into(binding.profileImg);
 

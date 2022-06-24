@@ -282,8 +282,7 @@ public class LiveChatActivity extends AppCompatActivity {
         getCityName();
         setToolbarTitle(city + " Chat");
         if (locationPermissionAllowed && city != null && !registerChatUpdate) {
-
-            Toast.makeText(this, "Register Chat", Toast.LENGTH_SHORT).show();
+            binding.loadingBar.setVisibility(View.VISIBLE);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd:MM:yyyy", Locale.getDefault());
             String currentDate = dateFormat.format(new Date());

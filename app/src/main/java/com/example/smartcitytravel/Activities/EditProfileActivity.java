@@ -23,7 +23,6 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
-import com.bumptech.glide.Glide;
 import com.example.smartcitytravel.DataModel.User;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.Util.Color;
@@ -35,6 +34,7 @@ import com.example.smartcitytravel.WorkManager.ImageUpdateWorkManager;
 import com.example.smartcitytravel.databinding.ActivityEditProfileBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -134,7 +134,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     // get user profile image from activity intent and show profile image
     public void setProfileImage(String image_url) {
-        Glide.with(this)
+        Picasso.get()
                 .load(image_url)
                 .into(binding.selectProfileImgLayout.profileImg);
     }
