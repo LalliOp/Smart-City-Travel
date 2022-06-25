@@ -214,7 +214,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
                                         gridPlaceAdapter.setNewData(nearByPlaceList);
                                     }
                                     binding.noPlaceTxt.setVisibility(View.GONE);
-                                    binding.rangeLayout.setVisibility(View.VISIBLE);
                                     binding.PlaceRecyclerView.setVisibility(View.VISIBLE);
                                 }
                                 binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
@@ -260,7 +259,7 @@ public class NearByPlacesActivity extends AppCompatActivity {
                     public void run() {
 
                         if (internetAvailable) {
-                            binding.rangeBtn.setVisibility(View.VISIBLE);
+                            binding.rangeLayout.setVisibility(View.VISIBLE);
                             getNearByPlaces();
                         } else {
                             binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
