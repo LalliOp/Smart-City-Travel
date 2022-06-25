@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -65,10 +64,10 @@ public class NearByPlacesActivity extends AppCompatActivity {
         public void onLocationChanged(@NonNull Location location) {
             if (locationPermissionAllowed) {
                 currentLocation = location;
+                city = getCityName();
                 if (lastKnownLocationAccess) {
                     lastKnownLocationAccess = false;
                 } else {
-                    city = getCityName();
                     checkConnectionAndGetNearByPlaces();
                 }
             }
@@ -128,6 +127,7 @@ public class NearByPlacesActivity extends AppCompatActivity {
     protected void onResume() {
         checkLocationPermission();
         registerForLocationUpdates();
+
         super.onResume();
     }
 
@@ -184,20 +184,16 @@ public class NearByPlacesActivity extends AppCompatActivity {
                     .addOnSuccessListener(this, new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            if (queryDocumentSnapshots != null || !queryDocumentSnapshots.isEmpty()) {
-                                if (queryDocumentSnapshots.size() == 0) {
+                            if (queryDocumentSnapshots != null) {
+                                if (queryDocumentSnapshots.isEmpty()) {
                                     binding.noPlaceTxt.setVisibility(View.VISIBLE);
                                     binding.PlaceRecyclerView.setVisibility(View.GONE);
-
                                     if (!firstTimeNearbyPlaces) {
                                         gridPlaceAdapter.clearData();
                                     }
                                 } else {
-
-
-                                    ArrayList<Place> nearByPlaceList = new ArrayList<>();
                                     double selectedRange = Double.parseDouble(binding.rangeTxt.getText().toString());
-
+                                    ArrayList<Place> nearByPlaceList = new ArrayList<>();
                                     for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
                                         PlaceLocation placeLocation = querySnapshot.toObject(PlaceLocation.class);
                                         placeLocation.setPlaceId(querySnapshot.getId());
@@ -216,13 +212,12 @@ public class NearByPlacesActivity extends AppCompatActivity {
                                         firstTimeNearbyPlaces = false;
                                     } else {
                                         gridPlaceAdapter.setNewData(nearByPlaceList);
-
                                     }
-                                    binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
                                     binding.noPlaceTxt.setVisibility(View.GONE);
                                     binding.rangeLayout.setVisibility(View.VISIBLE);
                                     binding.PlaceRecyclerView.setVisibility(View.VISIBLE);
                                 }
+                                binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
                             }
                         }
                     });
@@ -253,6 +248,7 @@ public class NearByPlacesActivity extends AppCompatActivity {
     public void checkConnectionAndGetNearByPlaces() {
         binding.CheckConnectionLayout.loadingBar.setVisibility(View.VISIBLE);
         binding.PlaceRecyclerView.setVisibility(View.GONE);
+        binding.noPlaceTxt.setVisibility(View.GONE);
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
             @Override
@@ -329,7 +325,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
             return "";
         }
     }
-
 
     // when user lick on enable location button, open location setting to on or off location
     public void openLocationSetting() {

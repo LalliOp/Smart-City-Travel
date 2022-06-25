@@ -68,36 +68,24 @@ public class LiveChatActivity extends AppCompatActivity {
     private boolean initializedChat;
     private boolean registerChatUpdate;
     private Connection connection;
+    private int availableCity;
     private ArrayList<Message> errorMessageList;
 
     private final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(@NonNull Location location) {
             currentLocation = location;
-            getChatUpdates();
+            getChat();
         }
 
         @Override
         public void onProviderEnabled(@NonNull String provider) {
             if (locationPermissionAllowed) {
                 hideLocationSettingsButton();
-                if (binding.chatRecyclerView.getVisibility() == View.GONE) {
-                    binding.chatRecyclerView.setVisibility(View.VISIBLE);
-                    binding.messageLayout.setVisibility(View.VISIBLE);
-                    binding.loadingBar.setVisibility(View.VISIBLE);
-                }
             }
-
             LocationListener.super.onProviderEnabled(provider);
         }
 
-        @Override
-        public void onProviderDisabled(@NonNull String provider) {
-            if (locationPermissionAllowed && currentLocation == null) {
-                showLocationSettingsButton();
-            }
-            LocationListener.super.onProviderDisabled(provider);
-        }
     };
 
     private final ActivityResultLauncher<String[]> locationPermissionRequest = registerForActivityResult
@@ -132,9 +120,10 @@ public class LiveChatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         checkLocationPermission();
+        checkLocationProvider();
         registerForLocationUpdates();
         getCurrentLocation();
-        getChatUpdates();
+        getChat();
         super.onResume();
     }
 
@@ -149,6 +138,7 @@ public class LiveChatActivity extends AppCompatActivity {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         connection = new Connection();
         errorMessageList = new ArrayList<>();
+        availableCity = -1;
     }
 
     // style and customize status bar and toolbar
@@ -274,14 +264,12 @@ public class LiveChatActivity extends AppCompatActivity {
             }
         }, 0, 10, TimeUnit.SECONDS);
 
-
     }
 
     //whenever data changes in database. It will call
     private void getChatUpdates() {
-        getCityName();
-        setToolbarTitle(city + " Chat");
-        if (locationPermissionAllowed && city != null && !registerChatUpdate) {
+        if (city != null && !registerChatUpdate) {
+            registerChatUpdate = true;
             binding.loadingBar.setVisibility(View.VISIBLE);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd:MM:yyyy", Locale.getDefault());
@@ -316,13 +304,16 @@ public class LiveChatActivity extends AppCompatActivity {
                                     binding.chatRecyclerView.smoothScrollToPosition(chatAdapter.getData().size());
 
                                 }
-                                registerChatUpdate = true;
                                 binding.loadingBar.setVisibility(View.GONE);
+
                             }
 
                         }
                     });
+
+
         }
+
     }
 
     // set recyclerview with messageList
@@ -331,13 +322,31 @@ public class LiveChatActivity extends AppCompatActivity {
         binding.chatRecyclerView.setAdapter(chatAdapter);
     }
 
+    public void getChat() {
+        getCityName();
+        if (locationPermissionAllowed) {
+            if (availableCity == 0) {
+                binding.notAvailableTxt.setVisibility(View.GONE);
+                setToolbarTitle(city + " Chat");
+                getChatUpdates();
+            } else {
+                if (availableCity == 1 && binding.locationSettingBtn.getVisibility() == View.GONE) {
+                    binding.notAvailableTxt.setVisibility(View.VISIBLE);
+                    hideChat();
+                }
+            }
+        }
+    }
+
     // get current location
     @SuppressLint("MissingPermission")
     public void getCurrentLocation() {
-        if (locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null) {
-            currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        } else if (locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) != null) {
-            currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if (locationPermissionAllowed) {
+            if (locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null) {
+                currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            } else if (locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) != null) {
+                currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            }
         }
     }
 
@@ -370,6 +379,22 @@ public class LiveChatActivity extends AppCompatActivity {
         binding.locationPermissionBtn.setVisibility(View.GONE);
     }
 
+    public void checkLocationProvider() {
+        if (locationPermissionAllowed) {
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                    || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                hideLocationSettingsButton();
+
+            } else {
+                if (currentLocation == null) {
+                    showLocationSettingsButton();
+                }
+            }
+
+        }
+
+    }
+
     // app detail settings page are open, where we navigate to permissions page
     public void openLocationPermission() {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -388,7 +413,13 @@ public class LiveChatActivity extends AppCompatActivity {
     //hide when location settings is on
     void hideLocationSettingsButton() {
         binding.locationSettingBtn.setVisibility(View.GONE);
-        binding.messageLayout.setVisibility(View.VISIBLE);
+        if (availableCity == 1) {
+            hideChat();
+        } else if (binding.chatRecyclerView.getVisibility() == View.GONE) {
+            binding.chatRecyclerView.setVisibility(View.VISIBLE);
+            binding.messageLayout.setVisibility(View.VISIBLE);
+            binding.loadingBar.setVisibility(View.VISIBLE);
+        }
     }
 
     // show when location permission is denied
@@ -414,6 +445,11 @@ public class LiveChatActivity extends AppCompatActivity {
                 ArrayList<Address> cityList = (ArrayList<Address>) geocoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
                 if (cityList.get(0).getLocality() != null) {
                     city = cityList.get(0).getLocality();
+                    if (city.equals("Lahore") || city.equals("Islamabad")) {
+                        availableCity = 0;
+                    } else {
+                        availableCity = 1;
+                    }
                 }
             } catch (IOException ignored) {
             }
@@ -456,6 +492,12 @@ public class LiveChatActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    public void hideChat() {
+        binding.chatRecyclerView.setVisibility(View.GONE);
+        binding.messageLayout.setVisibility(View.GONE);
+        binding.loadingBar.setVisibility(View.GONE);
     }
 
     @Override

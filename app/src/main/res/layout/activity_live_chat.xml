@@ -79,4 +79,13 @@
         android:text="@string/location_settings"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/notAvailableTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/this_feature_is_not_available_in_your_area"
+        android:textColor="@color/default_black"
+        android:textSize="15sp"
+        android:visibility="gone" />
 </RelativeLayout>

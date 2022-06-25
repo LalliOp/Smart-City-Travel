@@ -105,4 +105,5 @@
     <string name="no_nearby_place_to_show">No nearby place to show</string>
     <string name="retry">Retry</string>
     <string name="failed">failed</string>
+    <string name="this_feature_is_not_available_in_your_area">This feature is not available in your area</string>
 </resources>
