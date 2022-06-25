@@ -148,14 +148,11 @@ public class PlaceListActivity extends AppCompatActivity {
         });
         Collections.reverse(placeList);
 
-        ArrayList<Place> popularPlaceList = new ArrayList<>(placeList.subList(0, 10));
+        ArrayList<Place> popularPlaceList = new ArrayList<>(placeList.subList(0, 60));
         Collections.shuffle(popularPlaceList);
 
-        //ArrayList<Place> placeList = new ArrayList<>(popularPlaceList.subList(0, popularPlaceList.size() - 1));
-
-        showPopularPlaces(popularPlaceList);
+        showPopularPlaces(new ArrayList<>(popularPlaceList.subList(0, 20)));
         binding.popularLoadingBar.setVisibility(View.GONE);
-
     }
 
     //create recyclerview and show popular places
@@ -178,9 +175,13 @@ public class PlaceListActivity extends AppCompatActivity {
             }
         }
         Collections.shuffle(restaurantPlaceList);
-        //ArrayList<Place> placeList = new ArrayList<>(popularPlaceList.subList(0, popularPlaceList.size() - 1));
 
-        showRestaurantPlaces(restaurantPlaceList, placeType);
+        if (restaurantPlaceList.size() > 20) {
+            showRestaurantPlaces(new ArrayList<>(restaurantPlaceList.subList(0, 20)), placeType);
+        } else {
+            showRestaurantPlaces(restaurantPlaceList, placeType);
+        }
+
         binding.restaurantLoadingBar.setVisibility(View.GONE);
     }
 
@@ -205,9 +206,12 @@ public class PlaceListActivity extends AppCompatActivity {
             }
         }
         Collections.shuffle(famousSpotList);
-        //ArrayList<Place> placeList = new ArrayList<>(popularPlaceList.subList(0, popularPlaceList.size() - 1));
 
-        showFamousSpots(famousSpotList, placeType);
+        if (famousSpotList.size() > 20) {
+            showFamousSpots(new ArrayList<>(famousSpotList.subList(0, 20)), placeType);
+        } else {
+            showFamousSpots(famousSpotList, placeType);
+        }
         binding.famousSpotLoadingBar.setVisibility(View.GONE);
     }
 
@@ -232,9 +236,13 @@ public class PlaceListActivity extends AppCompatActivity {
             }
         }
         Collections.shuffle(hotelPlaceList);
-        //ArrayList<Place> placeList = new ArrayList<>(popularPlaceList.subList(0, popularPlaceList.size() - 1));
 
-        showHotelPlaces(hotelPlaceList, placeType);
+        if (hotelPlaceList.size() > 20) {
+            showHotelPlaces(new ArrayList<>(hotelPlaceList.subList(0, 20)), placeType);
+        } else {
+            showHotelPlaces(new ArrayList<>(hotelPlaceList), placeType);
+
+        }
         binding.hotelLoadingBar.setVisibility(View.GONE);
     }
 
@@ -345,13 +353,21 @@ public class PlaceListActivity extends AppCompatActivity {
         }
 
         if (!recommendedPlaceList.isEmpty()) {
-            Collections.shuffle(recommendedPlaceList);
-            // limit size of recommended places as same implementation remain in other places
+            ArrayList<Place> recommendedPlaceSubList;
+            if (recommendedPlaceList.size() > 60) {
+                recommendedPlaceSubList = new ArrayList<>(recommendedPlaceList.subList(0, 60));
+            } else {
+                recommendedPlaceSubList = new ArrayList<>(recommendedPlaceList.subList(0, recommendedPlaceList.size()));
+            }
 
-            showRecommendedPlaces(recommendedPlaceList);
+            Collections.shuffle(recommendedPlaceSubList);
+            if (recommendedPlaceSubList.size() > 20) {
+                showRecommendedPlaces(new ArrayList<>(recommendedPlaceSubList.subList(0, 20)));
+            } else {
+                showRecommendedPlaces(recommendedPlaceSubList);
+            }
             binding.recommendationLayout.setVisibility(View.VISIBLE);
         }
-
 
     }
 

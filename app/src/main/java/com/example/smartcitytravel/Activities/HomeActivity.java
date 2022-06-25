@@ -274,43 +274,25 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 binding.drawerLayout.closeDrawer(GravityCompat.START);
-
                 showLogoutDialog("Logout", "Do you want to logout?");
             }
         });
     }
 
-    //create layout of dialog and set title and message in dialog textview
-    public View createLogoutLayout(String title, String message) {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog, null);
-
-        TextView titleTxt = dialogView.findViewById(R.id.titleTxt);
-        titleTxt.setText(title);
-
-        TextView messageTxt = dialogView.findViewById(R.id.messageTxt);
-        messageTxt.setText(message);
-
-        return dialogView;
-    }
-
     //create and show logout dialog
     public void showLogoutDialog(String title, String message) {
-        View dialogView = createLogoutLayout(title, message);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(dialogView)
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         showLoadingBar();
                         logout();
-
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
                     }
                 });
         AlertDialog alertDialog = builder.create();

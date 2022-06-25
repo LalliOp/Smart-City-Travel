@@ -15,7 +15,6 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -28,12 +27,14 @@ import androidx.fragment.app.Fragment;
 import com.example.smartcitytravel.DataModel.PlaceDetail;
 import com.example.smartcitytravel.R;
 import com.example.smartcitytravel.databinding.FragmentNavigationBinding;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Map;
@@ -63,7 +64,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         public void onProviderEnabled(@NonNull String provider) {
             if (locationPermissionAllowed) {
                 hideLocationSettingsButton();
-
             }
             LocationListener.super.onProviderEnabled(provider);
 
@@ -73,7 +73,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         public void onProviderDisabled(@NonNull String provider) {
             if (locationPermissionAllowed && currentLocation == null) {
                 showLocationSettingsButton();
-
             }
             LocationListener.super.onProviderDisabled(provider);
 
@@ -120,7 +119,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         setMapFragment();
         openNavigation();
         openLocationSetting();
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -143,16 +141,12 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
     // run when map is ready to display
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        getLastKnownLocation();
+
         this.googleMap = googleMap;
-        this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(placeLatLng));
-        this.googleMap.animateCamera(CameraUpdateFactory.zoomTo(10.7f));
         this.googleMap.getUiSettings().setMapToolbarEnabled(false);
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            getLastKnownLocation();
-
-        }
+        setLocationOnMap();
     }
 
     // set current location and destination on map
@@ -160,19 +154,51 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         if (currentLocation != null && googleMap != null) {
             googleMap.clear();
 
-            LatLng currentLocationLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            MarkerOptions currentLocationMarker = getCurrentLocationMarker();
+            MarkerOptions destinationPlaceMarker = getDestinationPlaceMarker();
 
-            googleMap.addMarker(new MarkerOptions()
-                    .position(currentLocationLatLng)
-                    .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.ic_my_location, 100, 100)))
-                    .title("Current Location"));
-
-            googleMap.addMarker(new MarkerOptions()
-                    .position(placeLatLng)
-                    .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.ic_destination_location, 100, 100)))
-                    .title(placeDetail.getName()));
+            configureMap(currentLocationMarker, destinationPlaceMarker);
         }
 
+    }
+
+    // add current location on map
+    public MarkerOptions getCurrentLocationMarker() {
+        LatLng currentLocationLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+
+        MarkerOptions currentLocationMarker = new MarkerOptions()
+                .position(currentLocationLatLng)
+                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.ic_my_location, 100, 100)))
+                .title("Current Location");
+        googleMap.addMarker(currentLocationMarker);
+
+        return currentLocationMarker;
+    }
+
+    // add destination location on map
+    public MarkerOptions getDestinationPlaceMarker() {
+        MarkerOptions destinationPlaceMarker = new MarkerOptions()
+                .position(placeLatLng)
+                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.ic_destination_location, 100, 100)))
+                .title(placeDetail.getName());
+        googleMap.addMarker(destinationPlaceMarker);
+        return destinationPlaceMarker;
+    }
+
+    // configure and adjust map to show both location on map
+    public void configureMap(MarkerOptions currentLocationMarker, MarkerOptions destinationPlaceMarker) {
+        LatLngBounds.Builder latLngBoundsBuilder = new LatLngBounds.Builder();
+        latLngBoundsBuilder.include(currentLocationMarker.getPosition());
+        latLngBoundsBuilder.include(destinationPlaceMarker.getPosition());
+
+        LatLngBounds latLngBounds = latLngBoundsBuilder.build();
+
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels / 2;
+        int padding = (int) (height * 0.20);
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds, width, height, padding);
+        googleMap.animateCamera(cameraUpdate);
     }
 
     //use to resize the icon size
@@ -303,10 +329,8 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         if (locationPermissionAllowed) {
             if (locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) != null) {
                 currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                setLocationOnMap();
             } else if (locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) != null) {
                 currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                setLocationOnMap();
             }
         }
     }

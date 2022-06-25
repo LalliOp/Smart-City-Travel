@@ -9,7 +9,6 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -60,7 +59,6 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         setToolBarTheme();
         deleteAccount();
-
     }
 
     // get preference fragment and del account when press delete
@@ -82,37 +80,20 @@ public class SettingsFragment extends Fragment {
         util.addToolbarAndNoUpButton((AppCompatActivity) requireActivity(), binding.toolbarLayout.toolbar, "       Settings");
     }
 
-    //create layout of dialog and set title and message in dialog textview
-    public View createDeleteAccountLayout(String title, String message) {
-        View dialogView = getLayoutInflater().inflate(R.layout.dialog, null);
-
-        TextView titleTxt = dialogView.findViewById(R.id.titleTxt);
-        titleTxt.setText(title);
-
-        TextView messageTxt = dialogView.findViewById(R.id.messageTxt);
-        messageTxt.setText(message);
-
-        return dialogView;
-    }
-
     //create and show delete account dialog
     public void showDeleteAccountDialog(String title, String message) {
-        View dialogView = createDeleteAccountLayout(title, message);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setView(dialogView)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        checkConnectionAndDeleteAccount();
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        checkConnectionAndDeleteAccount();
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
-
                     }
                 });
         AlertDialog alertDialog = builder.create();

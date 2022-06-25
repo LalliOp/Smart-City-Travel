@@ -43,6 +43,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/locationPermissionBtn"
         android:layout_centerInParent="true"
-        android:text="@string/location_settings"
+        android:text="@string/enable_location_settings"
         android:visibility="gone" />
 </RelativeLayout>

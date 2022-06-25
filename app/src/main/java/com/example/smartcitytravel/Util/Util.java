@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import com.example.smartcitytravel.Dialogs.ErrorDialog;
+import com.example.smartcitytravel.Fragments.ErrorDialogFragment;
 import com.example.smartcitytravel.R;
 
 import org.apache.commons.lang3.StringUtils;
@@ -47,9 +47,9 @@ public class Util {
 
     //show error message in dialog
     public void createErrorDialog(FragmentActivity activity, String title, String message) {
-        ErrorDialog errorDialog = new ErrorDialog(title, message);
-        errorDialog.show(activity.getSupportFragmentManager(), "error_dialog");
-        errorDialog.setCancelable(false);
+        ErrorDialogFragment errorDialogFragment = new ErrorDialogFragment(title, message);
+        errorDialogFragment.show(activity.getSupportFragmentManager(), "error_dialog");
+        errorDialogFragment.setCancelable(false);
     }
 
     //make first word of name capital

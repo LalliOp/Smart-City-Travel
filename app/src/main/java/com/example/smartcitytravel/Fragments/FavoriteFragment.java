@@ -1,9 +1,11 @@
 package com.example.smartcitytravel.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -119,13 +121,11 @@ public class FavoriteFragment extends Fragment {
                             for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
                                 Favorite favorite = querySnapshot.toObject(Favorite.class);
                                 favorite.setFavoriteId(querySnapshot.getId());
-
                                 favoriteList.add(favorite);
                             }
                             getPlacesDetail(favoriteList);
 
                         } else {
-
                             binding.nothingToShowTxt.setVisibility(View.VISIBLE);
                             binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
 
@@ -147,18 +147,18 @@ public class FavoriteFragment extends Fragment {
                                 for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
                                     Place place = querySnapshot.toObject(Place.class);
                                     place.setPlaceId(querySnapshot.getId());
-
                                     if (favorite.getPlaceId().equals(place.getPlaceId())) {
                                         placeList.add(place);
                                         break;
                                     }
                                 }
                             }
-
+                            Log.e("BEFORE", "onSuccess: ");
                             try {
                                 createRecyclerView(placeList);
                                 binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
                             } catch (Exception ignored) {
+                                Log.e("ERROR", "onSuccess: ");
                             }
 
                         }
