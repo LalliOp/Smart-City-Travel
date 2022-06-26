@@ -60,6 +60,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'com.google.maps.android:android-maps-utils:2.3.0'
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
+    implementation 'io.karn:khttp-android:0.1.0'
 
 
 }

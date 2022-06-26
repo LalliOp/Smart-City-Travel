@@ -4,8 +4,10 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import java.io.IOException;
-import java.net.InetAddress;
+import java.util.HashMap;
+
+import khttp.KHttp;
+import khttp.responses.Response;
 
 public class Connection {
     public Connection() {
@@ -17,6 +19,7 @@ public class Connection {
     public boolean isConnectionSourceAndInternetAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
         if (networkInfo == null || !networkInfo.isConnected()) {
             return false;
         } else {
@@ -28,9 +31,12 @@ public class Connection {
     //try to connect with google server to confirm internet connection is working
     public boolean isInternetAvailable() {
         try {
-            InetAddress googleAddress = InetAddress.getByName("www.google.com");
-            return !googleAddress.equals("");
-        } catch (IOException | IllegalArgumentException e) {
+            Response response = KHttp.get("https://www.google.com/",
+                    new HashMap<String, String>(), new HashMap<String, String>(),
+                    null, null, null, null, 1.5);
+
+            return response.getStatusCode() == 200;
+        } catch (Exception e) {
             return false;
         }
     }
