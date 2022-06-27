@@ -45,7 +45,6 @@ public class ShowMorePlaceActivity extends AppCompatActivity {
         checkConnectionAndGetPlaces();
     }
 
-    //initialize variables
     public void initialize() {
         util = new Util();
         placeType = getIntent().getExtras().getString("placeType");
@@ -55,7 +54,6 @@ public class ShowMorePlaceActivity extends AppCompatActivity {
 
     }
 
-    // style and customize toolbar and theme
     public void setToolBarTheme() {
         String title = getIntent().getExtras().getString("title");
 
@@ -63,7 +61,6 @@ public class ShowMorePlaceActivity extends AppCompatActivity {
         util.addToolbar(this, binding.toolbarLayout.toolbar, title);
     }
 
-    //create recyclerview and show places
     public void createRecyclerView() {
         ArrayList<Place> placeList = (ArrayList<Place>) getIntent().getExtras().getSerializable("placeList");
         intentPlaceListSize = placeList.size();
@@ -74,7 +71,6 @@ public class ShowMorePlaceActivity extends AppCompatActivity {
         binding.placeRecyclerView.addItemDecoration(new GridSpaceItemDecoration(20, 26, 10, 0));
     }
 
-    //check connection exist or not. If exist load places
     public void checkConnectionAndGetPlaces() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -142,7 +138,6 @@ public class ShowMorePlaceActivity extends AppCompatActivity {
                 });
     }
 
-    //run when user click on retry icon
     public void retryConnection() {
         binding.CheckConnectionLayout.retryConnection.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +151,6 @@ public class ShowMorePlaceActivity extends AppCompatActivity {
 
     }
 
-    // back to previous activity user click on up button (which is back button on top life side)
     @Override
     public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

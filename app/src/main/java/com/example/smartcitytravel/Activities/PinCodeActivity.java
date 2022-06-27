@@ -58,7 +58,6 @@ public class PinCodeActivity extends AppCompatActivity {
         resendCode();
     }
 
-    //initialize variables
     public void initialize() {
         pin_code = 0;
         util = new Util();
@@ -67,20 +66,17 @@ public class PinCodeActivity extends AppCompatActivity {
         uploadImage = null;
     }
 
-    //change default loading bar color
     public void setLoadingBarColor() {
         ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2));
         binding.loadingProgressBar.loadingBar.setIndeterminateTintList(colorStateList);
     }
 
-    //set title of activity
     public void setTitle() {
         String title = getIntent().getExtras().getString("title");
         binding.titleTxt.setText(title);
 
     }
 
-    // get email which is passed by Email Activity or SignUp Activity and change theme depend on activity
     public void getEmail() {
         if (getIntent().getExtras().getString("signup_email") != null) {
             email = getIntent().getExtras().getString("signup_email");
@@ -93,7 +89,6 @@ public class PinCodeActivity extends AppCompatActivity {
         }
     }
 
-    //add bold style email in header text
     public void boldEmail() {
         String normalTxt = binding.pincodeTxt.getText().toString();
         SpannableString styleTxt = new SpannableString(normalTxt + " " + email);
@@ -101,8 +96,6 @@ public class PinCodeActivity extends AppCompatActivity {
         binding.pincodeTxt.setText(styleTxt);
     }
 
-    //check pin code field contain valid data
-    //also check entered pin code is right or not and move to New Password Activity
     public void validatePinCode() {
         String pinCode = binding.pinCodeEdit.getText().toString();
         if (pinCode.isEmpty()) {
@@ -121,19 +114,15 @@ public class PinCodeActivity extends AppCompatActivity {
         }
     }
 
-    //show error msg and error icon color in pin code field
     public void showPinCodeError(String errorMsg) {
         binding.pincodeLayout.setErrorIconDrawable(null);
         binding.pincodeLayout.setError(errorMsg);
     }
 
-    //hide error icon color and msg in pin code field when no error occurs
     public void removePinCodeError() {
         binding.pincodeLayout.setError(null);
     }
 
-    // call when user click on continue button
-    // verify and validate pin code and move to New Password Activity
     public void continueButtonClickListener() {
         binding.continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,7 +133,6 @@ public class PinCodeActivity extends AppCompatActivity {
         });
     }
 
-    //Move from PinCode Activity to NewPassword Activity
     public void moveToNewPasswordActivity() {
         Intent intent = new Intent(this, NewPasswordActivity.class);
         intent.putExtra("email", email);
@@ -161,7 +149,6 @@ public class PinCodeActivity extends AppCompatActivity {
         });
     }
 
-    //check internet connection exist or not. If exist send pin code to user email
     public void checkConnectionAndSendPinCode() {
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -188,7 +175,6 @@ public class PinCodeActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    //generate and send pin code to email user enter
     public void sendPinCode() {
 
         Random random = new Random();
@@ -246,8 +232,6 @@ public class PinCodeActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    //create account by passing user account info to database
-    // and move to Successful Account Message Activity Activity if account created successfully
     public void createAccount() {
 
         User user = getCreateAccountInfo();
@@ -271,7 +255,6 @@ public class PinCodeActivity extends AppCompatActivity {
 
     }
 
-    // get new account information pass by sign up activity
     public User getCreateAccountInfo() {
         String password = getIntent().getExtras().getString("signup_password");
         String name = getIntent().getExtras().getString("signup_name");
@@ -291,7 +274,6 @@ public class PinCodeActivity extends AppCompatActivity {
         return user;
     }
 
-    // start background service to update profile image
     public void startUpdateImageWorkManager(String newUserId) {
         Data data = new Data.Builder()
                 .putString("image_url", uploadImage)
@@ -308,19 +290,16 @@ public class PinCodeActivity extends AppCompatActivity {
                 .enqueue(imageUpdateWorkRequest);
     }
 
-    // show progress bar when user click on register button
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
         util.makeScreenNotTouchable(PinCodeActivity.this);
     }
 
-    //hide progressbar when signup is complete and move to Login Activity or error occurs
     public void hideLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
         util.makeScreenTouchable(PinCodeActivity.this);
     }
 
-    //move to successful account creation activity
     public void moveToSuccessfulAccountMessageActivity() {
         Intent intent = new Intent(this, SuccessfulAccountMessageActivity.class);
         intent.putExtra("email", email);

@@ -24,7 +24,6 @@ public class Util {
     public Util() {
     }
 
-    // hide keyboard from screen
     public void hideKeyboard(Activity activity) {
         InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         View focusView = activity.getCurrentFocus();
@@ -34,25 +33,21 @@ public class Util {
         }
     }
 
-    // user unable to touch any view. Disable all views
     public void makeScreenNotTouchable(Activity activity) {
         activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
-    // user able to touch any view. Enable all views
     public void makeScreenTouchable(Activity activity) {
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
-    //show error message in dialog
     public void createErrorDialog(FragmentActivity activity, String title, String message) {
         ErrorDialogFragment errorDialogFragment = new ErrorDialogFragment(title, message);
         errorDialogFragment.show(activity.getSupportFragmentManager(), "error_dialog");
         errorDialogFragment.setCancelable(false);
     }
 
-    //make first word of name capital
     public String capitalizedName(String full_name) {
         String capitalizedName = "";
         String[] split_full_name = full_name.split("\\s+");
@@ -64,7 +59,6 @@ public class Util {
         return capitalizedName;
     }
 
-    //change color of status bar
     public void setStatusBarColor(Activity activity, int colorResId) {
         Window window = activity.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -72,7 +66,6 @@ public class Util {
         window.setStatusBarColor(ContextCompat.getColor(activity, colorResId));
     }
 
-    //change color of status bar using drawable
     public void setStatusBarColorDrawable(Activity activity, int drawableResId) {
         Drawable drawableBackground = ResourcesCompat.getDrawable(activity.getResources(), drawableResId, null);
 
@@ -84,7 +77,6 @@ public class Util {
 
     }
 
-    //customize and add toolbar
     public void addToolbar(AppCompatActivity activity, Toolbar toolbar, String title) {
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setTitle(title);
@@ -92,7 +84,6 @@ public class Util {
         activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
     }
 
-    //customize and add toolbar without up button
     public void addToolbarAndNoUpButton(AppCompatActivity activity, Toolbar toolbar, String title) {
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setTitle(title);

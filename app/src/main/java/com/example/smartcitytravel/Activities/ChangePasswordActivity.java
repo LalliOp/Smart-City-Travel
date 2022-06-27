@@ -45,7 +45,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
     }
 
-    //initialize variables
     public void initialize() {
         preferenceHandler = new PreferenceHandler();
         validation = new Validation();
@@ -60,13 +59,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
     }
 
-    // style and customize toolbar and theme
+
     public void setToolBarTheme() {
         util.setStatusBarColor(this, R.color.theme_light);
         util.addToolbar(this, binding.toolbarLayout.toolbar, "Change Password");
     }
 
-    // check whether existing password is equal to input password
     public void validateOldPassword() {
         if (user.getPassword().equals(binding.oldPasswordEdit.getText().toString())) {
             binding.oldPasswordLayout.setError(null);
@@ -78,7 +76,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
         }
     }
 
-    //check new password field contain valid and allowed characters
     public void validateNewPassword() {
         String password = binding.newPasswordEdit.getText().toString();
         String errorMessage = validation.validatePassword(password);
@@ -89,21 +86,18 @@ public class ChangePasswordActivity extends AppCompatActivity {
         }
     }
 
-    //show error msg and hide error icon in new password field
     public void showNewPasswordError(String errorMsg) {
         binding.newPasswordLayout.setError(errorMsg);
         binding.newPasswordLayout.setErrorIconDrawable(null);
         validate_new_password = false;
     }
 
-    //hide msg in new password field when no error occurs
+
     public void removeNewPasswordError() {
         binding.newPasswordLayout.setError(null);
         validate_new_password = true;
     }
 
-    //check confirm new password field
-    //and match confirm new password with new password
     public void matchNewPasswordAndConfirmNewPassword() {
         String password = binding.newPasswordEdit.getText().toString();
         String confirmPassword = binding.confirmNewPasswordEdit.getText().toString();
@@ -121,20 +115,18 @@ public class ChangePasswordActivity extends AppCompatActivity {
         }
     }
 
-    //show error msg and hide error icon in confirm new password field
     public void showConfirmNewPasswordError(String errorMsg) {
         binding.confirmNewPasswordLayout.setError(errorMsg);
         binding.confirmNewPasswordLayout.setErrorIconDrawable(null);
         validate_confirm_new_password = false;
     }
 
-    //hide msg in confirm new password field when no error occurs
+
     public void removeConfirmNewPasswordError() {
         binding.confirmNewPasswordLayout.setError(null);
         validate_confirm_new_password = true;
     }
 
-    // check old password and new password is same or not
     public void validateDifferentPassword() {
         String oldPassword = binding.oldPasswordEdit.getText().toString();
         String newPassword = binding.newPasswordEdit.getText().toString();
@@ -147,7 +139,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
     }
 
-    //check connection exist or not. If exist then update password
+
     public void checkConnectionAndUpdateNewPassword() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(this);
         if (isConnectionSourceAvailable) {
@@ -177,7 +169,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    // save new password in database
     public void updateNewPassword() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user")
@@ -194,7 +185,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 });
     }
 
-    //validate and save record in database
     public void save() {
         binding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,19 +205,16 @@ public class ChangePasswordActivity extends AppCompatActivity {
         });
     }
 
-    // show progress bar
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
         util.makeScreenNotTouchable(this);
     }
 
-    //hide progressbar
     public void hideLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
         util.makeScreenTouchable(this);
     }
 
-    // end this activity when user click on up button (which is back button on top life side)
     @Override
     public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

@@ -39,8 +39,6 @@ public class SignUpActivity extends AppCompatActivity {
     private boolean validate_password;
     private boolean validate_confirm_password;
 
-    //run when launch() function is called
-    //get image from gallery and save new image
     private final ActivityResultLauncher<Intent> imagePickerActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -72,7 +70,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    //initialize variables
     public void initialize() {
         util = new Util();
         connection = new Connection();
@@ -81,7 +78,6 @@ public class SignUpActivity extends AppCompatActivity {
         imageUrl = getString(R.string.default_profile_image_url);
     }
 
-    //initialize validate variable for each edit field which help us to know which field contain error or not
     public void initializeValidator() {
         validate_full_name = false;
         validate_email = false;
@@ -89,7 +85,6 @@ public class SignUpActivity extends AppCompatActivity {
         validate_confirm_password = false;
     }
 
-    // set default profile image for create account
     public void setDefaultProfileImage() {
         Picasso.get()
                 .load(R.drawable.default_profile_image)
@@ -97,7 +92,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    // set profile image
     public void setProfileImage(String imageUrl) {
         Picasso.get()
                 .load(imageUrl)
@@ -105,7 +99,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    //open gallery to select image
     public void openGallery() {
         binding.selectProfileImgLayout.changeProfileImgLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,8 +112,6 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    //run when user click on register button
-    //check all fields contain valid and allowed characters and move to login activity if no error occur
     public void registerAccount() {
         binding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +128,6 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    //check full name field contain valid and allowed characters
     public void validateFullName() {
         String fullName = binding.fullNameEdit.getText().toString();
         String errorMessage = validation.validateFullName(fullName);
@@ -149,20 +139,17 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    //show error msg and error icon color in full name field
     public void showFullNameError(String errorMsg) {
         binding.fullNameLayout.setErrorIconTintList(color.iconRedColor(this));
         binding.fullNameLayout.setError(errorMsg);
         validate_full_name = false;
     }
 
-    //hide error icon color and msg in full name field when no error occurs
     public void removeFullNameError() {
         binding.fullNameLayout.setError(null);
         validate_full_name = true;
     }
 
-    //check email field contain valid and allowed characters
     public void validateEmail() {
         String email = binding.emailEdit.getText().toString();
         String errorMessage = validation.validateEmail(email);
@@ -174,20 +161,17 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    //show error msg and error icon color in email field
     public void showEmailError(String errorMsg) {
         binding.emailLayout.setErrorIconTintList(color.iconRedColor(this));
         binding.emailLayout.setError(errorMsg);
         validate_email = false;
     }
 
-    //hide error icon color and msg in email field when no error occurs
     public void removeEmailError() {
         binding.emailLayout.setError(null);
         validate_email = true;
     }
 
-    //check password field contain valid and allowed characters
     public void validatePassword() {
         String password = binding.passwordEdit.getText().toString();
         String errorMessage = validation.validatePassword(password);
@@ -199,7 +183,6 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    //show error msg and hide error icon in password field
     public void showPasswordError(String errorMsg) {
         binding.passwordLayout.setEndIconTintList(color.iconRedColor(this));
         binding.passwordLayout.setError(errorMsg);
@@ -207,15 +190,12 @@ public class SignUpActivity extends AppCompatActivity {
         validate_password = false;
     }
 
-    //hide msg in password field when no error occurs
     public void removePasswordError() {
         binding.passwordLayout.setEndIconTintList(color.iconWhiteColor(this));
         binding.passwordLayout.setError(null);
         validate_password = true;
     }
 
-    //check confirm password field
-    //and match confirm password with password
     public void matchPasswordAndConfirmPassword() {
         String password = binding.passwordEdit.getText().toString();
         String confirmPassword = binding.confirmPasswordEdit.getText().toString();
@@ -233,7 +213,6 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    //show error msg and hide error icon in confirm password field
     public void showConfirmPasswordError(String errorMsg) {
         binding.confirmPasswordLayout.setEndIconTintList(color.iconRedColor(this));
         binding.confirmPasswordLayout.setError(errorMsg);
@@ -241,16 +220,12 @@ public class SignUpActivity extends AppCompatActivity {
         validate_confirm_password = false;
     }
 
-    //hide msg in confirm password field when no error occurs
     public void removeConfirmPasswordError() {
         binding.confirmPasswordLayout.setEndIconTintList(color.iconWhiteColor(this));
         binding.confirmPasswordLayout.setError(null);
         validate_confirm_password = true;
     }
 
-
-    //Move from SignUp Activity to Pin code Activity
-    //pass email to Pin code Activity
     public void moveToPinCodeActivity() {
 
         Intent intent = new Intent(this, PinCodeActivity.class);
@@ -263,7 +238,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    // check internet connection exist or not. If exist than verify email by database
     public void checkConnectionAndVerifyEmail() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(SignUpActivity.this);
         if (isConnectionSourceAvailable) {
@@ -294,7 +268,6 @@ public class SignUpActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    //check whether email exist or not
     public void verifyEmail() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user").whereEqualTo("email", binding.emailEdit.getText().toString().toLowerCase())
@@ -321,19 +294,17 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    // show progress bar when user click on continue button
+
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
         util.makeScreenNotTouchable(SignUpActivity.this);
     }
 
-    //hide progressbar when move to next activity or error occurs
     public void hideLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
         util.makeScreenTouchable(SignUpActivity.this);
     }
 
-    //change default loading bar color
     public void setLoadingBarColor() {
         ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.light_white));
         binding.loadingProgressBar.loadingBar.setIndeterminateTintList(colorStateList);

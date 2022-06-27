@@ -26,7 +26,6 @@ public class UpdateProfileImageBroadcast extends BroadcastReceiver {
 
     }
 
-    // set profile new image
     public void setUpdatedProfileImage(Context context) {
         View headerLayout = binding.navigationView.getHeaderView(0);
 

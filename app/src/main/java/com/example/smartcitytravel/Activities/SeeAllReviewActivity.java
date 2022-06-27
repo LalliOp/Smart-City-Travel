@@ -50,7 +50,6 @@ public class SeeAllReviewActivity extends AppCompatActivity {
 
     }
 
-    //initialize variables
     public void initialize() {
         util = new Util();
         db = FirebaseFirestore.getInstance();
@@ -61,13 +60,11 @@ public class SeeAllReviewActivity extends AppCompatActivity {
         loading = false;
     }
 
-    // style and customize toolbar and theme
     public void setToolBarTheme() {
         util.setStatusBarColor(this, R.color.theme_light);
         util.addToolbar(this, binding.toolbarLayout.toolbar, "All Reviews");
     }
 
-    //check connection exist or not. If exist then load reviews
     public void checkConnectionAndLoadUsersReview() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -94,7 +91,6 @@ public class SeeAllReviewActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    // load other people reviews and set recycler view
     public void startLoadUsersReview() {
         ArrayList<Review> reviewList = new ArrayList<>();
 
@@ -127,7 +123,6 @@ public class SeeAllReviewActivity extends AppCompatActivity {
                 });
     }
 
-    // get info of users who review place then create recyclerview
     public void startLoadUsersInfo(ArrayList<Review> reviewList) {
         ArrayList<User> userList = new ArrayList<>();
         db.collection("user")
@@ -159,7 +154,6 @@ public class SeeAllReviewActivity extends AppCompatActivity {
                 });
     }
 
-    // create and show review recycler view
     public void createReviewRecyclerView(ArrayList<Review> reviewList, ArrayList<User> userList) {
         reviewAdapter = new ReviewAdapter(
                 this, reviewList, userList, false);
@@ -183,7 +177,6 @@ public class SeeAllReviewActivity extends AppCompatActivity {
 
     }
 
-    //show progress bar when more reviews are loading
     public void showLoadMoreProgressBar() {
         new Handler().post(new Runnable() {
             @Override
@@ -194,19 +187,16 @@ public class SeeAllReviewActivity extends AppCompatActivity {
         });
     }
 
-    // hide progress bar when reviews are loaded or no review found
     public void hideLoadMoreProgressBar() {
         binding.loadMoreProgressBar.setVisibility(View.GONE);
 
     }
 
-    // invisible progress bar when reviews are loaded or no review found
     public void inVisibleLoadMoreProgressBar() {
         binding.loadMoreProgressBar.setVisibility(View.INVISIBLE);
 
     }
 
-    // check internet connection exist or not. If exist load more review from database
     public void checkConnectionAndLoadMoreUsersReview() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(this);
         if (isConnectionSourceAvailable) {
@@ -239,7 +229,6 @@ public class SeeAllReviewActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    // call when recycler view reach end to get more reviews
     public void loadMoreUsersReview() {
         ArrayList<Review> moreReviewList = new ArrayList<>();
 
@@ -274,7 +263,6 @@ public class SeeAllReviewActivity extends AppCompatActivity {
 
     }
 
-    //called when more review are loaded to load user info related to that reviews
     public void loadMoreUsersInfo(ArrayList<Review> moreReviewList) {
         ArrayList<User> moreUserList = new ArrayList<>();
         db.collection("user")
@@ -306,7 +294,6 @@ public class SeeAllReviewActivity extends AppCompatActivity {
     }
 
 
-    //run when user click on retry icon
     public void retryConnection() {
         binding.checkConnectionLayout.retryConnection.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -318,8 +305,6 @@ public class SeeAllReviewActivity extends AppCompatActivity {
             }
         });
     }
-
-    //run when user click on retry icon which show when system unable to load more reviews
     public void tryLoadMoreReviewConnection() {
         binding.loadMoreNoConnectionImg.setOnClickListener(new View.OnClickListener() {
             @Override

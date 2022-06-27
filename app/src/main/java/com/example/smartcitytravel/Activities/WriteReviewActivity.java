@@ -79,7 +79,6 @@ public class WriteReviewActivity extends AppCompatActivity {
         backPressed = false;
     }
 
-    // get values pass by review fragment when click on edit button
     public void getIntentData() {
         if (getIntent().getExtras() != null) {
             toEdit = getIntent().getExtras().getBoolean("edit");
@@ -89,8 +88,6 @@ public class WriteReviewActivity extends AppCompatActivity {
         }
     }
 
-    //set review and rating in their respective field
-    //call when come to this activity from review fragment when click on edit button
     public void setReviewAndRating() {
         String review = getIntent().getExtras().getString("review");
         float rating = getIntent().getExtras().getFloat("rating");
@@ -99,7 +96,6 @@ public class WriteReviewActivity extends AppCompatActivity {
         binding.ratingBar.setRating(rating);
     }
 
-    // called when user click on submit button
     public void submitButtonClickListener() {
         binding.submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +108,6 @@ public class WriteReviewActivity extends AppCompatActivity {
 
     }
 
-    // If review or rating is written or marked then check internet connection exist or not. If exist then upload review
     public void checkConnectionAndUploadReview() {
         if (updateRating || updateReview) {
 
@@ -150,7 +145,6 @@ public class WriteReviewActivity extends AppCompatActivity {
         }
     }
 
-    // add review in database
     public void uploadReview() {
 
 
@@ -169,7 +163,6 @@ public class WriteReviewActivity extends AppCompatActivity {
 
     }
 
-    // call when writing review first time
     public void writeReview() {
         Review review = new Review(user.getUserId(), placeId, binding.ratingBar.getRating(),
                 binding.reviewEdit.getText().toString());
@@ -192,7 +185,6 @@ public class WriteReviewActivity extends AppCompatActivity {
                 });
     }
 
-    // update old review
     public void updateReview(String reviewId) {
         db.collection("review")
                 .document(reviewId)
@@ -217,7 +209,6 @@ public class WriteReviewActivity extends AppCompatActivity {
                 });
     }
 
-    // update old rating
     public void updateRating(String reviewId) {
 
         db.collection("review")
@@ -237,12 +228,10 @@ public class WriteReviewActivity extends AppCompatActivity {
                 });
     }
 
-    // setup result data which will return back to previous activity
     void updateResultIntentData() {
         setResult(100, returnIntentData);
     }
 
-    // called when change in review occurs
     public void reviewChangeListener() {
         binding.reviewEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -262,7 +251,6 @@ public class WriteReviewActivity extends AppCompatActivity {
         });
     }
 
-    // called when rating change
     public void ratingChangeListener() {
         binding.ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -273,7 +261,6 @@ public class WriteReviewActivity extends AppCompatActivity {
 
     }
 
-    //add toolbar in activity and customize status bar color
     public void setToolbar() {
         util.setStatusBarColor(this, R.color.theme_light);
         if (toEdit) {
@@ -285,7 +272,6 @@ public class WriteReviewActivity extends AppCompatActivity {
 
     }
 
-    //set profile name and image
     public void setUserProfile() {
         binding.nameTxt.setText(util.capitalizedName(user.getName()));
 
@@ -295,19 +281,16 @@ public class WriteReviewActivity extends AppCompatActivity {
 
     }
 
-    // show progress bar
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
         util.makeScreenNotTouchable(this);
     }
 
-    //hide progressbar
     public void hideLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
         util.makeScreenTouchable(this);
     }
 
-    // show message when updated
     public void displayUpdateMessage() {
         try {
             updateMessageToast.cancel();
@@ -319,7 +302,6 @@ public class WriteReviewActivity extends AppCompatActivity {
         }
     }
 
-    // back to previous activity when user click on up button (which is back button on top life side)
     @Override
     public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -337,7 +319,6 @@ public class WriteReviewActivity extends AppCompatActivity {
 
     }
 
-    //create and show update review confirmation dialog
     public void showUpdateReviewConfirmationDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog, null);
 
@@ -367,14 +348,12 @@ public class WriteReviewActivity extends AppCompatActivity {
         alertDialog.setCancelable(false);
     }
 
-    // finish activity if user click back or up button
     public void finishActivity() {
         if (backPressed) {
             finish();
         }
     }
 
-    //show apply changes confirmation dialog if changes are left to apply otherwise just exit activity
     @Override
     public void onBackPressed() {
         if (updateReview || updateRating) {
@@ -386,7 +365,6 @@ public class WriteReviewActivity extends AppCompatActivity {
         }
     }
 
-    // get rating for selected place and calculate average rating
     public void calculateAverageRating(double userRating) {
         db.collection("review")
                 .whereEqualTo("placeId", placeId)
@@ -419,7 +397,6 @@ public class WriteReviewActivity extends AppCompatActivity {
                 });
     }
 
-    // update new average calculate rating in database
     public void updateAverageRating(double newAvgRating) {
         db.collection("place")
                 .document(placeId)
@@ -442,14 +419,12 @@ public class WriteReviewActivity extends AppCompatActivity {
                 });
     }
 
-    // update the total number of votes for specific place
     public void updateVotes(int no_of_votes) {
         db.collection("place")
                 .document(placeId)
                 .update("Vote", no_of_votes);
     }
 
-    //round double value to one decimal places
     public double roundDoubleValue(double value) {
         DecimalFormat df = new DecimalFormat("#.#");
         df.setRoundingMode(RoundingMode.CEILING);

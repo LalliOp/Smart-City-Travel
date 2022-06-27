@@ -75,13 +75,11 @@ public class FavoriteFragment extends Fragment {
     }
 
 
-    // style and customize toolbar and theme
     public void setToolBarTheme() {
         util.setStatusBarColor(requireActivity(), R.color.theme_light);
         util.addToolbarAndNoUpButton((AppCompatActivity) requireActivity(), binding.toolbarLayout.toolbar, "       Favorites");
     }
 
-    // check connection exist or not. If exist then get favorite place list
     public void checkConnectionAndGetFavoritePlaceList() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -108,7 +106,6 @@ public class FavoriteFragment extends Fragment {
         executor.shutdown();
     }
 
-    //get user favorite places from database
     public void getFavoritePlaceList() {
         db.collection("favorite")
                 .whereEqualTo("userId", userId)
@@ -134,7 +131,6 @@ public class FavoriteFragment extends Fragment {
                 });
     }
 
-    // get detail of all favorite places
     public void getPlacesDetail(ArrayList<Favorite> favoriteList) {
         db.collection("place")
                 .get()
@@ -153,12 +149,10 @@ public class FavoriteFragment extends Fragment {
                                     }
                                 }
                             }
-                            Log.e("BEFORE", "onSuccess: ");
                             try {
                                 createRecyclerView(placeList);
                                 binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
                             } catch (Exception ignored) {
-                                Log.e("ERROR", "onSuccess: ");
                             }
 
                         }

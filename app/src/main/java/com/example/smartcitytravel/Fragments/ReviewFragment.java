@@ -47,7 +47,6 @@ public class ReviewFragment extends Fragment {
     private Review review;
     private Connection connection;
 
-    // called by launch() and pass write review activity as intent
     private ActivityResultLauncher<Intent> writeReviewResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -102,7 +101,6 @@ public class ReviewFragment extends Fragment {
         checkConnectionAndLoadReviews();
     }
 
-    // load other people reviews and set recycler view
     public void loadUsersReview() {
         db.collection("review")
                 .whereEqualTo("placeId", placeDetail.getPlaceId())
@@ -145,7 +143,6 @@ public class ReviewFragment extends Fragment {
                 });
     }
 
-    // create and show review recycler view
     public void createUserReviewRecyclerView(ArrayList<Review> reviewList, ArrayList<User> userList) {
         ReviewAdapter reviewAdapter = new ReviewAdapter(
                 requireActivity(), reviewList, userList, true);
@@ -155,7 +152,6 @@ public class ReviewFragment extends Fragment {
         binding.userReviewRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
     }
 
-    // get info of users who review place and then create recyclerview
     public void getUsersInfo(ArrayList<Review> reviewList) {
         ArrayList<User> userList = new ArrayList<>();
         db.collection("user")
@@ -186,14 +182,12 @@ public class ReviewFragment extends Fragment {
                 });
     }
 
-    // set rating
     public void setRating() {
         binding.avgRatingTxt.setText(placeDetail.getRating().toString());
         binding.avgRatingBar.setRating(placeDetail.getRating());
 
     }
 
-    // move to write review activity to rate and give feedback
     public void writeReview() {
         binding.writeReviewOption.writeReviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,8 +206,6 @@ public class ReviewFragment extends Fragment {
         });
     }
 
-    // call when user already review or rate place
-    // hide feedback textview if review feedback is empty otherwise not
     public void setReview(Review review) {
 
         if (review.getFeedback().isEmpty()) {
@@ -234,7 +226,6 @@ public class ReviewFragment extends Fragment {
 
     }
 
-    // limit length of review to 3 lines
     public void limitReviewLength() {
         if (binding.editReviewOption.reviewLayout.reviewTxt.getMaxLines() > 3) {
             binding.editReviewOption.reviewLayout.reviewTxt.setMaxLines(3);
@@ -242,7 +233,6 @@ public class ReviewFragment extends Fragment {
         }
     }
 
-    // expand or collapse review when user click on review when review is greater than 3
     public void expandOrCollapseReview() {
         binding.editReviewOption.reviewLayout.reviewLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,7 +247,6 @@ public class ReviewFragment extends Fragment {
         });
     }
 
-    // check whether user already review place or not. Update UI based on review existence
     public void loadReview() {
         db.collection("review")
                 .whereEqualTo("userId", user.getUserId())
@@ -283,7 +272,6 @@ public class ReviewFragment extends Fragment {
                 });
     }
 
-    //move to write review activity when user click on edit button under review
     public void editReview(Review review) {
         binding.editReviewOption.editReviewTxt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -299,14 +287,12 @@ public class ReviewFragment extends Fragment {
         });
     }
 
-    //make binding null which garbage collector auto collect and remove binding object with end of fragment
     @Override
     public void onDestroyView() {
         binding = null;
         super.onDestroyView();
     }
 
-    // move to see all review activity to show all reviews
     public void moveToSeeAllReview() {
         binding.seeAllReviewButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -320,8 +306,6 @@ public class ReviewFragment extends Fragment {
 
     }
 
-
-    // check connection exist or not. If exist than load reviews
     public void checkConnectionAndLoadReviews() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -351,7 +335,6 @@ public class ReviewFragment extends Fragment {
         executor.shutdown();
     }
 
-    //run when user click on retry icon
     public void retryConnection() {
         binding.checkConnectionLayout.retryConnection.setOnClickListener(new View.OnClickListener() {
             @Override

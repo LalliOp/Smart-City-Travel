@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
         checkUserAlreadySignIn();
     }
 
-    //Check whether user is already sign in
     public void checkUserAlreadySignIn() {
         Boolean checkPreferenceExist = preferenceHandler.checkLoggedInAccountPreferenceExist(MainActivity.this);
 
@@ -31,13 +30,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Move from SplashScreen to Login Activity
+
     public void moveToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
-    //Move from SplashScreen to Home Activity
     public void moveToHomeActivity() {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

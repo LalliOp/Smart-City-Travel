@@ -51,8 +51,6 @@ public class HomeFragment extends Fragment {
         hideLoadingBar();
     }
 
-    //run when user click on live chat image
-    //open live chat activity
     public void openLiveChat() {
         binding.liveChatImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,13 +72,11 @@ public class HomeFragment extends Fragment {
 
     }
 
-    //move from home fragment to live chat activity
     public void moveToLiveChatActivity() {
         Intent intent = new Intent(getActivity(), LiveChatActivity.class);
         startActivity(intent);
     }
 
-    //when user click on destination button, open destination activity
     public void moveToDestinationActivity() {
         binding.destinationCardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +85,6 @@ public class HomeFragment extends Fragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-
                         Intent intent = new Intent(getActivity(), DestinationActivity.class);
                         startActivity(intent);
                     }
@@ -99,7 +94,6 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    //when user click on nearby place button, open nearby place activity
     public void moveToNearByPlacesActivity() {
         binding.nearbyCardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,24 +110,20 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    //change default loading bar color
     public void setLoadingBarColor() {
         binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
     }
 
-    // show progress bar when user click on destination button
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
         util.makeScreenNotTouchable(requireActivity());
     }
 
-    //hide progressbar when move to destination activity
     public void hideLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
         util.makeScreenTouchable(requireActivity());
     }
 
-    //make binding null which garbage collector auto collect and remove binding object with end of fragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();

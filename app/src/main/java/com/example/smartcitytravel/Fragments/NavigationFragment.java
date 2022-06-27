@@ -50,7 +50,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
     private Location currentLocation;
     private GoogleMap googleMap;
 
-    // whenever location is changed or location is on or off
     private final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(@NonNull Location location) {
@@ -129,7 +128,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         super.onResume();
     }
 
-    //get map fragment and attach map with OnMapReadyCallback
     public void setMapFragment() {
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
@@ -138,7 +136,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    // run when map is ready to display
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         getLastKnownLocation();
@@ -149,7 +146,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         setLocationOnMap();
     }
 
-    // set current location and destination on map
     @SuppressLint("MissingPermission")
     public void setLocationOnMap() {
         if (currentLocation != null && googleMap != null) {
@@ -163,7 +159,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    // add current location on map
     public MarkerOptions getCurrentLocationMarker() {
         LatLng currentLocationLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
 
@@ -175,7 +170,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         return currentLocationMarker;
     }
 
-    // add destination location on map
     public MarkerOptions getDestinationPlaceMarker() {
         MarkerOptions destinationPlaceMarker = new MarkerOptions()
                 .position(placeLatLng)
@@ -185,7 +179,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         return destinationPlaceMarker;
     }
 
-    // configure and adjust map to show both location on map
     public void configureMap(MarkerOptions currentLocationMarker, MarkerOptions destinationPlaceMarker) {
         LatLngBounds.Builder latLngBoundsBuilder = new LatLngBounds.Builder();
         latLngBoundsBuilder.include(currentLocationMarker.getPosition());
@@ -201,13 +194,11 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         googleMap.animateCamera(cameraUpdate);
     }
 
-    //use to resize the icon size
     public Bitmap resizeMapIcons(int res, int width, int height) {
         Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), res);
         return Bitmap.createScaledBitmap(imageBitmap, width, height, false);
     }
 
-    // open google maps when user click on navigate button
     public void openNavigation() {
         binding.navigateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,7 +213,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    // when user click on enable location button, open location setting to on or off location
     public void openLocationSetting() {
         binding.locationSettingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,8 +223,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-
-    // request location permission. If permission is denied, Ask for location permission
     public void requestLocationPermission() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -246,7 +234,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    // check whether location permission is allowed or not
     public void checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -258,7 +245,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    // app detail settings page are open, where we navigate to permissions page
     public void openLocationPermission() {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", requireActivity().getPackageName(), null);
@@ -266,8 +252,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         startActivity(intent);
     }
 
-    // show when location permission is denied
-    // it show button which navigate to settings page which can navigate to permission page
     public void showLocationPermissionButton() {
         binding.mapFragment.setVisibility(View.GONE);
         binding.navigateBtn.setVisibility(View.GONE);
@@ -280,7 +264,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    //hide when location permission is allowed
     public void hideLocationPermissionButton() {
         binding.locationPermissionBtn.setVisibility(View.GONE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
@@ -291,21 +274,18 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    //show when location settings is off
     void showLocationSettingsButton() {
         binding.mapFragment.setVisibility(View.GONE);
         binding.navigateBtn.setVisibility(View.GONE);
         binding.locationSettingBtn.setVisibility(View.VISIBLE);
     }
 
-    //hide when location settings is on
     void hideLocationSettingsButton() {
         binding.mapFragment.setVisibility(View.VISIBLE);
         binding.navigateBtn.setVisibility(View.VISIBLE);
         binding.locationSettingBtn.setVisibility(View.GONE);
     }
 
-    // register to get current location
     @SuppressLint("MissingPermission")
     public void registerForLocationUpdates() {
         checkLocationPermission();
@@ -335,8 +315,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-
-    //make binding null which garbage collector auto collect and remove binding object with end of fragment
     @Override
     public void onDestroyView() {
         locationManager.removeUpdates(locationListener);

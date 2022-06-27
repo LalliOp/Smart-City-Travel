@@ -54,9 +54,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private Toast noConnectionToast;
     private boolean backPressed;
 
-
-    //run when launch() function is called
-    //get image from gallery and save new image
     private final ActivityResultLauncher<Intent> imagePickerActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -87,8 +84,6 @@ public class EditProfileActivity extends AppCompatActivity {
         changePassword();
     }
 
-
-    //initialize variables
     public void initialize() {
         util = new Util();
         color = new Color();
@@ -106,40 +101,33 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
-
-    // style and customize toolbar and theme
     public void setToolBarTheme() {
         util.setStatusBarColor(this, R.color.theme_light);
         util.addToolbar(this, binding.toolbarLayout.toolbar, "Edit Profile");
     }
 
-    //set name, email and image profile of user
     public void setUserProfile() {
         setProfileImage(user.getImage_url());
         setName();
         setEmail();
     }
 
-    //get name from activity intent and set name in name field
     public void setName() {
         String name = util.capitalizedName(user.getName());
         binding.fullNameEdit.setText(name);
     }
 
-    //get email from activity intent and set email in email field
     public void setEmail() {
         binding.emailEdit.setText(user.getEmail());
         binding.emailLayout.setEnabled(false);
     }
 
-    // get user profile image from activity intent and show profile image
     public void setProfileImage(String image_url) {
         Picasso.get()
                 .load(image_url)
                 .into(binding.selectProfileImgLayout.profileImg);
     }
 
-    //open gallery to select image
     public void openGallery() {
         binding.selectProfileImgLayout.changeProfileImgLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,7 +141,6 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
-    //check internet connection and then upload profile image and update in database
     public void checkConnectionAndUpdateProfileImage(Uri imageUri) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -182,7 +169,6 @@ public class EditProfileActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    // start background service to update profile image
     public void startUpdateImageWorkManager(Uri imageUri) {
         Data data = new Data.Builder()
                 .putString("image_url", imageUri.toString())
@@ -199,7 +185,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 .enqueue(imageUpdateWorkRequest);
     }
 
-    //validate and save record in database
     public void save() {
         binding.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,7 +195,6 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
-    //apply changes
     public void applyChanges() {
         if (validateFullName() && newProfileName) {
             checkConnectionAndUpdateProfileName();
@@ -220,7 +204,6 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    //check full name field contain valid and allowed characters
     public boolean validateFullName() {
         String fullName = binding.fullNameEdit.getText().toString();
         String errorMessage = validation.validateFullName(fullName);
@@ -233,18 +216,15 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    //show error msg and error icon color in full name field
     public void showFullNameError(String errorMsg) {
         binding.fullNameLayout.setErrorIconTintList(color.createColor(this, R.color.theme_light));
         binding.fullNameLayout.setError(errorMsg);
     }
 
-    //hide error icon color and msg in full name field when no error occurs
     public void removeFullNameError() {
         binding.fullNameLayout.setError(null);
     }
 
-    // check for changes in profile name
     public void nameChangeListener() {
 
         binding.fullNameEdit.addTextChangedListener(new TextWatcher() {
@@ -268,7 +248,6 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
-    //check internet connection exist or not. If exist update profile name
     public void checkConnectionAndUpdateProfileName() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(EditProfileActivity.this);
         if (isConnectionSourceAvailable) {
@@ -301,7 +280,6 @@ public class EditProfileActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    // update account profile name in database and update in Ui too
     public void updateProfileName() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -326,25 +304,21 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
-    // show progress bar when user click on save button
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
         util.makeScreenNotTouchable(this);
     }
 
-    //hide progressbar when update name in database is complete error occurs
     public void hideLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
         util.makeScreenTouchable(this);
     }
 
-    // send broadcast to update profile name
     public void sendUpdateProfileNameBroadcast() {
         Intent updateProfileNameIntent = new Intent("com.example.smartcitytravel.UPDATE_PROFILE_NAME");
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(updateProfileNameIntent);
     }
 
-    // show only one no connection msg when multiple connection failed
     public void displayNoConnectionMessage() {
         try {
             noConnectionToast.cancel();
@@ -355,12 +329,10 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    // enable and disable save button
     public void setSaveButtonState() {
         binding.saveBtn.setEnabled(newProfileImageSelected || newProfileName);
     }
 
-    // apply changes confirmation dialog when user click on up button (which is back button on top life side)
     @Override
     public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -378,7 +350,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
-    //show apply changes confirmation dialog if changes are left to apply otherwise just exit activity
     @Override
     public void onBackPressed() {
         if (binding.saveBtn.isEnabled()) {
@@ -390,7 +361,6 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    //create and show apply changes confirmation dialog
     public void showApplyChangesConfirmationDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog, null);
 
@@ -420,7 +390,6 @@ public class EditProfileActivity extends AppCompatActivity {
         alertDialog.setCancelable(false);
     }
 
-    // finish activity if user click back or up button
     public void finishActivity() {
         if (backPressed) {
             finish();

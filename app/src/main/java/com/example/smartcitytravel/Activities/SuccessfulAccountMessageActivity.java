@@ -6,7 +6,6 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.smartcitytravel.Activities.LoginActivity;
 import com.example.smartcitytravel.databinding.ActivitySuccessfulAccountMessageBinding;
 
 public class SuccessfulAccountMessageActivity extends AppCompatActivity {
@@ -22,13 +21,11 @@ public class SuccessfulAccountMessageActivity extends AppCompatActivity {
         continueButtonListener();
     }
 
-    //show successful message passed by PinCode or New Password Activity
     public void showMessage() {
         String message = getIntent().getExtras().getString("message");
         binding.successfulMessageTxt.setText(message);
     }
 
-    // when button pressed, move to Login Activity
     public void continueButtonListener() {
         binding.continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,7 +35,6 @@ public class SuccessfulAccountMessageActivity extends AppCompatActivity {
         });
     }
 
-    //move to Login Activity
     public void moveToLoginActivity() {
         String email = getIntent().getExtras().getString("email");
 

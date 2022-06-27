@@ -89,7 +89,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
                 .into(holder.binding.profileImg);
     }
 
-    // limit length of review to 3 lines
     public void limitReviewLength(ReviewViewHolder holder) {
         if (holder.binding.reviewTxt.getMaxLines() > 3) {
             holder.binding.reviewTxt.setMaxLines(3);

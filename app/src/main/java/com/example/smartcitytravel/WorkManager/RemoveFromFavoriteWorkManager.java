@@ -34,7 +34,6 @@ public class RemoveFromFavoriteWorkManager extends Worker {
         return Result.success();
     }
 
-    // get detail of selected place which you want to remove from favorite and then delete that place from favorite list
     public void getFavoritePlace(String userId, String placeId) {
         db.collection("favorite")
                 .whereEqualTo("userId", userId)
@@ -57,7 +56,6 @@ public class RemoveFromFavoriteWorkManager extends Worker {
 
     }
 
-    //remove place from favorite list in database
     public void removeFromFavorite(Favorite favorite) {
         db.collection("favorite")
                 .document(favorite.getFavoriteId())

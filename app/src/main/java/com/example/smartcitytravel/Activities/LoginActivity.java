@@ -48,7 +48,6 @@ public class LoginActivity extends AppCompatActivity {
     private boolean validate_password;
     private CollectionReference userCollection;
 
-    //run when launch() function is called by GoogleSignUpActivityResult
     private final ActivityResultLauncher<Intent> GoogleSignInActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -81,13 +80,11 @@ public class LoginActivity extends AppCompatActivity {
         resetPassword();
     }
 
-    //initialize validate variable for each edit field which help us to know which field contain error or not
     public void initializeValidator() {
         validate_email = false;
         validate_password = false;
     }
 
-    //initialize variables
     public void initialize() {
         util = new Util();
         connection = new Connection();
@@ -97,8 +94,6 @@ public class LoginActivity extends AppCompatActivity {
         userCollection = FirebaseFirestore.getInstance().collection("user");
     }
 
-    // set email in email field in login activity when create account from successful account creation activity and move to login activity
-    // get email which is passed by successful account creation Activity
     public void setEmail() {
         if (getIntent().getExtras() != null) {
             String email = getIntent().getExtras().getString("email");
@@ -107,8 +102,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    /* called when user click on google icon
-     * allow user to signUp or signIn with google account*/
     public void signInWithGoogle() {
         binding.googleImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,7 +112,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    //check internet connection and then start google sign in service
     public void checkConnectionAndSignInWithGoogle() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(LoginActivity.this);
         if (isConnectionSourceAvailable) {
@@ -149,7 +141,6 @@ public class LoginActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    // starting google sign in service
     public void initializeGoogleSignIn() {
 
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -163,8 +154,6 @@ public class LoginActivity extends AppCompatActivity {
         GoogleSignInActivityResult.launch(signInIntent);
     }
 
-    //Return object whether user successfully signIn or signUp with google account or throw exception
-    //move to home activity
     public void getGoogleSignInResult(ActivityResult result) {
         Task<GoogleSignInAccount> googleSignInAccountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
 
@@ -178,7 +167,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    // save google account details in database when user login with google account
     public void saveGoogleAccount(GoogleSignInAccount googleSignInAccount) {
         String profile_image_url;
         if (googleSignInAccount.getPhotoUrl() != null) {
@@ -207,8 +195,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    //check whether google email already exist or not
-    //if account already exist get details otherwise create new account with google info
     public void verifyEmail(GoogleSignInAccount googleSignInAccount) {
         userCollection.whereEqualTo("email", googleSignInAccount.getEmail().toLowerCase())
                 .get()
@@ -231,8 +217,6 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    //run by user click on login button
-    //check email and password is not empty, check internet connection and then verify account by database
     public void login() {
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,7 +233,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    //check email field contain valid and allowed characters
     public void validateEmail() {
         String email = binding.emailEdit.getText().toString();
         String errorMessage = validation.validateEmail(email);
@@ -261,7 +244,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    //password field is empty or not
+
     public void validatePassword() {
         if (binding.passwordEdit.getText().toString().isEmpty()) {
             showPasswordError("Error! Empty Password");
@@ -272,7 +255,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    //Move from Login Activity to SignUp Activity when user click signup from here text
     public void signUp() {
         binding.signUpHereTxt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -284,40 +266,34 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    //Move from Login Activity to Home Activity
     public void moveToHomeActivity() {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
-    //show error msg and error icon color in email field
     public void showEmailError(String errorMsg) {
         binding.emailLayout.setErrorIconTintList(color.iconRedColor(this));
         binding.emailLayout.setError(errorMsg);
         validate_email = false;
     }
 
-    //hide error icon color and msg in email field when no error occurs
     public void hideEmailError() {
         binding.emailLayout.setError(null);
         validate_email = true;
     }
 
-    //show error msg and hide error icon in password field
     public void showPasswordError(String errorMsg) {
         binding.passwordLayout.setEndIconTintList(color.iconRedColor(this));
         binding.passwordLayout.setError(errorMsg);
         binding.passwordLayout.setErrorIconDrawable(null);
     }
 
-    //hide error msg in password field
     public void hidePasswordError() {
         binding.passwordLayout.setEndIconTintList(color.iconWhiteColor(this));
         binding.passwordLayout.setError(null);
     }
 
-    //check connection exist or not and call verifyLogin() if connection exist
     public void checkConnectionAndVerifyLogin() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(LoginActivity.this);
         if (isConnectionSourceAvailable) {
@@ -348,7 +324,6 @@ public class LoginActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    //check whether account exist or not and save account info in preference
     public void verifyLogin() {
 
         userCollection.whereEqualTo("email", binding.emailEdit.getText().toString().toLowerCase())
@@ -382,24 +357,21 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    //change default loading bar color
+
     public void setLoadingBarColor() {
         binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
     }
 
-    // show progress bar
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
         util.makeScreenNotTouchable(LoginActivity.this);
     }
 
-    //hide progressbar
     public void hideLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
         util.makeScreenTouchable(LoginActivity.this);
     }
 
-    //move to reset password process
     public void resetPassword() {
         binding.restPasswordTxt.setOnClickListener(new View.OnClickListener() {
             @Override

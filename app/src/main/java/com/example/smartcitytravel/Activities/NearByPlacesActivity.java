@@ -57,8 +57,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
     private Connection connection;
     private String city;
 
-
-    // whenever location is changed or location is on or off
     private final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(@NonNull Location location) {
@@ -142,7 +140,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
         connection = new Connection();
     }
 
-    //change range when user click range button
     public void selectRange() {
         String selectedRange = binding.rangeTxt.getText().toString();
         switch (selectedRange) {
@@ -158,13 +155,11 @@ public class NearByPlacesActivity extends AppCompatActivity {
         }
     }
 
-    // style and customize toolbar and theme
     public void setToolBarTheme() {
         util.setStatusBarColor(this, R.color.theme_light);
         util.addToolbar(this, binding.toolbarLayout.toolbar, "Nearby Places");
     }
 
-    //when click on range button, range changed and again get all nearby places to current location
     public void changeRange() {
         binding.rangeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +170,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
         });
     }
 
-    //get location of all nearby places to current location
     public void getNearByPlaces() {
         if (locationPermissionAllowed) {
             db.collection("place")
@@ -224,7 +218,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
 
     }
 
-    // get near by places by using last known location
     @SuppressLint("MissingPermission")
     public void getNearByPlacesWithLastKnownLocation() {
         if (locationPermissionAllowed) {
@@ -242,7 +235,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
         }
     }
 
-    // check whether connection exist or not. If exist, get nearby places
     public void checkConnectionAndGetNearByPlaces() {
         binding.CheckConnectionLayout.loadingBar.setVisibility(View.VISIBLE);
         binding.PlaceRecyclerView.setVisibility(View.GONE);
@@ -274,7 +266,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    //run when user click on retry icon
     public void retryConnection() {
         binding.CheckConnectionLayout.retryConnection.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -288,7 +279,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
 
     }
 
-    // initialize recyclerview
     public void setAdapter(ArrayList<Place> nearByPlaceList) {
         gridPlaceAdapter = new GridPlaceAdapter(this, nearByPlaceList);
 
@@ -297,7 +287,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
 
     }
 
-    // calculate distance between to two coordinates
     public double calculateDistance(double placeLatitude, double placeLongitude) {
         Location placeLocation = new Location("place_location");
         placeLocation.setLatitude(placeLatitude);
@@ -308,7 +297,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
 
     }
 
-    //get the name of current location city
     public String getCityName() {
         Geocoder geocoder = new Geocoder(NearByPlacesActivity.this, Locale.getDefault());
         try {
@@ -324,7 +312,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
         }
     }
 
-    // when user lick on enable location button, open location setting to on or off location
     public void openLocationSetting() {
         binding.locationSettingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -335,7 +322,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
         });
     }
 
-    // request location permission. If permission is denied, Ask for location permission
     public void requestLocationPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -347,7 +333,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
 
     }
 
-    // check whether location permission is allowed or not
     public void checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -359,8 +344,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
         }
     }
 
-    // show when location permission is denied
-    // it show button which navigate to settings page which can navigate to permission page
     public void showLocationPermissionButton() {
         binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
         binding.PlaceRecyclerView.setVisibility(View.GONE);
@@ -374,14 +357,12 @@ public class NearByPlacesActivity extends AppCompatActivity {
         });
     }
 
-    //hide when location permission is allowed
     public void hideLocationPermissionButton() {
         binding.locationPermissionBtn.setVisibility(View.GONE);
         binding.PlaceRecyclerView.setVisibility(View.VISIBLE);
         binding.rangeBtn.setVisibility(View.VISIBLE);
     }
 
-    // app detail settings page are open, where we navigate to permissions page
     public void openLocationPermission() {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", getPackageName(), null);
@@ -389,7 +370,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //show when location settings is off
     void showLocationSettingsButton() {
         binding.CheckConnectionLayout.loadingBar.setVisibility(View.GONE);
         binding.PlaceRecyclerView.setVisibility(View.GONE);
@@ -397,12 +377,10 @@ public class NearByPlacesActivity extends AppCompatActivity {
         binding.locationSettingBtn.setVisibility(View.VISIBLE);
     }
 
-    //hide when location settings is on
     void hideLocationSettingsButton() {
         binding.locationSettingBtn.setVisibility(View.GONE);
     }
 
-    // register to get current location
     @SuppressLint("MissingPermission")
     public void registerForLocationUpdates() {
         if (locationPermissionAllowed) {
@@ -420,7 +398,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
         }
     }
 
-    // return to previous activity when user click on up button (which is back button on top life side)
     @Override
     public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

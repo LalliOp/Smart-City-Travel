@@ -2,7 +2,6 @@ package com.example.smartcitytravel.Util;
 
 public class Validation {
 
-    //check full name contain valid and allowed characters
     public String validateFullName(String fullName) {
         String nameRegex = "[a-zA-Z\\s]+";
         if (fullName.isEmpty()) {
@@ -14,7 +13,6 @@ public class Validation {
         }
     }
 
-    //check email contain valid and allowed characters
     public String validateEmail(String email) {
         String emailRegex = "^[A-Za-z0-9.]+@[A-Za-z.]+.[A-Za-z]+$";
         if (email.isEmpty()) {
@@ -26,7 +24,6 @@ public class Validation {
         }
     }
 
-    //check password contain valid and allowed characters
     public String validatePassword(String password) {
         if (password.isEmpty()) {
             return "Error! Enter password";
@@ -45,8 +42,6 @@ public class Validation {
         }
     }
 
-    //check confirm password
-    //and match confirm password with password
     public int matchPasswordAndConfirmPassword(String password, String confirmPassword) {
         if (confirmPassword.isEmpty()) {
             return 2;

@@ -48,7 +48,6 @@ public class GeneralSearchActivity extends AppCompatActivity {
         getAllPlaceNames();
     }
 
-    //initialize variables
     public void initialize() {
         util = new Util();
         db = FirebaseFirestore.getInstance();
@@ -58,13 +57,11 @@ public class GeneralSearchActivity extends AppCompatActivity {
         noConnectionMSGCalled = false;
     }
 
-    // style and customize toolbar and theme
     public void setToolBarTheme() {
         util.setStatusBarColor(this, R.color.theme_light);
         util.addToolbar(this, binding.toolbarLayout.getRoot(), "");
     }
 
-    // call to create search menu in toolbar. overriding built-in function
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
@@ -79,7 +76,6 @@ public class GeneralSearchActivity extends AppCompatActivity {
         return true;
     }
 
-    // style and design search bar
     public void setSearchViewUI(SearchView searchView) {
         searchView.setQueryHint("Search Place by Name");
         searchView.setIconified(false);
@@ -99,7 +95,6 @@ public class GeneralSearchActivity extends AppCompatActivity {
 
     }
 
-    // return to previous activity when user click on up button (which is back button on top life side)
     @Override
     public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -111,7 +106,6 @@ public class GeneralSearchActivity extends AppCompatActivity {
 
     }
 
-    // called whenever user enter text in search bar
     public void onPlaceNameEntered(SearchView searchView) {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -128,7 +122,6 @@ public class GeneralSearchActivity extends AppCompatActivity {
         });
     }
 
-    //get names of all available places
     public void getAllPlaceNames() {
         db
                 .collection("place")
@@ -145,7 +138,6 @@ public class GeneralSearchActivity extends AppCompatActivity {
                 });
     }
 
-    // get all places from database which matched with user search text
     public void getMatchedPlaces(ArrayList<String> matchPlaceNameList) {
         db
                 .collection("place")
@@ -180,7 +172,6 @@ public class GeneralSearchActivity extends AppCompatActivity {
                 });
     }
 
-    // initialize recyclerview
     public void setAdapter(ArrayList<Place> resultPlaceList) {
         gridPlaceAdapter = new GridPlaceAdapter(this, resultPlaceList);
 
@@ -189,8 +180,6 @@ public class GeneralSearchActivity extends AppCompatActivity {
 
     }
 
-    // call everytime when user text written in search bar changes
-    // match places with user search text
     public void onQueryWrite(String query) {
         query = query.trim();
 
@@ -233,7 +222,6 @@ public class GeneralSearchActivity extends AppCompatActivity {
         }
     }
 
-    //check connection exist or not. If available
     public void checkConnectionAndOnWriteQuery(String query) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {

@@ -47,7 +47,6 @@ public class NewPasswordActivity extends AppCompatActivity {
         resetPassword();
     }
 
-    //initialize variables
     public void initialize() {
         color = new Color();
         connection = new Connection();
@@ -55,13 +54,11 @@ public class NewPasswordActivity extends AppCompatActivity {
         validation = new Validation();
     }
 
-    //initialize validate variable for each field which help us to know which field contain error or not
     public void initializeValidator() {
         validate_password = false;
         validate_confirm_password = false;
     }
 
-    // get email which is passed by PinCode Activity
     public void getEmail() {
         email = getIntent().getExtras().getString("email");
     }
@@ -80,7 +77,6 @@ public class NewPasswordActivity extends AppCompatActivity {
         });
     }
 
-    //check password field contain valid and allowed characters
     public void validatePassword() {
         String password = binding.passwordEdit.getText().toString();
         String errorMessage = validation.validatePassword(password);
@@ -92,12 +88,10 @@ public class NewPasswordActivity extends AppCompatActivity {
         }
     }
 
-    //change default loading bar color
     public void setLoadingBarColor() {
         binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
     }
 
-    //show error msg and hide error icon in password field
     public void showPasswordError(String errorMsg) {
         binding.passwordLayout.setEndIconTintList(color.iconRedColor(this));
         binding.passwordLayout.setError(errorMsg);
@@ -105,15 +99,12 @@ public class NewPasswordActivity extends AppCompatActivity {
         validate_password = false;
     }
 
-    //hide msg in password field when no error occurs
     public void removePasswordError() {
         binding.passwordLayout.setEndIconTintList(color.iconWhiteColor(this));
         binding.passwordLayout.setError(null);
         validate_password = true;
     }
 
-    //check confirm password field
-    //and match confirm password with password
     public void validateMatchPasswordAndConfirmPassword() {
         String password = binding.passwordEdit.getText().toString();
         String confirmPassword = binding.confirmPasswordEdit.getText().toString();
@@ -130,7 +121,6 @@ public class NewPasswordActivity extends AppCompatActivity {
         }
     }
 
-    //show error msg and hide error icon in confirm password field
     public void showConfirmPasswordError(String errorMsg) {
         binding.confirmPasswordLayout.setEndIconTintList(color.iconRedColor(this));
         binding.confirmPasswordLayout.setError(errorMsg);
@@ -138,14 +128,12 @@ public class NewPasswordActivity extends AppCompatActivity {
         validate_confirm_password = false;
     }
 
-    //hide msg in confirm password field when no error occurs
     public void removeConfirmPasswordError() {
         binding.confirmPasswordLayout.setEndIconTintList(color.iconWhiteColor(this));
         binding.confirmPasswordLayout.setError(null);
         validate_confirm_password = true;
     }
 
-    // check internet connection exist or not. If exist change password in database
     public void checkConnectionAndChangePassword() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(NewPasswordActivity.this);
         if (isConnectionSourceAvailable) {
@@ -176,7 +164,6 @@ public class NewPasswordActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    //change account password in database
     public void changePassword() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user").whereEqualTo("email", email)
@@ -204,19 +191,16 @@ public class NewPasswordActivity extends AppCompatActivity {
 
     }
 
-    // show progress bar when user click on reset password button
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
         util.makeScreenNotTouchable(NewPasswordActivity.this);
     }
 
-    //hide progressbar when reset password is complete and move to Login Activity or error occurs
     public void hideLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
         util.makeScreenTouchable(NewPasswordActivity.this);
     }
 
-    //move to successful account message activity
     public void moveToSuccessfulAccountMessageActivity() {
         Intent intent = new Intent(this, SuccessfulAccountMessageActivity.class);
         intent.putExtra("email", email);

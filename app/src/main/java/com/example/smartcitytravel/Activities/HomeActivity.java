@@ -84,14 +84,11 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-
-    //initialize variables
     public void initialize() {
         util = new Util();
         preferenceHandler = new PreferenceHandler();
     }
 
-    // register to listen for profile image broadcast
     public void registerUpdateProfileImageBroadcastReceiver() {
         updateProfileImageBroadcast = new UpdateProfileImageBroadcast(binding);
 
@@ -100,7 +97,6 @@ public class HomeActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(updateProfileImageBroadcast, intentFilter);
     }
 
-    // register to listen for profile name broadcast
     public void registerUpdateProfileNameBroadcastReceiver() {
         updateProfileNameBroadcast = new UpdateProfileNameBroadcast(binding);
 
@@ -109,7 +105,6 @@ public class HomeActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(updateProfileNameBroadcast, intentFilter);
     }
 
-    // set name , email and image of user profile
     public void setUserProfile(User user) {
 
         View headerLayout = binding.navigationView.getHeaderView(0);
@@ -120,8 +115,6 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    // set name of user in UI
-    // short name if name is longer than single line
     public void setName(View headerLayout, String name) {
 
         TextView nameTxt = headerLayout.findViewById(R.id.profileNameTxt);
@@ -138,8 +131,6 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    // set email of user in UI
-    // short email if email is longer than single line
     public void setEmail(View headerLayout, String email) {
 
         TextView emailTxt = headerLayout.findViewById(R.id.profileEmailTxt);
@@ -157,14 +148,12 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    // set profile image of user in UI
     public void setProfileImage(View headerLayout, String imageUrl) {
         Picasso.get()
                 .load(imageUrl)
                 .into((ImageView) headerLayout.findViewById(R.id.profileImg));
     }
 
-    //change or select fragment from navigation drawer
     public void selectFragmentFromDrawer(Bundle savedInstanceState) {
         binding.navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -190,14 +179,12 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    // set icon for navigation drawer button
     public void setNavigationDrawerIcon(int drawableId) {
         Glide.with(this)
                 .load(drawableId)
                 .into(binding.navigationDrawerImg);
     }
 
-    // create favorite fragment
     public void createFavoriteFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -208,7 +195,6 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    // create settings fragment
     public void createSettingsFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -218,7 +204,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    // create about us fragment
     public void createAboutUsFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -228,8 +213,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-
-    //open and close navigation drawer
     public void navigationDrawerToggle() {
         binding.navigationDrawerImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,8 +226,6 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    //create home fragment which is start screen in home activity
-    //and select as selected fragment in navigation drawer
     public void createHomeFragment(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -255,9 +236,6 @@ public class HomeActivity extends AppCompatActivity {
         binding.navigationView.setCheckedItem(R.id.home_menu);
     }
 
-    //override default back press behavior
-    //if drawer is open and user press back, close the drawer
-    //otherwise default behaviour
     @Override
     public void onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -268,7 +246,6 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    //show logout dialog when user click on logout button
     public void onLogoutButtonClicked() {
         binding.logoutLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -279,7 +256,6 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    //create and show logout dialog
     public void showLogoutDialog(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title)
@@ -299,18 +275,15 @@ public class HomeActivity extends AppCompatActivity {
         alertDialog.setCancelable(false);
     }
 
-    //change default loading bar color
     public void setLoadingBarColor() {
         binding.loadingProgressBar.loadingBar.setIndeterminateTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2)));
     }
 
-    // show progress bar
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
         util.makeScreenNotTouchable(this);
     }
 
-    //logout user from system whether google account or non google account
     public void logout() {
         Boolean account_type = preferenceHandler.getAccountTypePreference(HomeActivity.this);
         if (!account_type) {
@@ -340,13 +313,11 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    //Move Home Activity to Login Activity
     public void moveToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
-    //move to edit user profile activity
     public void editUserProfile() {
         View headerLayout = binding.navigationView.getHeaderView(0);
         ShapeableImageView editProfileImg = headerLayout.findViewById(R.id.editProfileImg);
@@ -375,7 +346,6 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    // request location permission. If permission is denied, Ask for location permission
     public void requestLocationPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -385,7 +355,6 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    //remove broadcast receiver when activity is destroyed
     @Override
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(updateProfileImageBroadcast);

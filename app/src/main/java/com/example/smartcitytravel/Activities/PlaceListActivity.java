@@ -51,7 +51,6 @@ public class PlaceListActivity extends AppCompatActivity {
         checkConnectionAndGetPlaces();
     }
 
-    //initialize variables
     public void initialize() {
         connection = new Connection();
         util = new Util();
@@ -62,13 +61,11 @@ public class PlaceListActivity extends AppCompatActivity {
         placeList = new ArrayList<>();
     }
 
-    //add toolbar in activity and customize status bar color
     public void setToolbar() {
         util.setStatusBarColor(PlaceListActivity.this, R.color.theme_light);
         util.addToolbar(PlaceListActivity.this, binding.toolbarLayout.toolbar, city);
     }
 
-    //check internet connection exist or not. If exist load places
     public void checkConnectionAndGetPlaces() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -99,7 +96,6 @@ public class PlaceListActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    //run when user click on retry icon
     public void retryConnection() {
         binding.checkConnectionLayout.retryConnection.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +134,6 @@ public class PlaceListActivity extends AppCompatActivity {
                 });
     }
 
-    //get popular places by using placeList
     public void getPopularPlaces() {
         Collections.sort(placeList, new Comparator<Place>() {
             @Override
@@ -155,7 +150,6 @@ public class PlaceListActivity extends AppCompatActivity {
         binding.popularLoadingBar.setVisibility(View.GONE);
     }
 
-    //create recyclerview and show popular places
     public void showPopularPlaces(ArrayList<Place> popularPlaceList) {
         PlaceAdapter placeAdapter = new PlaceAdapter(this, popularPlaceList, city);
 
@@ -165,7 +159,6 @@ public class PlaceListActivity extends AppCompatActivity {
         binding.popularRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
     }
 
-    //get restaurant places by using placeList
     public void getRestaurantPlaces() {
         ArrayList<Place> restaurantPlaceList = new ArrayList<>();
         String placeType = "Restaurant";
@@ -185,7 +178,6 @@ public class PlaceListActivity extends AppCompatActivity {
         binding.restaurantLoadingBar.setVisibility(View.GONE);
     }
 
-    //create recyclerview and show restaurant places
     public void showRestaurantPlaces(ArrayList<Place> restaurantPlaceList, String placeType) {
 
         PlaceAdapter placeAdapter = new PlaceAdapter(this,
@@ -197,7 +189,6 @@ public class PlaceListActivity extends AppCompatActivity {
         binding.restaurantRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
     }
 
-    //get famous spots by using placeList
     public void getFamousSpots() {
         ArrayList<Place> famousSpotList = new ArrayList<>();
         String placeType = "Tourism_spot";
@@ -216,7 +207,6 @@ public class PlaceListActivity extends AppCompatActivity {
         binding.famousSpotLoadingBar.setVisibility(View.GONE);
     }
 
-    //create recyclerview and show famous spots
     public void showFamousSpots(ArrayList<Place> famousSpotList, String placeType) {
         PlaceAdapter placeAdapter = new PlaceAdapter(this,
                 famousSpotList, true, "Famous Spots", placeType, city);
@@ -227,7 +217,6 @@ public class PlaceListActivity extends AppCompatActivity {
         binding.famousSpotRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
     }
 
-    //get hotel places by using placeList
     public void getHotelPlaces() {
         ArrayList<Place> hotelPlaceList = new ArrayList<>();
         String placeType = "Hotel";
@@ -247,7 +236,6 @@ public class PlaceListActivity extends AppCompatActivity {
         binding.hotelLoadingBar.setVisibility(View.GONE);
     }
 
-    //create recyclerview and show hotel places
     public void showHotelPlaces(ArrayList<Place> hotelPlaceList, String placeType) {
         PlaceAdapter placeAdapter = new PlaceAdapter(this,
                 hotelPlaceList, true, "Hotels", placeType, city);
@@ -258,7 +246,6 @@ public class PlaceListActivity extends AppCompatActivity {
         binding.hotelRecyclerView.addItemDecoration(new GridSpaceItemDecoration(0, 0, 8, 8));
     }
 
-    // return to previous activity when user click on up button (which is back button on top life side)
     @Override
     public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -270,12 +257,10 @@ public class PlaceListActivity extends AppCompatActivity {
 
     }
 
-    // get recommended places
     public void getRecommendedPlaces() {
         getUserFavoritePlaces();
     }
 
-    // get places ids which user add in favorite
     public void getUserFavoritePlaces() {
         ArrayList<String> favoritePlacesIdList = new ArrayList<>();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -296,7 +281,6 @@ public class PlaceListActivity extends AppCompatActivity {
                 });
     }
 
-    // get places ids which user rate 3.5 or higher
     public void getUserTopRatedPlaces(ArrayList<String> favoritePlacesIdList) {
         ArrayList<String> topRatedPlacesIdList = new ArrayList<>();
         db.collection("review")
@@ -317,9 +301,6 @@ public class PlaceListActivity extends AppCompatActivity {
                 });
     }
 
-    // create recommendation
-    // use user favorite places ids and 3.5 or higher rated places ids to get type of places user like
-    // get places which match with type of places user liked
     public void createRecommendation(ArrayList<String> favoritePlacesIdList,
                                      ArrayList<String> topRatedPlacesIdList) {
 
@@ -365,7 +346,6 @@ public class PlaceListActivity extends AppCompatActivity {
 
     }
 
-    //create recyclerview for recommended places
     public void showRecommendedPlaces(ArrayList<Place> recommendedPlaceList) {
         PlaceAdapter placeAdapter = new PlaceAdapter(this, recommendedPlaceList, city);
 

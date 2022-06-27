@@ -35,7 +35,6 @@ public class AddToFavoriteWorkManager extends Worker {
         return Result.success();
     }
 
-    // add place to favorite list in database
     public void addToFavorite(Favorite favorite) {
         db.collection("favorite")
                 .add(favorite)

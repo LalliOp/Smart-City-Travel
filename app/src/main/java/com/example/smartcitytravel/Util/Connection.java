@@ -3,7 +3,6 @@ package com.example.smartcitytravel.Util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 import java.util.HashMap;
 
@@ -15,8 +14,6 @@ public class Connection {
 
     }
 
-    //check whether system is connected with internet source (WIFI and Network) regardless of internet is working or not
-    //then call isInternetAvailable() to check whether internet connection is working or not
     public boolean isConnectionSourceAndInternetAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -29,7 +26,6 @@ public class Connection {
 
     }
 
-    //try to connect with google server to confirm internet connection is working
     public boolean isInternetAvailable() {
         try {
             Response response = KHttp.get("https://www.google.com/",
@@ -42,7 +38,6 @@ public class Connection {
         }
     }
 
-    //check whether system is connected with internet source (WIFI and Network) regardless of internet is working or not
     public boolean isConnectionSourceAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();

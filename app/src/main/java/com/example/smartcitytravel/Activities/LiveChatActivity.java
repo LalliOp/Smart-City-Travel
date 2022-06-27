@@ -141,13 +141,11 @@ public class LiveChatActivity extends AppCompatActivity {
         availableCity = -1;
     }
 
-    // style and customize status bar and toolbar
     public void setToolBarTheme() {
         util.setStatusBarColor(this, R.color.theme_light);
         util.addToolbar(this, binding.toolbarLayout.getRoot(), "Group Chat");
     }
 
-    //set city name as title
     void setToolbarTitle(String title) {
         if (city != null) {
             getSupportActionBar().setTitle(title);
@@ -155,7 +153,6 @@ public class LiveChatActivity extends AppCompatActivity {
 
     }
 
-    // call when user click on send message button
     private void clickSendMessage() {
         binding.sendMessageImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,7 +168,6 @@ public class LiveChatActivity extends AppCompatActivity {
 
     }
 
-    //create message object
     public Message createMessage(String messageText) {
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
         String currentTime = timeFormat.format(new Date());
@@ -182,7 +178,6 @@ public class LiveChatActivity extends AppCompatActivity {
         return new Message(user.getUserId(), user.getName(), messageText, currentDate, currentTime, city);
     }
 
-    // check connection and send message
     public void checkConnectionAndSendMessage(String messageText) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -209,7 +204,6 @@ public class LiveChatActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    // upload new message in database
     public void uploadNewMessage(Message message) {
         message.setError(false);
         db
@@ -217,7 +211,6 @@ public class LiveChatActivity extends AppCompatActivity {
                 .add(message);
     }
 
-    // show error message into chat adapter
     public void addErrorMessageInChatAdapter(Message message) {
         message.setError(true);
         errorMessageList.add(message);
@@ -231,8 +224,6 @@ public class LiveChatActivity extends AppCompatActivity {
         Toast.makeText(LiveChatActivity.this, "Unable to send message", Toast.LENGTH_SHORT).show();
     }
 
-    //upload error message to database
-    // run after every 10 seconds till messages uploaded
     public void uploadErrorMessageListScheduler() {
         ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
         scheduledExecutor.scheduleAtFixedRate(new Runnable() {
@@ -266,7 +257,6 @@ public class LiveChatActivity extends AppCompatActivity {
 
     }
 
-    //whenever data changes in database. It will call
     private void getChatUpdates() {
         if (city != null && !registerChatUpdate) {
             registerChatUpdate = true;
@@ -316,7 +306,6 @@ public class LiveChatActivity extends AppCompatActivity {
 
     }
 
-    // set recyclerview with messageList
     private void setAdapter(ArrayList<Message> messageList) {
         chatAdapter = new ChatAdapter(this, messageList);
         binding.chatRecyclerView.setAdapter(chatAdapter);
@@ -338,7 +327,6 @@ public class LiveChatActivity extends AppCompatActivity {
         }
     }
 
-    // get current location
     @SuppressLint("MissingPermission")
     public void getCurrentLocation() {
         if (locationPermissionAllowed) {
@@ -350,7 +338,6 @@ public class LiveChatActivity extends AppCompatActivity {
         }
     }
 
-    // request location permission. If permission is denied, Ask for location permission
     public void requestLocationPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -362,7 +349,6 @@ public class LiveChatActivity extends AppCompatActivity {
 
     }
 
-    // check whether location permission is allowed or not
     public void checkLocationPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -374,7 +360,6 @@ public class LiveChatActivity extends AppCompatActivity {
         }
     }
 
-    //hide when location permission is allowed
     public void hideLocationPermissionButton() {
         binding.locationPermissionBtn.setVisibility(View.GONE);
     }
@@ -395,7 +380,6 @@ public class LiveChatActivity extends AppCompatActivity {
 
     }
 
-    // app detail settings page are open, where we navigate to permissions page
     public void openLocationPermission() {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", getPackageName(), null);
@@ -403,14 +387,12 @@ public class LiveChatActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //show when location settings is off
     void showLocationSettingsButton() {
         binding.chatRecyclerView.setVisibility(View.GONE);
         binding.messageLayout.setVisibility(View.GONE);
         binding.locationSettingBtn.setVisibility(View.VISIBLE);
     }
 
-    //hide when location settings is on
     void hideLocationSettingsButton() {
         binding.locationSettingBtn.setVisibility(View.GONE);
         if (availableCity == 1) {
@@ -422,8 +404,6 @@ public class LiveChatActivity extends AppCompatActivity {
         }
     }
 
-    // show when location permission is denied
-    // it show button which navigate to settings page which can navigate to permission page
     public void showLocationPermissionButton() {
         binding.chatRecyclerView.setVisibility(View.GONE);
         binding.messageLayout.setVisibility(View.GONE);
@@ -436,7 +416,6 @@ public class LiveChatActivity extends AppCompatActivity {
         });
     }
 
-    //get the name of current location city
     public void getCityName() {
         if (currentLocation != null) {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -456,7 +435,6 @@ public class LiveChatActivity extends AppCompatActivity {
         }
     }
 
-    // when user lick on enable location button, open location setting to on or off location
     public void openLocationSetting() {
         binding.locationSettingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -467,7 +445,6 @@ public class LiveChatActivity extends AppCompatActivity {
         });
     }
 
-    // register to get current location
     @SuppressLint("MissingPermission")
     public void registerForLocationUpdates() {
         if (locationPermissionAllowed) {
@@ -482,7 +459,6 @@ public class LiveChatActivity extends AppCompatActivity {
         }
     }
 
-    // return to previous activity when user click on up button (which is back button on top life side)
     @Override
     public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

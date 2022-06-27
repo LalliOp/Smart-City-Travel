@@ -57,7 +57,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
         blankFavoriteIcon();
     }
 
-    //initialize variables
     public void initialize() {
         util = new Util();
         connection = new Connection();
@@ -67,14 +66,12 @@ public class PlaceDetailActivity extends AppCompatActivity {
         placeId = getIntent().getExtras().getString("placeId");
     }
 
-    //add toolbar in activity and customize status bar color
     public void setToolbar() {
         util.setStatusBarColor(PlaceDetailActivity.this, R.color.theme_light);
         util.addToolbar(PlaceDetailActivity.this, binding.toolbarLayout.toolbar, "Detail");
 
     }
 
-    //change favorite icon to filled pink color and add place in favorite
     public void fillFavoriteIcon() {
         binding.favoriteBorder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +85,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     }
 
-    // add place in favorite in database
     public void startAddToFavoriteWorkManager() {
         Data data = new Data.Builder()
                 .putString("placeId", placeId)
@@ -104,7 +100,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 .enqueue(addToFavoriteWorkRequest);
     }
 
-    //check connection exist or not. If exist then add place to favorite
     public void checkConnectionAndAddToFavorite() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -128,7 +123,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    //change favorite icon to blank icon and remove place from favorite
     public void blankFavoriteIcon() {
         binding.favoriteFilled.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,7 +135,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
         });
     }
 
-    // remove favorite place from database
     public void startRemoveFromFavoriteWorkManager() {
         Data data = new Data.Builder()
                 .putString("placeId", placeId)
@@ -159,7 +152,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     }
 
-    //check connection exist or not. If exist then remove place from favorites
     public void checkConnectionAndRemoveFromFavorite() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -183,7 +175,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    //check from database whether this place is in favorite place list of user and change favorite icon based on that
     public void isPlaceFavorite() {
         db.collection("favorite")
                 .whereEqualTo("userId", userId)
@@ -200,7 +191,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 });
     }
 
-    //check internet connection exist or not. If exist get place details
     public void checkConnectionAndGetPlaceDetail() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new Runnable() {
@@ -228,7 +218,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    //run when user click on retry icon
     public void retryConnection() {
         binding.CheckConnectionLayout.retryConnection.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,10 +231,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     }
 
-    // get detail of place from database
     public void getPlaceDetail() {
-
-
         db.collection("place")
                 .document(placeId)
                 .get()
@@ -271,8 +257,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     }
 
-    //create and show place images slider
-    //change images after few seconds
     public void showImageSliderView(PlaceDetail placeDetail) {
 
         ArrayList<String> imageList = new ArrayList<>();
@@ -287,8 +271,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     }
 
-    //create viewpager2 and tab layout
-    //show tabs which show place detail
     public void createPlaceDetailTabs(PlaceDetail placeDetail) {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -314,7 +296,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
         tabLayoutMediator.attach();
     }
 
-    // return to previous activity when user click on up button (which is back button on top life side)
     @Override
     public boolean onOptionsItemSelected(@androidx.annotation.NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

@@ -28,7 +28,6 @@ public class UpdateProfileNameBroadcast extends BroadcastReceiver {
 
     }
 
-    // set new profile name
     public void setNewProfileName(Context context) {
         View headerLayout = binding.navigationView.getHeaderView(0);
 

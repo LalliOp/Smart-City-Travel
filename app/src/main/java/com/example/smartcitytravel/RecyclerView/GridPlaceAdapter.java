@@ -50,7 +50,6 @@ public class GridPlaceAdapter extends RecyclerView.Adapter<GridPlaceAdapter.Plac
         return placeList.size();
     }
 
-    // set data in place UI
     public void setPlaceUI(PlaceViewHolder holder, Place place) {
         holder.binding.placeNameTxt.setText(place.getName());
         holder.binding.ratingTxt.setText(place.getRating().toString());
@@ -73,32 +72,27 @@ public class GridPlaceAdapter extends RecyclerView.Adapter<GridPlaceAdapter.Plac
         });
     }
 
-    // set more data and notify in recyclerview
     public void setData(ArrayList<Place> newPlaceList) {
         int insertPosition = this.placeList.size();
         this.placeList.addAll(newPlaceList);
         notifyItemInserted(insertPosition);
     }
 
-    // data completely changed. Data maybe remove or new added
     public void setNewData(ArrayList<Place> newPlaceList) {
         this.placeList.clear();
         this.placeList.addAll(newPlaceList);
         notifyDataSetChanged();
     }
 
-    // get data
     public ArrayList<Place> getData() {
         return placeList;
     }
 
-    // remove all data
     public void clearData() {
         placeList.clear();
         notifyItemRangeRemoved(0, getItemCount());
     }
 
-    // remove place which is not exist in new place list
     public void removeData(ArrayList<Place> newPlaceList) {
         for (int i = 0; i < this.placeList.size(); i++) {
             boolean placeExist = false;
@@ -116,7 +110,6 @@ public class GridPlaceAdapter extends RecyclerView.Adapter<GridPlaceAdapter.Plac
 
     }
 
-    // zoom in animation
     private void setScaleAnimation(View view) {
         ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         anim.setDuration(300);

@@ -50,7 +50,6 @@ public class ImageUpdateWorkManager extends Worker {
         return Result.success();
     }
 
-    //upload image in firebase cloud and update image in database
     public void uploadProfileImage() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference().child("profile-images");
@@ -96,7 +95,6 @@ public class ImageUpdateWorkManager extends Worker {
         });
     }
 
-    //update profile image in database
     public void updateProfileImage(Uri downloadImageUri) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user").document(userId)
@@ -114,7 +112,6 @@ public class ImageUpdateWorkManager extends Worker {
                 });
     }
 
-    //create name for image file
     public String generateImageName() {
         int startIndex = imageUri.getLastPathSegment().lastIndexOf("/");
         int endIndex = imageUri.getLastPathSegment().lastIndexOf(".");
@@ -128,7 +125,6 @@ public class ImageUpdateWorkManager extends Worker {
         return rawImgName + randomNumber1.nextInt() + randomNumber2.nextInt();
     }
 
-    // send broadcast to update profile image
     public void sendUpdateProfileImageBroadcast() {
         Intent updateProfileImageIntent = new Intent("com.example.smartcitytravel.UPDATE_PROFILE_IMAGE");
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(updateProfileImageIntent);

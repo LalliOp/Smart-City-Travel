@@ -52,8 +52,6 @@ public class EmailActivity extends AppCompatActivity {
         validate_email = false;
     }
 
-    // call when user click on continue button
-    // check email and move to pin code activity
     public void continueButtonClickListener() {
         binding.continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +67,6 @@ public class EmailActivity extends AppCompatActivity {
         });
     }
 
-    //check email field contain valid and allowed characters
     public void validateEmail() {
         String email = binding.emailEdit.getText().toString();
         String errorMessage = validation.validateEmail(email);
@@ -81,20 +78,17 @@ public class EmailActivity extends AppCompatActivity {
         }
     }
 
-    //show error msg and error icon color in email field
     public void showEmailError(String errorMsg) {
         binding.emailLayout.setErrorIconTintList(color.iconRedColor(this));
         binding.emailLayout.setError(errorMsg);
         validate_email = false;
     }
 
-    //hide error icon color and msg in email field when no error occurs
     public void hideEmailError() {
         binding.emailLayout.setError(null);
         validate_email = true;
     }
 
-    // check internet connection exist ot not. If exist than verify email by database
     public void checkConnectionAndVerifyEmail() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(EmailActivity.this);
         if (isConnectionSourceAvailable) {
@@ -125,7 +119,6 @@ public class EmailActivity extends AppCompatActivity {
         executor.shutdown();
     }
 
-    //check whether email exist or not
     public void verifyEmail() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user").whereEqualTo("email", binding.emailEdit.getText().toString().toLowerCase())
@@ -150,27 +143,23 @@ public class EmailActivity extends AppCompatActivity {
                 });
     }
 
-    //change default loading bar color
     public void setLoadingBarColor() {
         ColorStateList colorStateList = ColorStateList.valueOf(getResources().getColor(R.color.light_orange_2));
         binding.loadingProgressBar.loadingBar.setIndeterminateTintList(colorStateList);
     }
 
-    // show progress bar when user click on continue button
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
         util.makeScreenNotTouchable(EmailActivity.this);
 
     }
 
-    //hide progressbar when move to next activity or error occurs
     public void hideLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
         util.makeScreenTouchable(EmailActivity.this);
 
     }
 
-    //Move from Email Activity to Pin Code Activity
     public void moveToPinCodeActivity() {
         Intent intent = new Intent(this, PinCodeActivity.class);
         intent.putExtra("email", binding.emailEdit.getText().toString());

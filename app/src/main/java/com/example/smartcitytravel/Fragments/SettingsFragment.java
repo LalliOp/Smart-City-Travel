@@ -61,7 +61,6 @@ public class SettingsFragment extends Fragment {
         deleteAccount();
     }
 
-    // get preference fragment and del account when press delete
     public void deleteAccount() {
         PreferenceFragment preferenceFragment = (PreferenceFragment) getChildFragmentManager().findFragmentById(R.id.preferenceFragment);
         preferenceFragment.getDeleteAccountPreference().setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -74,13 +73,11 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-    // style and customize toolbar and theme
     public void setToolBarTheme() {
         util.setStatusBarColor(requireActivity(), R.color.theme_light);
         util.addToolbarAndNoUpButton((AppCompatActivity) requireActivity(), binding.toolbarLayout.toolbar, "       Settings");
     }
 
-    //create and show delete account dialog
     public void showDeleteAccountDialog(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title)
@@ -101,7 +98,6 @@ public class SettingsFragment extends Fragment {
         alertDialog.setCancelable(false);
     }
 
-    //check connection and delete account and logout if connection is available
     public void checkConnectionAndDeleteAccount() {
         boolean isConnectionSourceAvailable = connection.isConnectionSourceAvailable(requireContext());
         if (isConnectionSourceAvailable) {
@@ -129,7 +125,6 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-    //delete account from database
     public void delete() {
         db
                 .collection("user")
@@ -142,7 +137,6 @@ public class SettingsFragment extends Fragment {
                 });
     }
 
-    //logout user from system whether google account or non google account
     public void logout() {
         Boolean account_type = preferenceHandler.getAccountTypePreference(requireContext());
         if (!account_type) {
@@ -173,25 +167,21 @@ public class SettingsFragment extends Fragment {
         hideLoadingBar();
     }
 
-    //Move to Login Activity
     public void moveToLoginActivity() {
         Intent intent = new Intent(requireContext(), LoginActivity.class);
         startActivity(intent);
     }
 
-    // show progress bar when user click on save button
     public void showLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.VISIBLE);
         util.makeScreenNotTouchable(requireActivity());
     }
 
-    //hide progressbar when update name in database is complete error occurs
     public void hideLoadingBar() {
         binding.loadingProgressBar.loadingBarLayout.setVisibility(View.GONE);
         util.makeScreenTouchable(requireActivity());
     }
 
-    //make binding null which garbage collector auto collect and remove binding object with end of fragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
