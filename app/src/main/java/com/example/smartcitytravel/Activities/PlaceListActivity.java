@@ -148,16 +148,16 @@ public class PlaceListActivity extends AppCompatActivity {
         });
         Collections.reverse(placeList);
 
-        ArrayList<Place> popularPlaceList = new ArrayList<>(placeList.subList(0, 60));
+        ArrayList<Place> popularPlaceList = new ArrayList<>(placeList.subList(0, 50));
         Collections.shuffle(popularPlaceList);
 
-        showPopularPlaces(new ArrayList<>(popularPlaceList.subList(0, 20)));
+        showPopularPlaces(new ArrayList<>(popularPlaceList.subList(0, 15)));
         binding.popularLoadingBar.setVisibility(View.GONE);
     }
 
     //create recyclerview and show popular places
     public void showPopularPlaces(ArrayList<Place> popularPlaceList) {
-        PlaceAdapter placeAdapter = new PlaceAdapter(this, popularPlaceList);
+        PlaceAdapter placeAdapter = new PlaceAdapter(this, popularPlaceList, city);
 
         binding.popularRecyclerView.setAdapter(placeAdapter);
         binding.popularRecyclerView.setHasFixedSize(true);
@@ -176,8 +176,8 @@ public class PlaceListActivity extends AppCompatActivity {
         }
         Collections.shuffle(restaurantPlaceList);
 
-        if (restaurantPlaceList.size() > 20) {
-            showRestaurantPlaces(new ArrayList<>(restaurantPlaceList.subList(0, 20)), placeType);
+        if (restaurantPlaceList.size() > 15) {
+            showRestaurantPlaces(new ArrayList<>(restaurantPlaceList.subList(0, 15)), placeType);
         } else {
             showRestaurantPlaces(restaurantPlaceList, placeType);
         }
@@ -187,8 +187,9 @@ public class PlaceListActivity extends AppCompatActivity {
 
     //create recyclerview and show restaurant places
     public void showRestaurantPlaces(ArrayList<Place> restaurantPlaceList, String placeType) {
+
         PlaceAdapter placeAdapter = new PlaceAdapter(this,
-                restaurantPlaceList, true, "Restaurants", placeType);
+                restaurantPlaceList, true, "Restaurants", placeType, city);
 
         binding.restaurantRecyclerView.setAdapter(placeAdapter);
         binding.restaurantRecyclerView.setHasFixedSize(true);
@@ -207,8 +208,8 @@ public class PlaceListActivity extends AppCompatActivity {
         }
         Collections.shuffle(famousSpotList);
 
-        if (famousSpotList.size() > 20) {
-            showFamousSpots(new ArrayList<>(famousSpotList.subList(0, 20)), placeType);
+        if (famousSpotList.size() > 15) {
+            showFamousSpots(new ArrayList<>(famousSpotList.subList(0, 15)), placeType);
         } else {
             showFamousSpots(famousSpotList, placeType);
         }
@@ -218,7 +219,7 @@ public class PlaceListActivity extends AppCompatActivity {
     //create recyclerview and show famous spots
     public void showFamousSpots(ArrayList<Place> famousSpotList, String placeType) {
         PlaceAdapter placeAdapter = new PlaceAdapter(this,
-                famousSpotList, true, "Famous Spots", placeType);
+                famousSpotList, true, "Famous Spots", placeType, city);
 
         binding.famousSpotRecyclerView.setAdapter(placeAdapter);
         binding.famousSpotRecyclerView.setHasFixedSize(true);
@@ -237,10 +238,10 @@ public class PlaceListActivity extends AppCompatActivity {
         }
         Collections.shuffle(hotelPlaceList);
 
-        if (hotelPlaceList.size() > 20) {
-            showHotelPlaces(new ArrayList<>(hotelPlaceList.subList(0, 20)), placeType);
+        if (hotelPlaceList.size() > 15) {
+            showHotelPlaces(new ArrayList<>(hotelPlaceList.subList(0, 15)), placeType);
         } else {
-            showHotelPlaces(new ArrayList<>(hotelPlaceList), placeType);
+            showHotelPlaces(hotelPlaceList, placeType);
 
         }
         binding.hotelLoadingBar.setVisibility(View.GONE);
@@ -249,7 +250,7 @@ public class PlaceListActivity extends AppCompatActivity {
     //create recyclerview and show hotel places
     public void showHotelPlaces(ArrayList<Place> hotelPlaceList, String placeType) {
         PlaceAdapter placeAdapter = new PlaceAdapter(this,
-                hotelPlaceList, true, "Hotels", placeType);
+                hotelPlaceList, true, "Hotels", placeType, city);
 
         binding.hotelRecyclerView.setAdapter(placeAdapter);
         binding.hotelRecyclerView.setHasFixedSize(true);
@@ -353,18 +354,11 @@ public class PlaceListActivity extends AppCompatActivity {
         }
 
         if (!recommendedPlaceList.isEmpty()) {
-            ArrayList<Place> recommendedPlaceSubList;
-            if (recommendedPlaceList.size() > 60) {
-                recommendedPlaceSubList = new ArrayList<>(recommendedPlaceList.subList(0, 60));
+            Collections.shuffle(recommendedPlaceList);
+            if (recommendedPlaceList.size() > 15) {
+                showRecommendedPlaces(new ArrayList<>(recommendedPlaceList.subList(0, 15)));
             } else {
-                recommendedPlaceSubList = new ArrayList<>(recommendedPlaceList.subList(0, recommendedPlaceList.size()));
-            }
-
-            Collections.shuffle(recommendedPlaceSubList);
-            if (recommendedPlaceSubList.size() > 20) {
-                showRecommendedPlaces(new ArrayList<>(recommendedPlaceSubList.subList(0, 20)));
-            } else {
-                showRecommendedPlaces(recommendedPlaceSubList);
+                showRecommendedPlaces(recommendedPlaceList);
             }
             binding.recommendationLayout.setVisibility(View.VISIBLE);
         }
@@ -373,7 +367,7 @@ public class PlaceListActivity extends AppCompatActivity {
 
     //create recyclerview for recommended places
     public void showRecommendedPlaces(ArrayList<Place> recommendedPlaceList) {
-        PlaceAdapter placeAdapter = new PlaceAdapter(this, recommendedPlaceList);
+        PlaceAdapter placeAdapter = new PlaceAdapter(this, recommendedPlaceList, city);
 
         binding.recommendationRecyclerView.setAdapter(placeAdapter);
         binding.recommendationRecyclerView.setHasFixedSize(true);

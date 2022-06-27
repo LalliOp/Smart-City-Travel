@@ -199,7 +199,6 @@ public class NearByPlacesActivity extends AppCompatActivity {
                                         placeLocation.setPlaceId(querySnapshot.getId());
 
                                         double distanceBetween = calculateDistance(Double.parseDouble(placeLocation.getLatitude()), Double.parseDouble(placeLocation.getLongitude()));
-
                                         if (distanceBetween <= selectedRange) {
                                             Place place = querySnapshot.toObject(Place.class);
                                             place.setPlaceId(querySnapshot.getId());

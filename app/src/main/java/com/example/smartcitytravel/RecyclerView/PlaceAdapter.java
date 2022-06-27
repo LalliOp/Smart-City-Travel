@@ -26,21 +26,25 @@ public class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context context;
     public static final int PLACE_VIEW = 0;
     public static final int SHOW_MORE_VIEW = 1;
-    private boolean enableShowMoreOption = false;
-    private String title = null;
-    private String placeType = null;
+    private boolean enableShowMoreOption;
+    private String title;
+    private String placeType;
+    private String city;
 
-    public PlaceAdapter(Context context, ArrayList<Place> placeArrayList) {
+    public PlaceAdapter(Context context, ArrayList<Place> placeArrayList, String city) {
         this.context = context;
         this.placeArrayList = placeArrayList;
+        this.city = city;
+        this.enableShowMoreOption = false;
     }
 
-    public PlaceAdapter(Context context, ArrayList<Place> placeArrayList, boolean enableShowMoreOption, String title, String placeType) {
+    public PlaceAdapter(Context context, ArrayList<Place> placeArrayList, boolean enableShowMoreOption, String title, String placeType, String city) {
         this.context = context;
         this.placeArrayList = placeArrayList;
         this.enableShowMoreOption = enableShowMoreOption;
         this.title = title;
         this.placeType = placeType;
+        this.city = city;
 
     }
 
@@ -129,6 +133,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 Intent intent = new Intent(context, ShowMorePlaceActivity.class);
                 intent.putExtra("title", title);
                 intent.putExtra("placeType", placeType);
+                intent.putExtra("city", city);
                 intent.putExtras(bundle);
                 context.startActivity(intent);
             }

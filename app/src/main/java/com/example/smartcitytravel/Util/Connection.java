@@ -3,6 +3,7 @@ package com.example.smartcitytravel.Util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import java.util.HashMap;
 
@@ -33,7 +34,7 @@ public class Connection {
         try {
             Response response = KHttp.get("https://www.google.com/",
                     new HashMap<String, String>(), new HashMap<String, String>(),
-                    null, null, null, null, 1.5);
+                    null, null, null, null, 2);
 
             return response.getStatusCode() == 200;
         } catch (Exception e) {

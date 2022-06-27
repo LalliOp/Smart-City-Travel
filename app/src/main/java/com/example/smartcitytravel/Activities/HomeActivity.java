@@ -286,7 +286,6 @@ public class HomeActivity extends AppCompatActivity {
                 .setMessage(message)
                 .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        showLoadingBar();
                         logout();
                     }
                 })
@@ -316,7 +315,6 @@ public class HomeActivity extends AppCompatActivity {
         Boolean account_type = preferenceHandler.getAccountTypePreference(HomeActivity.this);
         if (!account_type) {
             preferenceHandler.clearLoggedInAccountPreference(HomeActivity.this);
-
             moveToLoginActivity();
 
         } else {
@@ -330,6 +328,7 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
+                        preferenceHandler.clearLoggedInAccountPreference(HomeActivity.this);
                         moveToLoginActivity();
                     } else if (task.isCanceled()) {
                         Toast.makeText(HomeActivity.this, "Unable to logout", Toast.LENGTH_SHORT).show();
@@ -337,7 +336,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 }
             });
-            preferenceHandler.clearLoggedInAccountPreference(HomeActivity.this);
+
         }
     }
 

@@ -150,6 +150,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
     }
 
     // set current location and destination on map
+    @SuppressLint("MissingPermission")
     public void setLocationOnMap() {
         if (currentLocation != null && googleMap != null) {
             googleMap.clear();
@@ -171,7 +172,6 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
                 .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.ic_my_location, 100, 100)))
                 .title("Current Location");
         googleMap.addMarker(currentLocationMarker);
-
         return currentLocationMarker;
     }
 
@@ -181,7 +181,7 @@ public class NavigationFragment extends Fragment implements OnMapReadyCallback {
                 .position(placeLatLng)
                 .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.ic_destination_location, 100, 100)))
                 .title(placeDetail.getName());
-        googleMap.addMarker(destinationPlaceMarker);
+        googleMap.addMarker(destinationPlaceMarker).showInfoWindow();
         return destinationPlaceMarker;
     }
 
